@@ -1,21 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StackNavigator } from 'react-navigation';
+import AddEventScreen from './screens/AddEventScreen';
+import ItineraryScreen from './screens/ItineraryScreen';
 
-export default class App extends React.Component {
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text>Hello World!</Text>
-      </View>
-    );
-  }
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+const RootNavigator = StackNavigator({
+  Itinerary: {
+    screen: ItineraryScreen,
+    navigationOptions: {
+      headerTitle: 'Itinerary',
+    },
+  },
+  Events: {
+    screen: AddEventScreen,
+    navigationOptions: {
+      headerTitle: 'Event',
+    },
   },
 });
+
+export default RootNavigator;

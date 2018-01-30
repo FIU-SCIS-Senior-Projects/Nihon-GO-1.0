@@ -1,0 +1,8 @@
+{
+  "expoServerPort": 19000,
+  "packagerPort": 19001,
+  "packagerPid": 19980,
+  "expoServerNgrokUrl": "https://gv-dsn.mrisc002.manager.exp.direct",
+  "packagerNgrokUrl": "https://packager.gv-dsn.mrisc002.manager.exp.direct",
+  "ngrokPid": 10420
+}

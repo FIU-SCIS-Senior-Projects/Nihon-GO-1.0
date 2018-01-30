@@ -16,7 +16,6 @@ export default class AddEventScreen extends React.Component {
   static navigationOptions = {
     title: 'Welcome',
   };
-
   _showDateTimePicker = () => this.setState({ isDateTimePickerVisible: true });
 
   _hideDateTimePicker = () => this.setState({ isDateTimePickerVisible: false });
@@ -60,6 +59,7 @@ export default class AddEventScreen extends React.Component {
             isVisible={this.state.isDateTimePickerVisible}
             onConfirm={this._handleDatePicked}
             onCancel={this._hideDateTimePicker}
+            mode={'time'}
           />
         </View>
         <Text>Event Description:</Text>

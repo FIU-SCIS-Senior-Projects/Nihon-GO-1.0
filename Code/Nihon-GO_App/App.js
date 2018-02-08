@@ -5,7 +5,7 @@ import { createStore, applyMiddleware  } from 'redux';
 import firebase from 'firebase';
 import ReduxThunk from 'redux-thunk';
 import reducers from './src/reducers';
-import LoginForm from './src/components/LoginForm';
+import HomePage from './src/components/HomePage';
 import { Header } from './src/components/common';
 
 export default class App extends Component {
@@ -27,17 +27,22 @@ export default class App extends Component {
 	render() {
 		// Redux things
 		const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
-		
+		store.getState();
 		// Home view
 		return (
 			// TIP: Provider ONLY allows one component
 			<Provider store={store}>
-				<View>
-					<Header headerText="Nihon-GO" />
-					{/* ADD IMPORTED CODE HERE. EXAMPLE <LoginForm /> */}
+				<View style={{flex: 1}}>
+					<View style={{flex: 1}}>
+						<Header headerText="Nihon-GO" />
+					</View>
+					<View style={{flex: 10}}>
+						<HomePage/>
+					</View>
 				</View>
 			</Provider>
 		);
+		
 	}
 }
 

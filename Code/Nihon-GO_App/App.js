@@ -6,8 +6,8 @@ import firebase from 'firebase';
 import ReduxThunk from 'redux-thunk';
 import reducers from './src/reducers';
 import ItineraryList from './src/components/ItineraryList';
-import LoginForm from './src/components/LoginForm';
 import { Header } from './src/components/common';
+import Router from './src/Router';
 
 export default class App extends Component {
 	componentWillMount() {
@@ -33,11 +33,8 @@ export default class App extends Component {
 		return (
 			// TIP: Provider ONLY allows one component
 			<Provider store={store}>
-				<View style={{flex: 1}}>
-					<Header headerText="Nihon-GO" />
 					{/* ADD IMPORTED CODE HERE. EXAMPLE <LoginForm /> */}
-					<ItineraryList />
-				</View>
+					<Router />
 			</Provider>
 		);
 	}

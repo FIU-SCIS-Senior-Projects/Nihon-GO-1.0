@@ -1,4 +1,5 @@
 import firebase from 'firebase';
+import { Actions } from 'react-native-router-flux';
 import { 
 	EMAIL_CHANGED,
 	PASSWORD_CHANGED,
@@ -7,6 +8,8 @@ import {
 	LOGIN_USER_START_SPINNER,
 	LOGOUT
 } from './types';
+
+export * from './ItineraryActions';
 
 export const emailChanged = (text) => {
 	return {
@@ -82,12 +85,15 @@ const loginUserSuccess = (dispatch, user) => {
 		type: LOGIN_USER_SUCCESS,
 		payload: user
 	});
+
+	Actions.itineraryNav();
 };
 
-//tech-stack
-export const selectLibrary = (libraryId) => {
+export const selectItinerary = (itineraryId) => {
+	Actions.eventList();
+	
 	return {
-		type: 'select_library',
-		payload: libraryId
+		type: 'select_itinerary',
+		payload: itineraryId
 	};
 };

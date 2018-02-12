@@ -1,42 +1,61 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {Text, View, TouchableOpacity } from 'react-native';
 import { ImageCard, CaptionBox } from './common/index';
 import { EventView } from './EventView';
+import * as actions from '../actions';
+import { connect } from 'react-redux';
 
-const ItineraryPreview = (props) => {
-    return(
-        <TouchableOpacity onPress={props.onPress}>
-            <ImageCard  source={{uri: props.itinerary.image}}>
-                <CaptionBox>
-                    <Text 
-                        style={styles.titleText}
+class ItineraryPreview extends Component {
+    renderEvents(){
+        const { itinerary, selectedItineraryId } = this.props;
+
+        if (itinerary.id === selectedItineraryId){
+            console.log(itinerary.event[0])
+        }
+    }
+    render(){
+        const {titleStyle, captionStyle } = styles;
+        const { id, image, location, description } = this.props.itinerary;
+
+        return(
+            <TouchableOpacity onPress={() => this.props.selectItinerary(id)}>
+                <ImageCard  source={{uri: image}}>
+                    <CaptionBox>
+                        <Text 
+                            style={titleStyle}
+                            >
+                            {location}
+                        </Text>
+                        <Text numberOfLines={2}
+                            style={captionStyle}
                         >
-                        {props.itinerary.location}
-                    </Text>
-                    <Text
-                        style={styles.captionText}
-                    >
-                        {props.itinerary.description}
-                    </Text>
-                </CaptionBox>
-            </ImageCard>
-        </TouchableOpacity>
-    );
-};
+                            {description}
+                        </Text>
+                    </CaptionBox>
+                    {this.renderEvents()}
+                </ImageCard>
+            </TouchableOpacity>
+        );
+    }
+}
 
 const styles = {
-    titleText: {
-        flex: 1,
+    titleStyle: {
+        flex: 2,
         color: 'white',
         backgroundColor: 'transparent',
         fontSize: 24,
     },
-    captionText:{
-        flex: 1,
+    captionStyle:{
+        flex: 3,
         color: 'white',
         backgroundColor: 'transparent',
         fontSize: 18,
     },
 };
 
-export default ItineraryPreview;
+const mapStateToProps = state => {
+    return { selectedItineraryId: state.selectedItineraryId };
+};
+
+export default connect(mapStateToProps, actions)(ItineraryPreview);

@@ -8,6 +8,13 @@ import reducers from './src/reducers';
 import Router from './src/Router';
 
 export default class App extends Component {
+	constructor(){
+		super();
+		console.ignoredYellowBox = [
+			'Setting a timer'
+		];
+	}
+	
 	componentWillMount() {
 		// Initialize Firebase
 		const config = {

@@ -3,8 +3,7 @@ import {View, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import data from '../reducers/LibraryList.json';
 import BlogPreview from './BlogPreview';
-import { BlogButton } from '../components/common/BlogButton';
-import { BlogButtonPlus } from '../components/common/BlogButtonPlus';
+import { BlogButton, BlogButtonPlus } from './common';
 
 class BlogList extends Component 
 {

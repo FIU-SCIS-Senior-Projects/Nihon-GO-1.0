@@ -9,8 +9,6 @@ import {
 	LOGOUT
 } from './types';
 
-export * from './ItineraryActions'
-
 export const emailChanged = (text) => {
 	return {
 		type: EMAIL_CHANGED,
@@ -95,14 +93,5 @@ export const selectLibrary = (libraryId) => {
 	return {
 		type: 'select_library',
 		payload: libraryId
-	};
-};
-
-export const selectItinerary = (itineraryId) => {
-	Actions.eventList();
-	
-	return {
-		type: 'select_itinerary',
-		payload: itineraryId
 	};
 };

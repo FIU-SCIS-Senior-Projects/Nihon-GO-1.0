@@ -1,11 +1,11 @@
 import React from 'react';
 import {Text, View, TouchableOpacity , Image} from 'react-native';
-import { ImageCard, CaptionBox } from './common/index';
-import { BlogHeader } from '../components/common/BlogHeader';
-import { BlogCard } from '../components/common/BlogCard';
-import { BlogCardSection } from '../components/common/BlogCardSection';
-import { BlogButton } from '../components/common/BlogButton';
-import {BlogButtonPlus} from '../components/common/BlogButtonPlus';
+import { 
+    BlogCardSection, 
+    BlogButton, 
+    BlogButtonPlus,
+    BlogCard,
+    BlogHeader, } from './common';
 
 const BlogPreview = (props) => {
     return(
@@ -35,15 +35,6 @@ const BlogPreview = (props) => {
             </BlogButton>
         </BlogCardSection>
         </BlogCard>
-
-
-        /*
-        <Card>
-            <CardSection>
-            <Text>{props.blogItem.location}</Text>
-            </CardSection>
-        </Card>
-        */
     );
 };
 

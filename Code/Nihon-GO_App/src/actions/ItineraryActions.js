@@ -21,3 +21,12 @@ export const itineraryCreate = ({ titleInput, location, description, image, dura
         .then(() => Actions.pop());
     }
 };
+
+export const selectItinerary = (itineraryId) => {
+	Actions.eventList();
+	console.log("TEST");
+	return {
+		type: 'select_itinerary',
+		payload: itineraryId
+	};
+};

@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { AppRegistry, Text, View } from 'react-native';
+import { AppRegistry, View } from 'react-native';
 import { Provider } from 'react-redux';
 import { createStore, applyMiddleware  } from 'redux';
 import firebase from 'firebase';
 import ReduxThunk from 'redux-thunk';
 import reducers from './src/reducers';
-import ItineraryList from './src/components/ItineraryList';
-import { Header } from './src/components/common';
 import Router from './src/Router';
 
 export default class App extends Component {
@@ -23,7 +21,7 @@ export default class App extends Component {
 		
 		firebase.initializeApp(config);
 	}
-
+	
 	// Render application
 	render() {
 		// Redux things
@@ -33,8 +31,7 @@ export default class App extends Component {
 		return (
 			// TIP: Provider ONLY allows one component
 			<Provider store={store}>
-					{/* ADD IMPORTED CODE HERE. EXAMPLE <LoginForm /> */}
-					<Router />
+				<Router />
 			</Provider>
 		);
 	}

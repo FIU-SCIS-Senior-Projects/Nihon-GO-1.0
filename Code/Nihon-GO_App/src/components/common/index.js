@@ -4,5 +4,6 @@ export * from './CardSection';
 export * from './Header';
 export * from './Input';
 export * from './Spinner';
-export * from './ImageCard';
+export * from './Confirm';
 export * from './CaptionBox';
+export * from './ImageCard';

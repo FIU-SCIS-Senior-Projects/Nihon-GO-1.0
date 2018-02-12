@@ -74,7 +74,6 @@ class LoginForm extends Component {
 	
 	// Render buttons
 	renderButtons() {
-		
 		// Returns loading spinner
 		if (this.props.loading) {
 			return (
@@ -109,12 +108,6 @@ class LoginForm extends Component {
 				<CardSection>
 					<Button onPress={this.onRegisterPress.bind(this)}>
 						Register
-					</Button>
-				</CardSection>
-				
-				<CardSection>
-					<Button onPress={this.onGuestPress.bind(this)}>
-						Guest
 					</Button>
 				</CardSection>
 			</View>

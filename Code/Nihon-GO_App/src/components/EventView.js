@@ -1,17 +1,9 @@
 import React from 'react';
-import {View, Text, Image} from 'react-native';
-import { CardSection } from './common/index';
+import {View, Text} from 'react-native';
 
-const EventView = (props) => {
+const EventView = () => {
     return(
-        <View>
-            <CardSection>
-                <Image source={{uri: this.props.event.image}}/>
-                <Text>{this.props.event.duration}</Text>
-                <Text>{this.props.event.address}</Text>
-                <Text>{this.props.event.description}</Text>                
-            </CardSection>
-        </View>
+        <Text>Event View</Text>
     );
 };
 

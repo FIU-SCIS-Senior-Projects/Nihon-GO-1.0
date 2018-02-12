@@ -18,4 +18,3 @@ const styles ={
 };
 
 export { ImageCard };
-

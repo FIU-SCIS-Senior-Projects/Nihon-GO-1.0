@@ -17,12 +17,10 @@ export const userProfileFetch = () => {
 	return (dispatch) => {
 		firebase.database().ref(`/users/${currentUser.uid}`)
 			.on('value', snapshot => {
-				console.log("below is the snapshot");
-				console.log(snapshot.val());
 				if (snapshot.val()) {
 					dispatch({ type: USER_PROFILE_FETCH, payload: snapshot.val() });
 				} else {
-					console.log('else section');
+					console.log('Created generic profile for user.');
 					firebase.database().ref(`/users/${currentUser.uid}`)
 						.set({ 
 							username: "Generic Name",

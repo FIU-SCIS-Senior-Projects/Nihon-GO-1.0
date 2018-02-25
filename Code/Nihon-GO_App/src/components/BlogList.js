@@ -29,7 +29,7 @@ class BlogList extends Component
             <ScrollView style={styles.viewColor}>
                  {this.renderBlogs()}
  
-                <BlogButtonPlus >
+                <BlogButtonPlus onPress={() => console.log(location)} >
                     Add More Guides 
                 </BlogButtonPlus>
 

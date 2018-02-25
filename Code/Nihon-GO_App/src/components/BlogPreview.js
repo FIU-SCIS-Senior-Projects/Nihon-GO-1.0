@@ -36,14 +36,6 @@ const BlogPreview = (props) => {
         </BlogCardSection>
         </BlogCard>
 
-
-        /*
-        <Card>
-            <CardSection>
-            <Text>{props.blogItem.location}</Text>
-            </CardSection>
-        </Card>
-        */
     );
 };
 

@@ -3,8 +3,12 @@ import {View, Text, ScrollView} from 'react-native';
 import {connect} from 'react-redux';
 import data from '../reducers/LibraryList.json';
 import BlogPreview from './BlogPreview';
+<<<<<<< HEAD
 import { BlogButton } from '../components/common/BlogButton';
 import { BlogButtonPlus } from '../components/common/BlogButtonPlus';
+=======
+import { BlogButton, BlogButtonPlus } from './common';
+>>>>>>> develop
 
 class BlogList extends Component 
 {
@@ -29,7 +33,11 @@ class BlogList extends Component
             <ScrollView style={styles.viewColor}>
                  {this.renderBlogs()}
  
+<<<<<<< HEAD
                 <BlogButtonPlus onPress={() => console.log(location)} >
+=======
+                <BlogButtonPlus >
+>>>>>>> develop
                     Add More Guides 
                 </BlogButtonPlus>
 

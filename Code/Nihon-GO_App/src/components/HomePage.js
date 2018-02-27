@@ -1,31 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
+import ItineraryList from './ItineraryList';
+import { Card, Button } from './common';
 import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
-import LibraryList from './LibraryList';
-import { 
-	emailChanged, 
-	passwordChanged, 
-	loginUser, 
-	registerUser,
-	guestUser,
-	logoutUser
-} from '../actions';
-import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class HomePage extends Component {
-	
-	renderButtons() {
-		// Renders login, register, and guest buttons
-		return (
-			<View style={styles.containerButton}>
-					<Button onPress={() => Actions.blog()}>
-						Guides\Tips
-					</Button>
-					{this.renderUserprofile()}
-			</View>
-		);
-	}
 	
 	// Render login page
 	render() {
@@ -34,9 +13,11 @@ class HomePage extends Component {
 				<Card>
 					<Text style={styles.Placeholder}>MAP</Text>
 				</Card>
-				<Card>
-					<Text style={styles.Placeholder}>Sample Itineraries</Text>
-				</Card>
+				<View style={styles.containerButton}>
+					<Button onPress={() => Actions.itineraryList()}>
+						Sample Itineraries
+					</Button>
+				</View>
 			</View>
 		);
 	}
@@ -48,11 +29,10 @@ const styles = {
 		justifyContent: 'space-around'
 	},
 	containerButton: {
-		padding: 5,
-		backgroundColor: '#fff',
+		padding: 80,
+		paddingTop: 200,
 		justifyContent: 'flex-start',
 		flexDirection: 'row',
-		borderColor: '#ddd',
 		position: 'relative'
 	},
 	Placeholder:{
@@ -67,13 +47,4 @@ const styles = {
 	}
 };
 
-// Redux things
-const mapStateToProps = ({ auth }) => {
-	const { email, password, error, loading, loggedIn } = auth;
-	return { email, password, error, loading, loggedIn };
-};
-
-// Redux things
-export default connect(mapStateToProps, { 
-	emailChanged, passwordChanged, loginUser, registerUser, guestUser, logoutUser
-})(HomePage);
+export default HomePage

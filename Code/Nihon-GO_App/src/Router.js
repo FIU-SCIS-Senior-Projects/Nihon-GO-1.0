@@ -11,6 +11,8 @@ import ItineraryList from './components/ItineraryList';
 import EventList from './components/EventList';
 import ItineraryCreate from './components/ItineraryCreate';
 import DrawerPanel from './components/DrawerPanel';
+import BlogForm from './components/BlogForm';
+import BlogExpand from './components/BlogExpand';
 import { Icon } from 'react-native-elements'
 
 //Needs to be consolidated with other features
@@ -22,27 +24,65 @@ const RouterComponent = () => {
 						<Scene 
 							key="homepage" 
 							component={HomePage} 
-							title="Homepage" 
+							title="Home" 
 							initial />
-						<Scene key="login" back component={LoginForm} title="Please Login" />
-						<Scene key="itinerary" component={LibraryList} title="Itinerary" />
+						<Scene 
+							key="login" 
+							back 
+							component={LoginForm} 
+							title="Please Login" />
+						<Scene 
+							key="itinerary" 
+							component={LibraryList} 
+							title="Itinerary" />
 						<Scene 
 							onRight={() => Actions.editProfile()}
 							rightTitle="Edit"
 							key="userProfile" 
 							component={UserProfile} 
 							title="User Profile" />
-						<Scene key="editProfile" component={EditProfile} title="Edit Profile" />
-						<Scene key="blog" component={BlogList} title="Blog" />
 						<Scene 
+							key="editProfile" 
+							back 
+							onBack={()=> Actions.userProfile()} 
+							component={EditProfile} 
+							title="Edit Profile" />
+						<Scene 
+							rightTitle="Add Blog"
+							onRight={()=> Actions.BlogForm()}
+							title="Blog"
+							component={BlogList}
+							key="blog" />
+						<Scene 
+							key="BlogForm" 
+							back 
+							onBack={()=> Actions.blog()}
+							component = {BlogForm}
+							title="Create Blog" />
+						<Scene
+							key="BlogExpand"
+							back 
+							onBack={()=> Actions.blog()}
+							component = {BlogExpand}
+							title="[Blog Name]" />
+						<Scene 
+							back
 							rightTitle="Add"
 							onRight={()=> Actions.itineraryCreate()}
 							key="itineraryList" 
 							component={ItineraryList} 
-							title="Itineraries"
-						/>
-						<Scene key="itineraryCreate" component={ItineraryCreate} title="Create Itinerary" />
-						<Scene key="eventList" component={EventList} title="Events" />
+							title="Itineraries"/>
+						<Scene 
+							key="itineraryCreate" 
+							back 
+							onBack={()=> 
+							Actions.itineraryList()} 
+							component={ItineraryCreate} 
+							title="Create Itinerary" />
+						<Scene 
+							key="eventList" 
+							component={EventList} 
+							title="Events" />
 					</Scene>
 			</Scene>
 		</Router>

@@ -12,7 +12,7 @@ import {
 	userProfileFetch
 } from '../actions';
 import { Card, CardSection, Input, Button, Spinner } from './common';
-
+import { Icon, Avatar } from 'react-native-elements'
 
 class UserCard extends Component {
 	// Gets user profile data
@@ -25,6 +25,30 @@ class UserCard extends Component {
 	// Runs after user presses logout button
 	onLogoutPress() {
 		this.props.logoutUser();
+	}
+	
+	renderAvatar(){
+		if (this.props.loggedIn) {
+			return (
+				<View>
+					<Avatar
+						rounded
+						source={{uri: "https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"}}
+						large
+					/>
+				</View>
+			);
+		} else {
+			return (
+				<View>
+					<Avatar
+						rounded
+						title="?"
+						large
+					/>
+				</View>
+			);
+		}
 	}
 	
 	//Renders right side of card
@@ -60,7 +84,7 @@ class UserCard extends Component {
 	render() {
 		return (
 			<View style={styles.container}>
-				<Image source={{ uri: "https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"}} style={styles.photo} />
+				{this.renderAvatar()}
 				{this.renderUsername()}
 			</View>
 		);

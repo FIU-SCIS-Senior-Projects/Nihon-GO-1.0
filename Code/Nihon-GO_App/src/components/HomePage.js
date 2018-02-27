@@ -15,22 +15,6 @@ import { Card, CardSection, Input, Button, Spinner } from './common';
 
 class HomePage extends Component {
 	
-	renderUserprofile() {
-		if (this.props.loggedIn) {
-			return (
-				<Button onPress={() => Actions.userProfile()}>
-					User Profile
-				</Button>
-			);
-		} else {
-			return (
-				<Button onPress={() => Actions.login()}>
-					Sign in
-				</Button>
-			);
-		}
-	}
-	
 	renderButtons() {
 		// Renders login, register, and guest buttons
 		return (
@@ -48,10 +32,11 @@ class HomePage extends Component {
 		return (
 			<View style={styles.containerStyle}>
 				<Card>
-					<Text style={styles.mapPlaceholder}>MAP</Text>
+					<Text style={styles.Placeholder}>MAP</Text>
 				</Card>
-				<LibraryList/>
-				{this.renderButtons()}
+				<Card>
+					<Text style={styles.Placeholder}>Sample Itineraries</Text>
+				</Card>
 			</View>
 		);
 	}
@@ -70,7 +55,8 @@ const styles = {
 		borderColor: '#ddd',
 		position: 'relative'
 	},
-	mapPlaceholder:{
+	Placeholder:{
+		paddingTop: 5,
 		alignSelf: 'center',
 		fontSize: 32,
 		fontWeight: '600',

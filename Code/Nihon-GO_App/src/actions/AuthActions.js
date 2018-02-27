@@ -72,6 +72,8 @@ export const logoutUser = () => {
 		dispatch({ type: LOGOUT });
 		
 		firebase.auth().signOut();
+		
+		Actions.main();
 	};
 };
 
@@ -85,7 +87,7 @@ const loginUserSuccess = (dispatch, user) => {
 		payload: user
 	});
 	
-	Actions.homepage();
+	Actions.main();
 };
 
 //tech-stack

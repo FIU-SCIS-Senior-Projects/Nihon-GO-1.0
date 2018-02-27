@@ -1,4 +1,5 @@
 import React from 'react';
+import { View, Text, TouchableHighlight } from 'react-native'
 import { Scene, Router, Actions, Drawer } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import LibraryList from './components/LibraryList';
@@ -10,13 +11,14 @@ import ItineraryList from './components/ItineraryList';
 import EventList from './components/EventList';
 import ItineraryCreate from './components/ItineraryCreate';
 import DrawerPanel from './components/DrawerPanel';
+import { Icon } from 'react-native-elements'
 
 //Needs to be consolidated with other features
 const RouterComponent = () => {
 	return (
 		<Router>	
 			<Scene key="root" hideNavBar>
-					<Scene key="main" drawer contentComponent={DrawerPanel} navigationBarStyle={headerStyle}>
+					<Scene key="main" drawer drawerIcon={() => <Icon name='menu'/>} contentComponent={DrawerPanel} navigationBarStyle={headerStyle}>
 						<Scene 
 							key="homepage" 
 							component={HomePage} 

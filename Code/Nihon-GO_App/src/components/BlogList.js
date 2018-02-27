@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {View, Text, ScrollView} from 'react-native';
+import {View, Text, ScrollView, StyleSheet, FlatList} from 'react-native';
 import {connect} from 'react-redux';
 import data from '../reducers/LibraryList.json';
 import BlogPreview from './BlogPreview';
@@ -18,20 +18,18 @@ class BlogList extends Component
     {
         return this.state.blogs.map(blog => /*<Text>{blog.title}</Text>);*/
             <BlogPreview key={blog.location} blogItem={blog}/>
-        );
-        
+        ); 
     }    
     
     render()
     {
         return (
-            <ScrollView style={styles.viewColor}>
+            <ScrollView style={[styles.viewColor,styles.spacingView]}>
                  {this.renderBlogs()}
- 
-                <BlogButtonPlus >
-                    Add More Guides 
-                </BlogButtonPlus>
-
+                        
+            <BlogButtonPlus>
+                Load More
+            </BlogButtonPlus>
             </ScrollView>
         );
     }  
@@ -42,9 +40,12 @@ class BlogList extends Component
             backgroundColor: '#D4DBDA',
         },
         spacingView: {
-            paddingTop: 6,
-            paddingBottom: 4
+            paddingTop: 60
+        },
+        flexing: {
+            flex: 1,
         },
         };
 
+        
 export default BlogList;

@@ -5,12 +5,14 @@ import {
     BlogButton, 
     BlogButtonPlus,
     BlogCard,
-    BlogHeader, } from './common';
+    BlogHeader,
+    BlogExpand } from './common';
+import { Actions} from 'react-native-router-flux';
 
 const BlogPreview = (props) => {
     return(
         <BlogCard >
-        <BlogCardSection >
+        <BlogCardSection /*onPress={Actions.BlogExpand()*/ >
         <View style={styles.imageContainerStyle}>
             <View >
                 <Image style={styles.imageStyle} 
@@ -27,8 +29,8 @@ const BlogPreview = (props) => {
         </View>
         </BlogCardSection>
         <BlogCardSection >
-            <BlogButton>
-                Rate
+            <BlogButton onPress={ () => Actions.BlogExpand()}>
+                View
             </BlogButton>
             <BlogButton >
                 Suggest Changes

@@ -1,25 +1,18 @@
 import React from 'react';
 import {Text, View, TouchableOpacity , Image} from 'react-native';
-<<<<<<< HEAD
-import { ImageCard, CaptionBox } from './common/index';
-import { BlogHeader } from '../components/common/BlogHeader';
-import { BlogCard } from '../components/common/BlogCard';
-import { BlogCardSection } from '../components/common/BlogCardSection';
-import { BlogButton } from '../components/common/BlogButton';
-import {BlogButtonPlus} from '../components/common/BlogButtonPlus';
-=======
 import { 
     BlogCardSection, 
     BlogButton, 
     BlogButtonPlus,
     BlogCard,
-    BlogHeader, } from './common';
->>>>>>> develop
+    BlogHeader,
+    BlogExpand } from './common';
+import { Actions} from 'react-native-router-flux';
 
 const BlogPreview = (props) => {
     return(
         <BlogCard >
-        <BlogCardSection >
+        <BlogCardSection /*onPress={Actions.BlogExpand()*/ >
         <View style={styles.imageContainerStyle}>
             <View >
                 <Image style={styles.imageStyle} 
@@ -36,18 +29,14 @@ const BlogPreview = (props) => {
         </View>
         </BlogCardSection>
         <BlogCardSection >
-            <BlogButton>
-                Rate
+            <BlogButton onPress={ () => Actions.BlogExpand()}>
+                View
             </BlogButton>
             <BlogButton >
                 Suggest Changes
             </BlogButton>
         </BlogCardSection>
         </BlogCard>
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
     );
 };
 

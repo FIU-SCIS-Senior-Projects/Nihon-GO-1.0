@@ -10,6 +10,8 @@ import BlogList from './components/BlogList';
 import ItineraryList from './components/ItineraryList';
 import EventList from './components/EventList';
 import ItineraryCreate from './components/ItineraryCreate';
+import BlogForm from './components/BlogForm';
+import BlogExpand from './components/BlogExpand';
 
 
 const RouterComponent = () => {
@@ -33,7 +35,23 @@ const RouterComponent = () => {
 						component={UserProfile} 
 						title="User Profile" />
 					<Scene key="editProfile" component={EditProfile} title="Edit Profile" />
-					<Scene key="blog" component={BlogList} title="Blog" />
+					<Scene 
+					 	rightTitle="Add Blog"
+						onRight={()=> Actions.BlogForm()}
+						title="Blog"
+						component={BlogList}
+						key="blog" 
+					/>
+					<Scene 
+					key="BlogForm" 
+					component = {BlogForm}
+					title="Create Blog" 
+					/>
+					<Scene
+					key="BlogExpand"
+					component = {BlogExpand}
+					title="[Blog Name]"
+					/>
 					<Scene 
 						rightTitle="Add"
 						onRight={()=> Actions.itineraryCreate()}

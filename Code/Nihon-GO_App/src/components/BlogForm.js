@@ -1,72 +1,83 @@
 import React, { Component } from 'react';
-import { input } from './common/Input' ;
-import firebase from 'firebase';
-import {BlogButton, BlogCard, BlogCardSection} from './common'
+import { Input, BlogButton, BlogCard, BlogCardSection } from './common' ;
+import {connect} from 'react-redux';
+import { blogUpdate, blogForm} from '../actions';
+import {View} from 'react-native';
 
 
 class BlogForm extends Component {
 
+    /*
     onButtonPress() {
-        const {titleIn, loc, desc, img, dur} = this.props
-        this.props.BlogForm({titleIn,loc,desc,img,dur});
+        const {titleInput, location, description, image, duration} = this.props
+        this.props.blogForm({titleInput,location,description,image,duration});
     }
+    */
 
     render() {
         return (
+            <View style={styles.spacingView}>
             <BlogCard>
                 <BlogCardSection>
                     <Input
-                    placeholder="Title"
-                    label="Enter Event Title"
-                    value={this.props.titleIn}
-                    onChangeText={value => this.props.BlogForm({prop: 'titleIn', value})}
+                    label="Title"
+                    placeholder="Enter Event Title"
+                    value={this.props.titleInput}
+                    onChangeText={value => this.props.blogUpdate({prop: 'titleInput', value})}
+                    />
+
+                </BlogCardSection>
+                
+                <BlogCardSection>
+                    <Input
+                    label="Location"
+                    placeholder="Enter Event Location"
+                    value={this.props.location}
+                    onChangeText={value => this.props.blogUpdate({prop: 'location', value})}
                     />
                 </BlogCardSection>
-                    <Input
-                    placeholder="Location"
-                    label="Enter Event Location"
-                    value={this.props.loc}
-                    onChangeText={value => this.props.BlogForm({prop: 'loc', value})}
-                    />
+
                  <BlogCardSection>
                  <Input
-                 placeholder="Description"
-                 label="Enter Event Description"
-                 value={this.props.desc}
-                 onChangeText={value => this.props.BlogForm({prop: 'desc', value})}
+                 label="Description"
+                 placeholder="Enter Event Description"
+                 value={this.props.description}
+                 onChangeText={value => this.props.blogUpdate({prop: 'description', value})}
                  />
                  </BlogCardSection> 
                  <BlogCardSection>
                     <Input
-                    placeholder="Image"
-                    label="Enter Image Url"
-                    value={this.props.img}
-                    onChangeText={value => this.props.BlogForm({prop: 'img', value})}
+                    label="Image"
+                    placeholder="Enter Image Url"
+                    value={this.props.image}
+                    onChangeText={value => this.props.blogUpdate({prop: 'image', value})}
                     />
                 </BlogCardSection> 
                 <BlogCardSection>
                     <Input
-                    placeholder="Duration"
-                    label="The days of the event"
-                    value={this.props.dur}
-                    onChangeText={value => this.props.BlogForm({prop: 'dur', value})}
+                    label="Duration"
+                    placeholder="The days of the event"
+                    value={this.props.duration}
+                    onChangeText={value => this.props.blogUpdate({prop: 'duration', value})}
                     />
                 </BlogCardSection> 
                 <BlogCardSection>
-                    <BlogButton onPress={this.onButonPress.bind(this)}>
+                    <BlogButton >
                         Submit
                     </BlogButton>
                 </BlogCardSection>    
-            </BlogCard>        
-
+            </BlogCard>
+            </View>        
         );
     }
 };
 
-const mapStateToProps = (state) => {
-    const {loc, desc,img, dur, titleIn} = state.BlogForm;
-
-    return {loc, desc, img, dur, titleIn}
-}
+const styles = {
+    spacingView: {
+        flex: 1,
+        paddingTop: 60,
+        paddingBottom: 4
+    },
+    };
 
 export default BlogForm;    

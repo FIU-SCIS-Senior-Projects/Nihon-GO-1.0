@@ -9,7 +9,9 @@ import {
 	guestUser,
 	logoutUser
 } from '../actions';
-import { Card, CardSection, Input, Button, Spinner } from './common';
+import { Card, CardSection, Input, Spinner } from './common';
+import { Button } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 class LoginForm extends Component {
 	// Runs after user edits email
@@ -45,14 +47,20 @@ class LoginForm extends Component {
 	}
 	
 	// Render login input if user is NOT logged in
- 	renderLoginInput() {
+ 	renderLoginInput() {		
 		if (!this.props.loggedIn) {
 			return (
-				<View>
+				<View>		
 					<CardSection>
 						<Input
-							label="Email"
-							placeholder="email@gmail.com"
+							label={
+								<Icon
+									name='envelope'
+									size={40}
+									color='black'
+								/>
+							}
+							placeholder="Email"
 							onChangeText={this.onEmailChange.bind(this)}
 							value={this.props.email}
 						/>
@@ -61,8 +69,14 @@ class LoginForm extends Component {
 					<CardSection>
 						<Input
 							secureTextEntry
-							label="Password"
-							placeholder="password"
+							label={
+								<Icon
+									name='lock'
+									size={50}
+									color='black'
+								/>
+							}
+							placeholder="Password"
 							onChangeText={this.onPasswordChange.bind(this)}
 							value={this.props.password}
 						/> 
@@ -86,11 +100,15 @@ class LoginForm extends Component {
 		// Renders logout button if user is logged in
 		if (this.props.loggedIn) {
 			return (
-				<View>
+				<View>					
 					<CardSection>
-						<Button onPress={this.onLogoutPress.bind(this)}>
-							Log Out
-						</Button>
+						<Button onPress={this.onLogoutPress.bind(this)}
+							title='Log out'
+							rounded
+							backgroundColor='green'
+							icon={{name: 'exit-to-app', type: 'MaterialIcons'}}
+							containerViewStyle={{flex: 1}}
+						/>
 					</CardSection>
 				</View>
 			);
@@ -100,15 +118,23 @@ class LoginForm extends Component {
 		return (
 			<View>
 				<CardSection>
-					<Button onPress={this.onLoginPress.bind(this)}>
-						Login
-					</Button>
+					<Button onPress={this.onLoginPress.bind(this)}
+						title='Log in'
+						rounded
+						backgroundColor='green'
+						icon={{name: 'exit-to-app', type: 'MaterialIcons'}}
+						containerViewStyle={{flex: 1}}
+					/>
 				</CardSection>
 				
 				<CardSection>
-					<Button onPress={this.onRegisterPress.bind(this)}>
-						Register
-					</Button>
+					<Button onPress={this.onRegisterPress.bind(this)}
+						title='Register'
+						rounded
+						backgroundColor='green'
+						icon={{name: 'person-add', type: 'MaterialIcons'}}
+						containerViewStyle={{flex: 1}}
+					/>
 				</CardSection>
 			</View>
 		);
@@ -130,7 +156,7 @@ class LoginForm extends Component {
 	// Render login page
 	render() {
 		return (
-			<Card>	
+			<Card>
 				{this.renderLoginInput()}
 				
 				{this.renderError()}

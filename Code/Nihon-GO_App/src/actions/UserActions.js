@@ -46,3 +46,9 @@ export const userProfileSave = ({ username, country, languages, description, ema
 			});
 	};
 };
+
+export const userProfileImageFetch = () => {
+	const picture = firebase.storage().ref('UserProfile/ProfilePicture/Floor Sticker.png');
+	console.log(picture.location);
+	return null;
+};

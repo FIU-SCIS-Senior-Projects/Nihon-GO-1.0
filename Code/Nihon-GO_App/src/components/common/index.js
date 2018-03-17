@@ -12,5 +12,5 @@ export * from './Header';
 export * from './ImageCard';
 export * from './Input';
 export * from './Spinner';
-
+export * from './CountingIcon';
 

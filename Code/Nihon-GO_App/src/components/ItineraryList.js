@@ -21,7 +21,7 @@ class ItineraryList extends Component {
 
     render(){
         return (
-            <ListView style={{backgroundColor: '#20A38180'}}
+            <ListView style={{backgroundColor: 'black'}}
                 dataSource={this.dataSource}
                 renderRow={this.renderRow}
             />

@@ -1,25 +1,43 @@
 import React, { Component } from 'react';
-import {Text, View, TouchableOpacity } from 'react-native';
-import { ImageCard, CaptionBox } from './common/index';
+import {Text,
+        View, 
+        TouchableWithoutFeedback,
+        TouchableOpacity, 
+        UIManager, 
+        LayoutAnimation } from 'react-native';
+import { ImageCard, CaptionBox, CountingIcon } from './common/index';
 import { EventView } from './EventView';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
+import { LinearGradient } from 'expo';
+import { Icon } from 'react-native-elements';
 
 class ItineraryPreview extends Component {
-    renderEvents(){
-        const { itinerary, selectedItineraryId } = this.props;
 
-        if (itinerary.id === selectedItineraryId){
-            console.log(itinerary.event[0])
-        }
+    componentWillUpdate() {
+        var CustomLayoutLinear = {
+            duration: 300,
+            create: {
+              type: LayoutAnimation.Types.linear,
+              property: LayoutAnimation.Properties.opacity,
+            },
+            update: {
+              type: LayoutAnimation.Types.linear,
+            },
+          };
+
+		UIManager.setLayoutAnimationEnabledExperimental &&   UIManager.setLayoutAnimationEnabledExperimental(true);
+        LayoutAnimation.configureNext(CustomLayoutLinear);
     }
-    render(){
-        const {titleStyle, captionStyle } = styles;
-        const { id, image, location, description } = this.props.itinerary;
 
-        return(
-            <TouchableOpacity onPress={() => this.props.selectItinerary(id)}>
-                <ImageCard  source={{uri: image}}>
+    //This method renders the title, description, and selection arrow for all itinerary previews
+    renderTopHalf(){
+        const { id, image, location, description } = this.props.itinerary;
+        const {titleStyle, captionStyle, linearGradient } = styles;
+
+        return (
+            <View style={{flex: 1, flexDirection: 'row'}}>
+                <View style={{flex: 5}}>
                     <CaptionBox>
                         <Text 
                             style={titleStyle}
@@ -32,9 +50,96 @@ class ItineraryPreview extends Component {
                             {description}
                         </Text>
                     </CaptionBox>
-                    {this.renderEvents()}
+                </View>
+                <View style={{flex: 1, marginTop: 10,}}>
+                    <TouchableOpacity style={{flex: 1}}>
+                        <Icon
+                            name='caret-right'
+                            type='font-awesome'
+                            color='white'
+                            size={35}
+                            />
+                    </TouchableOpacity>
+                </View>
+            </View>
+        );
+    }
+
+    //This method renders the comment, share, and favorites buttons when preview is expanded.
+    renderBottomHalf(){
+        const { id, image, location, description } = this.props.itinerary;
+        const {titleStyle, captionStyle, linearGradient } = styles;
+
+        return(
+            <View style={{flex: 1, justifyContent: 'flex-end'}}>
+                <View style={{marginBottom: 10, marginLeft: 10, flexDirection: 'row'}}>
+                    <CountingIcon 
+                        iconName='comment' 
+                        iconType='font-awesome' 
+                        count='30'
+                        iconColor='#03A9F4'/>
+                    <CountingIcon 
+                        iconName='share-alt' 
+                        iconType='font-awesome' 
+                        count='25'
+                        iconColor='#4CAF50'/>
+                    <CountingIcon 
+                        iconName='heart' 
+                        iconType='font-awesome' 
+                        count='1000'
+                        iconColor='#F44336'/>
+                </View>
+            </View>
+        );
+
+    }
+
+    renderExpandedPreview(){
+        const { itinerary, selectedItineraryId, expanded } = this.props;
+        const { id, image, location, description } = this.props.itinerary;
+        const {titleStyle, captionStyle, linearGradient } = styles;
+
+        if (!expanded){
+            return (
+                <ImageCard  source={{uri: image}} style={{height: 100}}>
+                    <LinearGradient 
+                    colors={['#00000099', '#FFFFFF00']} //66 is 40% in hex
+                    start={[0, 0]}
+                    style={{flex:1,}}
+                    >
+                        {this.renderTopHalf()}
+                    </LinearGradient>
                 </ImageCard>
-            </TouchableOpacity>
+            );
+        }
+        else{
+            return (
+                <ImageCard  source={{uri: image}}>
+                    <LinearGradient 
+                        colors={['#00000066', '#FFFFFF00']} //66 is 40% in hex
+                        start={[0, 0]}
+                        style={{flex: 1,}}
+                        >
+                        {this.renderTopHalf()}
+                    </LinearGradient>
+                    <LinearGradient 
+                        colors={['#FFFFFF00', '#00000066']} //66 is 40% in hex
+                        style={{flex: 1,}}
+                        >
+                        {this.renderBottomHalf()}
+                    </LinearGradient>
+                </ImageCard>
+            );
+        }
+    }
+    render(){       
+
+        return(
+            <TouchableWithoutFeedback onPress={() => this.props.selectItinerary(this.props.itinerary.id)}>
+                <View>
+                    {this.renderExpandedPreview()}
+                </View>
+            </TouchableWithoutFeedback>
         );
     }
 }
@@ -45,17 +150,25 @@ const styles = {
         color: 'white',
         backgroundColor: 'transparent',
         fontSize: 24,
+        fontWeight: 'bold',
+        marginLeft: 10,
+        marginTop: 5,
     },
     captionStyle:{
         flex: 3,
         color: 'white',
         backgroundColor: 'transparent',
         fontSize: 18,
+        fontStyle: 'italic',
+        fontWeight: 'bold',
+        marginLeft: 10,
     },
 };
 
-const mapStateToProps = state => {
-    return { selectedItineraryId: state.selectedItineraryId };
+const mapStateToProps = (state, ownProps) => {
+    const expanded = state.selectedItineraryId === ownProps.itinerary.id;
+
+    return { expanded };
 };
 
 export default connect(mapStateToProps, actions)(ItineraryPreview);

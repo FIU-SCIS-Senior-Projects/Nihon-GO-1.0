@@ -12,6 +12,7 @@ import EventList from './components/EventList';
 import ItineraryCreate from './components/ItineraryCreate';
 import BlogForm from './components/BlogForm';
 import BlogExpand from './components/BlogExpand';
+import SubBlogPreview from './components/SubBlogPreview';
 
 
 const RouterComponent = () => {
@@ -36,7 +37,7 @@ const RouterComponent = () => {
 						title="User Profile" />
 					<Scene key="editProfile" component={EditProfile} title="Edit Profile" />
 					<Scene 
-					 	rightTitle="Add Blog"
+					 	rightTitle="Add Guide"
 						onRight={()=> Actions.BlogForm()}
 						title="Blog"
 						component={BlogList}
@@ -50,7 +51,14 @@ const RouterComponent = () => {
 					<Scene
 					key="BlogExpand"
 					component = {BlogExpand}
-					title="[Blog Name]"
+					title="Subcategory"
+					/>
+					<Scene
+					rightTitle="Add Subguide" 
+					onRight={()=> Actions.BlogForm()} /*Place holder needs its own blog form*/
+					key="SubBlogPreview"
+					component = {SubBlogPreview}
+					title="SubBlogs"
 					/>
 					<Scene 
 						rightTitle="Add"

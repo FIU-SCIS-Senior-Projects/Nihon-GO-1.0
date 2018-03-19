@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View, TouchableOpacity , Image} from 'react-native';
+import {Text, View, TouchableOpacity , Image, TouchableWithoutFeedback} from 'react-native';
 import { 
     BlogCardSection, 
     BlogButton, 
@@ -10,34 +10,29 @@ import {
 import { Actions} from 'react-native-router-flux';
 import {ListView } from 'react-native';
 
-const BlogPreview = (props) => {
+const SubBlogPreview = (props) => {
     return(
-        <BlogCard >
-        <BlogCardSection /*onPress={Actions.BlogExpand()*/ >
-        <View style={styles.imageContainerStyle}>
-            <View >
-                <Image style={styles.imageStyle} 
-                    source={ { uri: props.blogItem.image } } />
-            </View>
-            <View style={styles.textContainerStyle}>
-                <Text style={styles.titleText}>
-                    {props.blogItem.location}
-                </Text>
-                <Text style={styles.captionText}>
-                    {props.blogItem.description}
-                </Text>
-            </View>
-        </View>
-        </BlogCardSection>
-        <BlogCardSection >
-            <BlogButton onPress={ () => Actions.BlogExpand()}>
-                View
-            </BlogButton>
-            <BlogButton >
-                Suggest Changes
-            </BlogButton>
-        </BlogCardSection>
+        
+        <TouchableWithoutFeedback onPress={() => this.props.selectBlog(id)}>
+        <BlogCard>
+            <BlogCardSection /*onPress={Actions.BlogExpand()*/ >
+                <View style={styles.imageContainerStyle}>
+                    <View style={styles.textContainerStyle}>
+                        <Text style={styles.titleText}>
+                            {props.blogItem.location}
+                        </Text>
+                    </View>
+                </View>
+            </BlogCardSection>
+            <BlogCardSection>
+                      <View>
+                        <Text style={styles.captionText}>
+                            {props.blogItem.description}
+                        </Text>
+                    </View>
+            </BlogCardSection>
         </BlogCard>
+        </TouchableWithoutFeedback>
     );
 };
 
@@ -81,5 +76,4 @@ const styles = {
 
 };
 
-
-export default BlogPreview;
+export default SubBlogPreview;

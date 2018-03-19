@@ -13,7 +13,12 @@ import { LinearGradient } from 'expo';
 import { Icon } from 'react-native-elements';
 
 class ItineraryPreview extends Component {
-
+    constructor(props){
+        super(props);
+        this.state = {
+            expandedItinerary: false
+        };
+    }
     componentWillUpdate() {
         var CustomLayoutLinear = {
             duration: 300,
@@ -30,6 +35,12 @@ class ItineraryPreview extends Component {
         LayoutAnimation.configureNext(CustomLayoutLinear);
     }
 
+    toggleExpanded(){
+        this.setState(previousState => {
+            return { expandedItinerary: !previousState.expandedItinerary };
+          });
+    }
+
     //This method renders the title, description, and selection arrow for all itinerary previews
     renderTopHalf(){
         const { id, image, location, description } = this.props.itinerary;
@@ -44,7 +55,7 @@ class ItineraryPreview extends Component {
                             >
                             {location}
                         </Text>
-                        <Text numberOfLines={2}
+                        <Text numberOfLines={1}
                             style={captionStyle}
                         >
                             {description}
@@ -52,12 +63,14 @@ class ItineraryPreview extends Component {
                     </CaptionBox>
                 </View>
                 <View style={{flex: 1, marginTop: 10,}}>
-                    <TouchableOpacity style={{flex: 1}}>
+                    <TouchableOpacity 
+                        onPress={() => this.props.selectItinerary(this.props.itinerary.id)}
+                        style={{flex: 1}}>
                         <Icon
-                            name='caret-right'
+                            name='angle-right'
                             type='font-awesome'
                             color='white'
-                            size={35}
+                            size={30}
                             />
                     </TouchableOpacity>
                 </View>
@@ -77,17 +90,17 @@ class ItineraryPreview extends Component {
                         iconName='comment' 
                         iconType='font-awesome' 
                         count='30'
-                        iconColor='#03A9F4'/>
+                        iconColor='white'/>
                     <CountingIcon 
                         iconName='share-alt' 
                         iconType='font-awesome' 
                         count='25'
-                        iconColor='#4CAF50'/>
+                        iconColor='white'/>
                     <CountingIcon 
                         iconName='heart' 
                         iconType='font-awesome' 
                         count='1000'
-                        iconColor='#F44336'/>
+                        iconColor='white'/>
                 </View>
             </View>
         );
@@ -95,11 +108,11 @@ class ItineraryPreview extends Component {
     }
 
     renderExpandedPreview(){
-        const { itinerary, selectedItineraryId, expanded } = this.props;
+        const { itinerary, expanded } = this.props;
         const { id, image, location, description } = this.props.itinerary;
         const {titleStyle, captionStyle, linearGradient } = styles;
 
-        if (!expanded){
+        if (!this.state.expandedItinerary){
             return (
                 <ImageCard  source={{uri: image}} style={{height: 100}}>
                     <LinearGradient 
@@ -135,11 +148,12 @@ class ItineraryPreview extends Component {
     render(){       
 
         return(
-            <TouchableWithoutFeedback onPress={() => this.props.selectItinerary(this.props.itinerary.id)}>
+            <TouchableWithoutFeedback onPress={() => {this.toggleExpanded()}}>
                 <View>
                     {this.renderExpandedPreview()}
                 </View>
             </TouchableWithoutFeedback>
+            
         );
     }
 }
@@ -160,7 +174,6 @@ const styles = {
         backgroundColor: 'transparent',
         fontSize: 18,
         fontStyle: 'italic',
-        fontWeight: 'bold',
         marginLeft: 10,
     },
 };

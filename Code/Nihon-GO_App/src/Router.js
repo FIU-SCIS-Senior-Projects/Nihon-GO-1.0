@@ -8,6 +8,7 @@ import UserProfile from './components/UserProfile';
 import EditProfile from './components/EditProfile';
 import BlogList from './components/BlogList';
 import ItineraryList from './components/ItineraryList';
+import EventList from './components/EventList';
 import ItineraryView from './components/ItineraryView';
 import ItineraryCreate from './components/ItineraryCreate';
 import DrawerPanel from './components/DrawerPanel';

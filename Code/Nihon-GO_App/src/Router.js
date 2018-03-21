@@ -66,8 +66,6 @@ const RouterComponent = () => {
 							component = {BlogExpand}
 							title="[Blog Name]" />
 						<Scene 
-							rightTitle="Add"
-							onRight={()=> Actions.itineraryCreate()}
 							key="itineraryList" 
 							component={ItineraryList} 
 							title="Itineraries"/>

@@ -75,7 +75,7 @@ class Drawer extends Component {
 	}
 
 	renderItineraryBtn(){
-		if (Actions.currentScene == "_itinerary") {
+		if (Actions.currentScene == "_itineraryList") {
 			return (
 				<View style={styles.focus}>
 					<DrawerButton icon='globe' iconType='entypo' onPress={() => Actions.itineraryList()}>

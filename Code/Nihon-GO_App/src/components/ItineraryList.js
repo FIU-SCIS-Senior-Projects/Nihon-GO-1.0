@@ -3,6 +3,7 @@ import { ListView, View } from 'react-native';
 import { connect } from 'react-redux';
 import ItineraryPreview from './ItineraryPreview';
 import { Icon } from 'react-native-elements';
+import { Actions } from 'react-native-router-flux';
 
 class ItineraryList extends Component {
 
@@ -30,7 +31,8 @@ class ItineraryList extends Component {
                     name='plus'
                     type='entypo'
                     color='#2196F3'
-                    size={35}
+                    size={30}
+                    onPress={() => {Actions.itineraryCreate()}}
                     />
             </View>
         );
@@ -52,10 +54,9 @@ class ItineraryList extends Component {
 
 const styles = {
     floatingButton: {
-        marginRight: 20,
-        justifyContent: 'flex-end',
-        alignItems: 'flex-end',
-        flex: 1,
+        bottom: 10,
+        right: 10,
+        position: 'absolute',
     },
 };
 

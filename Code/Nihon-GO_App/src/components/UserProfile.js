@@ -1,11 +1,33 @@
 import React, { Component } from 'react';
 import firebase from 'firebase';
-import { View, Text, Image } from 'react-native';
+//import { View, Text, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Card, CardSection, Input } from './common';
 import { userProfileUpdate, userProfileFetch, userProfileImageFetch } from '../actions';
-import { Avatar } from 'react-native-elements';
+import { Avatar, Divider } from 'react-native-elements';
+import LibraryList from './LibraryList'; // TESTING ONLY
+import {
+  Animated,
+  Dimensions,
+  Image,
+  ImageBackground,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {
+  TabBar,
+  TabViewAnimated,
+  TabViewPagerPan,
+  TabViewPagerScroll,
+} from 'react-native-tab-view';
+
+// Gets pictures for profile
+const profilePicture = require('../resources/profilePicture.png');
+const profileBackgroundPicture = require('../resources/profileBackground.jpg');
 
 class UserProfile extends Component {
 	// Gets user profile data
@@ -13,85 +35,263 @@ class UserProfile extends Component {
 		this.props.userProfileFetch();
 	}
 	
-	// Renders user profile
-	render() {
-		const { username, country, languages, description, email } = this.props;
+	static defaultProps = {
+		containerStyle: {},
+		tabContainerStyle: {},
+	}
+	
+	// State of the tabs
+	state = {
+		tabs: {
+			index: 0,
+			routes: [
+				{ key: '1', title: 'ABOUT'},
+				{ key: '2', title: 'ITINERARY'},
+			],
+		},
+	}
+	
+	// Used to handle tabs
+	handleIndexChange = index => {
+		this.setState({
+			tabs: {
+				...this.state.tabs,
+				index,
+			},
+		})
+	}
+	
+	renderHeader = props => {
 		return (
-			<Card style={{borderColor: 'black', borderWidth: 3, borderBottomWidth: 3}}>
-				<CardSection style={{backgroundColor: 'lightgreen'}}>			
-					<Avatar  
-						xlarge 
-						rounded
-						source={{uri: 'https://firebasestorage.googleapis.com/v0/b/nihon-go-fiu.appspot.com/o/UserProfile%2FProfilePicture%2FFloor%20Sticker.png?alt=media&token=61ce1803-1c38-4296-99b4-4da4610bcb94'}} 
-						avatarStyle={{borderColor: 'black', borderWidth: 1, borderRadius: 20}}
+			<TabBar
+				{...props}
+				indicatorStyle={styles.indicatorTab}
+				pressOpacity={0.8}
+				renderLabel={this.renderLabel(props)}
+				style={styles.tabBar}
+			/>
+		)
+	}
+	
+	// Renders correct tab
+	renderScene = ({ route: { key } }) => {
+		switch (key) {
+			case '1':
+				return this.renderAbout()
+			case '2':
+				return this.renderList()
+			default:
+				return <View />
+			}
+	}
+	
+	// Render tab labels
+	renderLabel = props => ({ route, index }) => {
+		const inputRange = props.navigationState.routes.map((x, i) => i)
+		const outputRange = inputRange.map(
+			inputIndex => (inputIndex === index ? 'black' : 'gray')
+		)
+		const color = props.position.interpolate({
+			inputRange,
+			outputRange,
+		})
+
+		return (
+			<View style={styles.tabRow}>
+				<Animated.Text style={[styles.tabLabelText, { color }]}>
+					{route.title}
+				</Animated.Text>
+			</View>
+		)
+	}
+	
+	renderPager = props => {
+		return Platform.OS === 'ios' ? (
+			<TabViewPagerScroll {...props} />
+			) : (
+			<TabViewPagerPan {...props} />
+		)
+	}
+	
+	// Renders profile picture, background picture, and user name
+	renderContactHeader = () => {
+		const { username } = this.props;
+		return (
+			<View style={styles.headerContainer}>
+				<View style={styles.coverContainer}>
+					<ImageBackground
+						source={profileBackgroundPicture}
+						style={styles.coverImage}
+					>
+						<View style={styles.coverTitleContainer}>
+							<Text style={styles.coverTitle} />
+						</View>
+						
+						<View style={styles.coverMetaContainer}>
+							<Text style={styles.coverName}>{username}</Text>
+						</View>
+					</ImageBackground>
+				</View>
+				
+				<View style={styles.profileImageContainer}>
+					<Image
+						source={profilePicture}
+						style={styles.profileImage}
 					/>
-			
-					<View style={{flexDirection: 'column', justifyContent: 'center'}}>
-						<Text style={styles.titleTextStyle}>
-							{username}
-						</Text>
-					
-						<Text style={styles.textStyle}>
-							{country}
-						</Text>
-					
-						<Text style={styles.textStyle}>
-							{languages}
-						</Text>
+				</View>
+			</View>
+		);
+	}
+	
+	// Render about tab - countains user information
+	renderAbout() {
+		const { username, country, languages, description } = this.props;
+		return (
+			<View>
+				<Text style={styles.titleTextStyle}>Bio</Text>
+				<Divider style={{ backgroundColor: 'blue' }} />
+				<Text style={styles.textStyle}>
+					{description}
+				</Text>
+				
+				<Text style={styles.titleTextStyle}>Info</Text>
+				<Divider style={{ backgroundColor: 'blue' }} />
+				<Text style={styles.textStyle}>
+					Name: {username}
+				</Text>
+				<Text style={styles.textStyle}>
+					Country: {country}
+				</Text>
+				<Text style={styles.textStyle}>
+					Languages: {languages}
+				</Text>
+				
+				<Text style={styles.titleTextStyle}>Extra</Text>
+				<Divider style={{ backgroundColor: 'blue' }} />
+				<Text style={styles.textStyle}>
+					Nothing
+				</Text>
+			</View>
+		);
+	}
+	
+	// Renders itinerary list
+	renderList() {
+		return <LibraryList/>
+	}
+	
+	render() {
+		return (
+			<ScrollView style={styles.scroll}>
+				<View style={[styles.container, this.props.containerStyle]}>
+					<View style={styles.cardContainer}>
+						{this.renderContactHeader()}
+						<TabViewAnimated
+							navigationState={this.state.tabs}
+							onIndexChange={this.handleIndexChange}
+							renderHeader={this.renderHeader}
+							renderPager={this.renderPager}
+							renderScene={this.renderScene}
+							style={[styles.tabContainer, this.props.tabContainerStyle]}
+						/>
 					</View>
-				</CardSection>
-				
-				<CardSection style={{backgroundColor: 'lightblue'}}>
-					<Text style={styles.textStyle}>
-						{description}
-					</Text>
-				</CardSection>
-				
-				<CardSection style={{borderBottomWidth: 0, flexDirection: 'column'}}>
-						<Text style={styles.titleTextStyle}>
-							Itineraries:
-						</Text>
-					
-						<Text style={styles.textStyle}>
-							Itinerary 1
-						</Text>
-						<Text style={styles.textStyle}>
-							Itinerary 2
-						</Text>
-						<Text style={styles.textStyle}>
-							Itinerary 3
-						</Text>
-						<Text style={styles.textStyle}>
-							Itinerary 4
-						</Text>
-						<Text style={styles.textStyle}>
-							Itinerary 5
-						</Text>
-				</CardSection>
-			</Card>
+				</View>
+		  </ScrollView>
 		);
 	}
 }
 
 const styles = {
-	titleTextStyle: {
-		fontSize: 20,
-		paddingLeft: 10,
-		fontWeight: 'bold'
+	cardContainer: {
+		flex: 1,
+	},
+	container: {
+		flex: 1,
+	},
+	coverContainer: {
+		marginBottom: 55,
+		position: 'relative',
+	},
+	coverImage: {
+		height: Dimensions.get('window').width * (3 / 4),
+		width: Dimensions.get('window').width,
+	},
+	coverMetaContainer: {
+		backgroundColor: 'transparent',
+		paddingBottom: 10,
+		paddingLeft: 135,
+	},
+	coverName: {
+		color: '#FFF',
+		fontSize: 28,
+		fontWeight: 'bold',
+		paddingBottom: 2,
+	},
+	coverTitle: {
+		color: '#FFF',
+		fontSize: 24,
+		fontWeight: 'bold',
+		textAlign: 'center',
+	},
+	coverTitleContainer: {
+		backgroundColor: 'transparent',
+		flex: 1,
+		justifyContent: 'space-between',
+		paddingTop: 45,
+	},
+	headerContainer: {
+		alignItems: 'center',
+		backgroundColor: '#FFF',
+	},
+	indicatorTab: {
+		backgroundColor: 'transparent',
+	},
+	profileImage: {
+		borderColor: '#FFF',
+		borderRadius: 55,
+		borderWidth: 3,
+		height: 110,
+		width: 110,
+	},
+	profileImageContainer: {
+		bottom: 0,
+		left: 10,
+		position: 'absolute',
+	},
+	scroll: {
+		backgroundColor: '#FFF',
+	},
+	tabBar: {
+		backgroundColor: 'transparent',
+		marginBottom: 20,
+		marginLeft: 130,
+	},
+	tabContainer: {
+		flex: 1,
+		marginBottom: 12,
+		marginTop: -55,
+		position: 'relative',
+		zIndex: 10,
+	},
+	tabRow: {
+		flexWrap: 'wrap',
+		flexDirection: 'row',
+	},
+	tabLabelText: {
+		color: 'black',
+		fontSize: 18,
+		textAlign: 'center',
 	},
 	textStyle: {
 		fontSize: 18,
 		paddingLeft: 10,
 		flexWrap: 'wrap'
 	},
-	imageStyle: {
-		height: 100,
-		width: 100,
-		resizeMode: 'contain',
-		justifyContent: 'center',
-		alignItems: 'center',
-		borderRadius: 100,
-	}
+	titleTextStyle: {
+		fontSize: 20,
+		paddingLeft: 20,
+		fontWeight: 'bold'
+	},
 };
 
 const mapStateToProps = (state) => {

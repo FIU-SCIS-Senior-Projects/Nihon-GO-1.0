@@ -13,7 +13,7 @@ import DrawerPanel from './components/DrawerPanel';
 import BlogForm from './components/BlogForm';
 import BlogExpand from './components/BlogExpand';
 import MapModal from './components/MapModal';
-import { Icon } from 'react-native-elements'
+import { Icon } from 'react-native-elements';
 
 //Needs to be consolidated with other features
 const RouterComponent = () => {

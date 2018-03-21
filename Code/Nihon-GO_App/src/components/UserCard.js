@@ -34,8 +34,7 @@ class UserCard extends Component {
 					<Avatar
 						rounded
 						source={{uri: "https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"}}
-						large
-					/>
+						large/>
 				</View>
 			);
 		} else {
@@ -44,8 +43,7 @@ class UserCard extends Component {
 					<Avatar
 						rounded
 						title="?"
-						large
-					/>
+						large/>
 				</View>
 			);
 		}

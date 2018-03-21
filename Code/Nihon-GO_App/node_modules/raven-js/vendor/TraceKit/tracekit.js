@@ -80,18 +80,18 @@ TraceKit.report = (function reportModuleWrapper() {
     lastExceptionStack = null;
 
   /**
-     * Add a crash handler.
-     * @param {Function} handler
-     */
+   * Add a crash handler.
+   * @param {Function} handler
+   */
   function subscribe(handler) {
     installGlobalHandler();
     handlers.push(handler);
   }
 
   /**
-     * Remove a crash handler.
-     * @param {Function} handler
-     */
+   * Remove a crash handler.
+   * @param {Function} handler
+   */
   function unsubscribe(handler) {
     for (var i = handlers.length - 1; i >= 0; --i) {
       if (handlers[i] === handler) {
@@ -101,17 +101,17 @@ TraceKit.report = (function reportModuleWrapper() {
   }
 
   /**
-     * Remove all crash handlers.
-     */
+   * Remove all crash handlers.
+   */
   function unsubscribeAll() {
     uninstallGlobalHandler();
     handlers = [];
   }
 
   /**
-     * Dispatch stack information to all handlers.
-     * @param {Object.<string, *>} stack
-     */
+   * Dispatch stack information to all handlers.
+   * @param {Object.<string, *>} stack
+   */
   function notifyHandlers(stack, isWindowError) {
     var exception = null;
     if (isWindowError && !TraceKit.collectWindowErrors) {
@@ -135,16 +135,16 @@ TraceKit.report = (function reportModuleWrapper() {
   var _oldOnerrorHandler, _onErrorHandlerInstalled;
 
   /**
-     * Ensures all global unhandled exceptions are recorded.
-     * Supported by Gecko and IE.
-     * @param {string} msg Error message.
-     * @param {string} url URL of script that generated the exception.
-     * @param {(number|string)} lineNo The line number at which the error
-     * occurred.
-     * @param {?(number|string)} colNo The column number at which the error
-     * occurred.
-     * @param {?Error} ex The actual Error object.
-     */
+   * Ensures all global unhandled exceptions are recorded.
+   * Supported by Gecko and IE.
+   * @param {string} msg Error message.
+   * @param {string} url URL of script that generated the exception.
+   * @param {(number|string)} lineNo The line number at which the error
+   * occurred.
+   * @param {?(number|string)} colNo The column number at which the error
+   * occurred.
+   * @param {?Error} ex The actual Error object.
+   */
   function traceKitWindowOnError(msg, url, lineNo, colNo, ex) {
     var stack = null;
     // If 'ex' is ErrorEvent, get real Error from inside
@@ -232,12 +232,12 @@ TraceKit.report = (function reportModuleWrapper() {
   }
 
   /**
-     * Reports an unhandled Error to TraceKit.
-     * @param {Error} ex
-     * @param {?boolean} rethrow If false, do not re-throw the exception.
-     * Only used for window.onerror to not cause an infinite loop of
-     * rethrowing.
-     */
+   * Reports an unhandled Error to TraceKit.
+   * @param {Error} ex
+   * @param {?boolean} rethrow If false, do not re-throw the exception.
+   * Only used for window.onerror to not cause an infinite loop of
+   * rethrowing.
+   */
   function report(ex, rethrow) {
     var args = _slice.call(arguments, 1);
     if (lastExceptionStack) {
@@ -364,26 +364,28 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
   // ex.stacktrace = n/a; see 'opera:config#UserPrefs|Exceptions Have Stacktrace'
 
   /**
-     * Computes stack trace information from the stack property.
-     * Chrome and Gecko use this property.
-     * @param {Error} ex
-     * @return {?Object.<string, *>} Stack trace information.
-     */
+   * Computes stack trace information from the stack property.
+   * Chrome and Gecko use this property.
+   * @param {Error} ex
+   * @return {?Object.<string, *>} Stack trace information.
+   */
   function computeStackTraceFromStackProp(ex) {
     if (typeof ex.stack === 'undefined' || !ex.stack) return;
 
-    var chrome = /^\s*at (.*?) ?\(((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|[a-z]:|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i,
-      gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|resource|\[native).*?|[^@]*bundle)(?::(\d+))?(?::(\d+))?\s*$/i,
-      winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:file|ms-appx(?:-web)|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i,
-      // Used to additionally parse URL/line/column from eval frames
-      geckoEval = /(\S+) line (\d+)(?: > eval line \d+)* > eval/i,
-      chromeEval = /\((\S*)(?::(\d+))(?::(\d+))\)/,
-      lines = ex.stack.split('\n'),
-      stack = [],
-      submatch,
-      parts,
-      element,
-      reference = /^(.*) is undefined$/.exec(ex.message);
+    var chrome = /^\s*at (?:(.*?) ?\()?((?:file|https?|blob|chrome-extension|native|eval|webpack|<anonymous>|[a-z]:|\/).*?)(?::(\d+))?(?::(\d+))?\)?\s*$/i;
+    var winjs = /^\s*at (?:((?:\[object object\])?.+) )?\(?((?:file|ms-appx(?:-web)|https?|webpack|blob):.*?):(\d+)(?::(\d+))?\)?\s*$/i;
+    // NOTE: blob urls are now supposed to always have an origin, therefore it's format
+    // which is `blob:http://url/path/with-some-uuid`, is matched by `blob.*?:\/` as well
+    var gecko = /^\s*(.*?)(?:\((.*?)\))?(?:^|@)((?:file|https?|blob|chrome|webpack|resource|moz-extension).*?:\/.*?|\[native code\]|[^@]*bundle)(?::(\d+))?(?::(\d+))?\s*$/i;
+    // Used to additionally parse URL/line/column from eval frames
+    var geckoEval = /(\S+) line (\d+)(?: > eval line \d+)* > eval/i;
+    var chromeEval = /\((\S*)(?::(\d+))(?::(\d+))\)/;
+    var lines = ex.stack.split('\n');
+    var stack = [];
+    var submatch;
+    var parts;
+    var element;
+    var reference = /^(.*) is undefined$/.exec(ex.message);
 
     for (var i = 0, j = lines.length; i < j; ++i) {
       if ((parts = chrome.exec(lines[i]))) {
@@ -455,18 +457,18 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
   }
 
   /**
-     * Adds information about the first frame to incomplete stack traces.
-     * Safari and IE require this to get complete data on the first frame.
-     * @param {Object.<string, *>} stackInfo Stack trace information from
-     * one of the compute* methods.
-     * @param {string} url The URL of the script that caused an error.
-     * @param {(number|string)} lineNo The line number of the script that
-     * caused an error.
-     * @param {string=} message The error generated by the browser, which
-     * hopefully contains the name of the object that caused the error.
-     * @return {boolean} Whether or not the stack information was
-     * augmented.
-     */
+   * Adds information about the first frame to incomplete stack traces.
+   * Safari and IE require this to get complete data on the first frame.
+   * @param {Object.<string, *>} stackInfo Stack trace information from
+   * one of the compute* methods.
+   * @param {string} url The URL of the script that caused an error.
+   * @param {(number|string)} lineNo The line number of the script that
+   * caused an error.
+   * @param {string=} message The error generated by the browser, which
+   * hopefully contains the name of the object that caused the error.
+   * @return {boolean} Whether or not the stack information was
+   * augmented.
+   */
   function augmentStackTraceWithInitialElement(stackInfo, url, lineNo, message) {
     var initial = {
       url: url,
@@ -505,14 +507,14 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
   }
 
   /**
-     * Computes stack trace information by walking the arguments.caller
-     * chain at the time the exception occurred. This will cause earlier
-     * frames to be missed but is the only way to get any stack trace in
-     * Safari and IE. The top frame is restored by
-     * {@link augmentStackTraceWithInitialElement}.
-     * @param {Error} ex
-     * @return {?Object.<string, *>} Stack trace information.
-     */
+   * Computes stack trace information by walking the arguments.caller
+   * chain at the time the exception occurred. This will cause earlier
+   * frames to be missed but is the only way to get any stack trace in
+   * Safari and IE. The top frame is restored by
+   * {@link augmentStackTraceWithInitialElement}.
+   * @param {Error} ex
+   * @return {?Object.<string, *>} Stack trace information.
+   */
   function computeStackTraceByWalkingCallerChain(ex, depth) {
     var functionName = /function\s+([_$a-zA-Z\xA0-\uFFFF][_$a-zA-Z0-9\xA0-\uFFFF]*)?\s*\(/i,
       stack = [],
@@ -582,10 +584,10 @@ TraceKit.computeStackTrace = (function computeStackTraceWrapper() {
   }
 
   /**
-     * Computes a stack trace for an exception.
-     * @param {Error} ex
-     * @param {(string|number)=} depth
-     */
+   * Computes a stack trace for an exception.
+   * @param {Error} ex
+   * @param {(string|number)=} depth
+   */
   function computeStackTrace(ex, depth) {
     var stack = null;
     depth = depth == null ? 0 : +depth;

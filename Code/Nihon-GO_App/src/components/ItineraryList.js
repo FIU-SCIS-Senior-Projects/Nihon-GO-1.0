@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
-import { ListView } from 'react-native';
+import { ListView, View } from 'react-native';
 import { connect } from 'react-redux';
 import ItineraryPreview from './ItineraryPreview';
+import { Icon } from 'react-native-elements';
+import { Actions } from 'react-native-router-flux';
 
 class ItineraryList extends Component {
 
@@ -19,15 +21,44 @@ class ItineraryList extends Component {
         );
     }
 
+    renderItAddButton(){
+        const { floatingButton } = styles;
+
+        return(
+            <View style={floatingButton}>
+                <Icon
+                    raised
+                    name='plus'
+                    type='entypo'
+                    color='#2196F3'
+                    size={30}
+                    onPress={() => {Actions.itineraryCreate()}}
+                    />
+            </View>
+        );
+    }
+
     render(){
         return (
-            <ListView style={{backgroundColor: '#20A38180'}}
-                dataSource={this.dataSource}
-                renderRow={this.renderRow}
-            />
+            <View style={{flex: 1}}>
+                <ListView style={{backgroundColor: 'black'}}
+                    dataSource={this.dataSource}
+                    renderRow={this.renderRow}
+                />
+                {this.renderItAddButton()}
+            </View>
+
         );
     }  
 }
+
+const styles = {
+    floatingButton: {
+        bottom: 10,
+        right: 10,
+        position: 'absolute',
+    },
+};
 
 const mapStateToProps = state => {
     return { itineraries: state.itineraries };

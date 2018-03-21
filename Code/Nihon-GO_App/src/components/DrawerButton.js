@@ -2,13 +2,13 @@ import React from 'react'
 import { View, Text, TouchableHighlight } from 'react-native'
 import { Icon } from 'react-native-elements'
 
-const DrawerButton = ({ onPress, children, icon }) => {
+const DrawerButton = ({ onPress, children, icon, iconType }) => {
 	const { buttonStyle, textStyle, containerStyle } = styles;
 	
 	return (
 			<TouchableHighlight underlayColor='#95bcf2' onPress={onPress} style={buttonStyle}>
 				<View style={containerStyle}>
-					<Icon name={icon}/>
+					<Icon name={icon} type={iconType}/>
 					<Text style={textStyle}>
 						{children}
 					</Text>

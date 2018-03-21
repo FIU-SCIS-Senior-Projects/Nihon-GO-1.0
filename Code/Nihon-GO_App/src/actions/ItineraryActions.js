@@ -23,8 +23,8 @@ export const itineraryCreate = ({ titleInput, location, description, image, dura
 };
 
 export const selectItinerary = (itineraryId) => {
-	Actions.eventList();
-	console.log("TEST");
+	Actions.itineraryView();
+
 	return {
 		type: 'select_itinerary',
 		payload: itineraryId

@@ -8,7 +8,7 @@ import UserProfile from './components/UserProfile';
 import EditProfile from './components/EditProfile';
 import BlogList from './components/BlogList';
 import ItineraryList from './components/ItineraryList';
-import EventList from './components/EventList';
+import ItineraryView from './components/ItineraryView';
 import ItineraryCreate from './components/ItineraryCreate';
 import DrawerPanel from './components/DrawerPanel';
 import BlogForm from './components/BlogForm';
@@ -66,9 +66,6 @@ const RouterComponent = () => {
 							component = {BlogExpand}
 							title="[Blog Name]" />
 						<Scene 
-							back
-							rightTitle="Add"
-							onRight={()=> Actions.itineraryCreate()}
 							key="itineraryList" 
 							component={ItineraryList} 
 							title="Itineraries"/>
@@ -80,9 +77,11 @@ const RouterComponent = () => {
 							component={ItineraryCreate} 
 							title="Create Itinerary" />
 						<Scene 
-							key="eventList" 
-							component={EventList} 
-							title="Events" />
+							key="itineraryView"
+							back
+							onBack={()=> Actions.itineraryList()}
+							component={ItineraryView} 
+							title="Itinerary - Events" />
 					</Scene>
 			</Scene>
 		</Router>

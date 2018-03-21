@@ -73,12 +73,34 @@ class Drawer extends Component {
 			);
 		}
 	}
+
+	//Renders Itinerary button and focuses button if is current scene
+	renderItineraryBtn(){
+		if (Actions.currentScene == "_itineraryList") {
+			return (
+				<View style={styles.focus}>
+					<DrawerButton icon='globe' iconType='entypo' onPress={() => Actions.itineraryList()}>
+						Itineraries
+					</DrawerButton>
+				</View>
+			);
+		} else {
+			return (
+				<View>
+					<DrawerButton icon='globe' iconType='entypo' onPress={() => Actions.itineraryList()}>
+						Itineraries
+					</DrawerButton>
+				</View>
+			);
+		}
+	}
 	// Renders home all
 	renderButtons() {
 		return (
 			<View style={styles.containerButton}>
 				{this.renderHomeBtn()}
 				{this.renderBlogBtn()}
+				{this.renderItineraryBtn()}
 				{this.renderProfileBtn()}
 			</View>
 		);

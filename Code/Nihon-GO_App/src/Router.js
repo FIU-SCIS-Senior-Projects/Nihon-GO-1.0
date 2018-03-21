@@ -2,13 +2,11 @@ import React from 'react';
 import { View, Text, TouchableHighlight } from 'react-native'
 import { Scene, Router, Actions, Drawer, Lightbox } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
-import LibraryList from './components/LibraryList';
 import HomePage from './components/HomePage';
 import UserProfile from './components/UserProfile';
 import EditProfile from './components/EditProfile';
 import BlogList from './components/BlogList';
 import ItineraryList from './components/ItineraryList';
-import EventList from './components/EventList';
 import ItineraryView from './components/ItineraryView';
 import ItineraryCreate from './components/ItineraryCreate';
 import DrawerPanel from './components/DrawerPanel';
@@ -34,10 +32,6 @@ const RouterComponent = () => {
 								back 
 								component={LoginForm} 
 								title="Please Login" />
-							<Scene 
-								key="itinerary" 
-								component={LibraryList} 
-								title="Itinerary" />
 							<Scene 
 								onRight={() => Actions.editProfile()}
 								rightTitle="Edit"
@@ -69,9 +63,6 @@ const RouterComponent = () => {
 								component = {BlogExpand}
 								title="[Blog Name]" />
 							<Scene 
-								back
-								rightTitle="Add"
-								onRight={()=> Actions.itineraryCreate()}
 								key="itineraryList" 
 								component={ItineraryList} 
 								title="Itineraries"/>
@@ -83,9 +74,11 @@ const RouterComponent = () => {
 								component={ItineraryCreate} 
 								title="Create Itinerary" />
 							<Scene 
-								key="eventList" 
-								component={EventList} 
-								title="Events" />
+								key="itineraryView"
+								back
+								onBack={()=> Actions.itineraryList()}
+								component={ItineraryView} 
+								title="Itinerary - Events" />
 						</Scene>
 				</Scene>
 				<Scene key="mapModal" component={MapModal} />

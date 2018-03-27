@@ -6,6 +6,11 @@ import UserReducer from './UserReducer'; //user profile
 import ItSelectionReducer from './ItSelectionReducer'; //Itinerary
 import ItineraryFormReducer from './ItineraryFormReducer';
 import ItineraryReducer from './ItineraryReducer';
+import BlFormReducer from './BlFormReducer';
+import BlReducer from './BlReducer';
+import BlSelectionReducer from './BlSelectionReducer';
+import BlSubReducer from './BlSubReducer';
+import BlCategoryReducer from './BlCategoryReducer';
 
 export default combineReducers({
 	auth: AuthReducer, //authentication
@@ -14,5 +19,10 @@ export default combineReducers({
 	user: UserReducer, //user profile
 	selectedItineraryId: ItSelectionReducer,
 	itineraries: ItineraryReducer,
-	itineraryForm: ItineraryFormReducer
+	itineraryForm: ItineraryFormReducer,
+	blogForm: BlFormReducer,
+	blogs: BlReducer,
+	selectedBlogId: BlSelectionReducer,
+	subblogs: BlSubReducer,
+	selectedCategory: BlCategoryReducer
 });

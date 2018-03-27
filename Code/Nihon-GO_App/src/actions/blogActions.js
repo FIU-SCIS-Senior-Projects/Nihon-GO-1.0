@@ -13,17 +13,23 @@ export const blogUpdate = ({prop, value}) => {
 
 export const blogForm = ({titleInput, location, description, image, duration}) => {
     return()  =>{
-        firebase.database().ref('blogs')
+        firebase.database().ref('/blogs')
         .push({titleInput,location,description,image, duration})
         .then(() => Actions.pop())
     };
 };
 
 export const selectBlog = (blogId) => {
-    Actions.eventList();
-    constole.log("...");
+    console.log("...");
     return {
         type: 'select_blog',
-        payload: blog
+        payload: blogId
+    };
+}
+export const selectCategory = (category) => {
+    Actions.BlogExpand();
+    return {
+        type: 'select_category',
+        payload: category
     };
 };

@@ -17,36 +17,36 @@ import SubBlogPreview from './components/SubBlogPreview';
 
 const RouterComponent = () => {
 	return (
-		<Router>	
+		<Router>
 			<Scene key="root" hideNavBar>
 				<Scene key="main">
-					<Scene 
-						key="homepage" 
-						component={HomePage} 
-						title="Homepage" 
-						initial 
+					<Scene
+						key="homepage"
+						component={HomePage}
+						title="Homepage"
+						initial
 						onRight={() => Actions.itineraryList()}
 						rightTitle="View Itineraries"/>
 					<Scene key="login" component={LoginForm} title="Please Login" />
 					<Scene key="itinerary" component={LibraryList} title="Itinerary" />
-					<Scene 
+					<Scene
 						onRight={() => Actions.editProfile()}
 						rightTitle="Edit"
-						key="userProfile" 
-						component={UserProfile} 
+						key="userProfile"
+						component={UserProfile}
 						title="User Profile" />
 					<Scene key="editProfile" component={EditProfile} title="Edit Profile" />
-					<Scene 
+					<Scene
 					 	rightTitle="Add Guide"
 						onRight={()=> Actions.BlogForm()}
 						title="Blog"
 						component={BlogList}
-						key="blog" 
+						key="blog"
 					/>
-					<Scene 
-					key="BlogForm" 
+					<Scene
+					key="BlogForm"
 					component = {BlogForm}
-					title="Create Blog" 
+					title="Create Blog"
 					/>
 					<Scene
 					key="BlogExpand"
@@ -54,17 +54,17 @@ const RouterComponent = () => {
 					title="Subcategory"
 					/>
 					<Scene
-					rightTitle="Add Subguide" 
+					rightTitle="Add Subguide"
 					onRight={()=> Actions.BlogForm()} /*Place holder needs its own blog form*/
 					key="SubBlogPreview"
 					component = {SubBlogPreview}
 					title="SubBlogs"
 					/>
-					<Scene 
+					<Scene
 						rightTitle="Add"
 						onRight={()=> Actions.itineraryCreate()}
-						key="itineraryList" 
-						component={ItineraryList} 
+						key="itineraryList"
+						component={ItineraryList}
 						title="Itineraries"
 					/>
 					<Scene key="itineraryCreate" component={ItineraryCreate} title="Create Itinerary" />

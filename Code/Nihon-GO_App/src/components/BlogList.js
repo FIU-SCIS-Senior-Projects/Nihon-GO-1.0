@@ -1,39 +1,37 @@
 import React, { Component } from 'react';
-import {View, Text, ScrollView, StyleSheet, FlatList} from 'react-native';
+import {View, Text, ScrollView, StyleSheet, ListView} from 'react-native';
 import {connect} from 'react-redux';
-import data from '../reducers/LibraryList.json';
 import BlogPreview from './BlogPreview';
 import { BlogButton, BlogButtonPlus } from './common';
 
 class BlogList extends Component 
 {
-    state={ blogs: [] };
-
     componentWillMount()
     {
-        this.setState ({ blogs: data });
+            const ds = new ListView.DataSource({
+                rowHasChanged: (r1, r2) => r1 != r2
+            });
+
+            this.dataSource = ds.cloneWithRows(this.props.blogs);
     }
     
-    renderBlogs()
+    renderRow(blog)
     {
-        return this.state.blogs.map(blog => /*<Text>{blog.title}</Text>);*/
-            <BlogPreview key={blog.location} blogItem={blog}/>
+        return(
+            <BlogPreview blog={blog.category}/>
         ); 
     }    
     
     render()
     {
         return (
-            <ScrollView style={[styles.viewColor,styles.spacingView]}>
-                 {this.renderBlogs()}
-                        
-            <BlogButtonPlus>
-                Load More
-            </BlogButtonPlus>
-            </ScrollView>
+            <ListView style={{backgroundColor: '#D4DBDA',paddingTop:60}}
+            dataSource={this.dataSource}
+            renderRow={this.renderRow}
+            />
         );
     }  
-};
+}
 
     const styles = {
         viewColor: {          
@@ -47,5 +45,8 @@ class BlogList extends Component
         },
         };
 
-        
-export default BlogList;
+ const mapStateToProps = state => {
+    return { blogs: state.blogs};
+};     
+
+export default connect(mapStateToProps)(BlogList);

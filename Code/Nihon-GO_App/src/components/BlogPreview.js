@@ -1,36 +1,44 @@
-import React from 'react';
+import React, {Component} from 'react';
 import {Text, View, TouchableOpacity , Image} from 'react-native';
-import { 
-    BlogCardSection, 
-    BlogButton, 
+import {
+    BlogCardSection,
+    BlogButton,
     BlogButtonPlus,
     BlogCard,
     BlogHeader,
     BlogExpand } from './common';
-import { Actions} from 'react-native-router-flux';
+import * as actions from '../actions';
 import {ListView } from 'react-native';
+import { connect } from 'react-redux';
+import { Actions } from 'react-native-router-flux';
 
-const BlogPreview = (props) => {
-    return(
+
+class BlogPreview extends Component {
+    constructor(props){
+        super(props);
+    }
+
+
+    render(){
+        const {titleStyle, captionStyle } = styles;
+        const { id, image, category } = this.props.blog;
+  return(
         <BlogCard >
-        <BlogCardSection /*onPress={Actions.BlogExpand()*/ >
+        <BlogCardSection >
         <View style={styles.imageContainerStyle}>
             <View >
-                <Image style={styles.imageStyle} 
-                    source={ { uri: props.blogItem.image } } />
+                <Image style={styles.imageStyle}
+                    source={ { uri: image } } />
             </View>
             <View style={styles.textContainerStyle}>
                 <Text style={styles.titleText}>
-                    {props.blogItem.location}
-                </Text>
-                <Text style={styles.captionText}>
-                    {props.blogItem.description}
+                    {category}
                 </Text>
             </View>
         </View>
         </BlogCardSection>
         <BlogCardSection >
-            <BlogButton onPress={ () => Actions.BlogExpand()}>
+            <BlogButton onPress={ () => this.props.selectCategory(this.props.blog.category)}>
                 View
             </BlogButton>
             <BlogButton >
@@ -39,6 +47,7 @@ const BlogPreview = (props) => {
         </BlogCardSection>
         </BlogCard>
     );
+}
 };
 
 
@@ -81,5 +90,8 @@ const styles = {
 
 };
 
+const mapStateToProps = state => {
+    return { selectedBlogId: state.selectedBlogId };
+};
 
-export default BlogPreview;
+export default connect(mapStateToProps, actions)(BlogPreview);

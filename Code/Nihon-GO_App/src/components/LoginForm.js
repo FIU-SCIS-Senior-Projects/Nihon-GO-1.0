@@ -63,12 +63,12 @@ class LoginForm extends Component {
 		}
 	}
 	
-	// Runs after user presses guest button
+	// Runs after user presses guest button NO LONGER USED
 	onGuestPress() {
 		this.props.guestUser();
 	}
 	
-	// Runs after user presses logout button
+	// Runs after user presses logout button NO LONGER USED
 	onLogoutPress() {
 		this.props.logoutUser();
 	}

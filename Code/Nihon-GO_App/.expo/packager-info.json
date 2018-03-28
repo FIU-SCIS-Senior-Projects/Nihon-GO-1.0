@@ -1,8 +1,8 @@
 {
-  "expoServerPort": null,
+  "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 13792,
+  "packagerPid": 6012,
   "expoServerNgrokUrl": "https://gv-dsn.daeddy.nihon-go-app.exp.direct",
   "packagerNgrokUrl": "https://packager.gv-dsn.daeddy.nihon-go-app.exp.direct",
-  "ngrokPid": 8144
+  "ngrokPid": 11672
 }

@@ -21,10 +21,10 @@ const styles = {
 	textStyle: {
 		textAlign:'left',
 		textAlignVertical: 'center',
-		marginLeft: 5,
+		marginLeft: 15,
 		flex: 1,
-		fontSize: 20,
-		fontWeight: '600'
+		fontSize: 15,
+		fontWeight: '400'
 	},
 	buttonStyle: {
 		height:50,

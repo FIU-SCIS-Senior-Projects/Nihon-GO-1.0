@@ -115,7 +115,7 @@ class Drawer extends Component {
 	}
 	render() {
 		return (
-			<View>
+			<View style={styles.background}>
 				{this.renderUserCard()}
 				{this.renderButtons()}
 			</View>
@@ -135,10 +135,14 @@ const styles = {
 		justifyContent:'flex-start',
 		height: 150,
 		elevation: 1,
-		backgroundColor: '#cccccc',
+		backgroundColor: '#4fc3f7',
 	},
 	focus: {
-		backgroundColor: '#95bcf2',
+		backgroundColor: '#efefef',
+	},
+	background: {
+		flex:1,
+		backgroundColor: 'white',
 	}
 };
 

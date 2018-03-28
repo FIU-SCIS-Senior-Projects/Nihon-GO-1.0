@@ -74,6 +74,7 @@ class Drawer extends Component {
 		}
 	}
 
+	//Renders Itinerary button and focuses button if is current scene
 	renderItineraryBtn(){
 		if (Actions.currentScene == "_itineraryList") {
 			return (
@@ -93,7 +94,6 @@ class Drawer extends Component {
 			);
 		}
 	}
-
 	// Renders home all
 	renderButtons() {
 		return (

@@ -5,7 +5,6 @@ import {View,
         TouchableWithoutFeedback, 
         TouchableOpacity,
         ScrollView } from 'react-native';
-import { EventView } from './EventView';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 import { Card } from './common/index';

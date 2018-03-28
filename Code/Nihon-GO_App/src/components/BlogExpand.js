@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {Text, View, TouchableOpacity } from 'react-native';
 import { ImageCard, CaptionBox } from './common/index';
-import { EventView } from './EventView';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 

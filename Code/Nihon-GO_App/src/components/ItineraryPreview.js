@@ -6,7 +6,6 @@ import {Text,
         UIManager, 
         LayoutAnimation } from 'react-native';
 import { ImageCard, CaptionBox, CountingIcon } from './common/index';
-import { EventView } from './EventView';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 import { LinearGradient } from 'expo';
@@ -17,7 +16,7 @@ class ItineraryPreview extends Component {
         super(props);
         this.state = {
             expandedItinerary: false
-        };
+        }; 
     }
     componentWillUpdate() {
         var CustomLayoutLinear = {

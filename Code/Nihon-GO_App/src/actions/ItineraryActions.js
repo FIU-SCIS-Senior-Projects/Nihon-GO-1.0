@@ -23,10 +23,10 @@ export const itineraryCreate = ({ titleInput, location, description, image, dura
 };
 
 export const selectItinerary = (itineraryId) => {
-    Actions.itineraryView();
+	Actions.itineraryView();
 
-    return {
-        type: 'select_itinerary',
-        payload: itineraryId
-    };
-}
+	return {
+		type: 'select_itinerary',
+		payload: itineraryId
+	};
+};

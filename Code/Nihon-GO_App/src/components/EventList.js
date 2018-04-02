@@ -16,7 +16,7 @@ class EventList extends Component {
     
     renderRow(event){
         return(
-            <EventPreview event={event}/>
+            <EventPreview event={event} mode={'start'}/>
         );
     }
 

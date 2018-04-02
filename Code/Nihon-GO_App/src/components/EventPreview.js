@@ -27,30 +27,32 @@ class EventPreview extends Component {
     }
 
     renderButton(){
-        if (this.state.completedEvent)
-        {
-            return(
-                <Button 
-                    fontColor='white'
-                    onPress={()=>{this.toggleCompleted()}}
-                    style={{
-                        justifyContent: 'center',
-                        alignItems:'center',
-                        backgroundColor: '#007aff'}}>
-                    Not Done
-                </Button>
-            );
-        }
-        else{
-            return(
-                <Button 
-                    onPress={()=>{this.toggleCompleted()}}
-                    style={{
-                        justifyContent: 'center',
-                        alignItems:'center'}}>
-                    Done
-                </Button>
-            );
+        if (this.props.mode === 'start'){
+            if (this.state.completedEvent)
+            {
+                return(
+                    <Button 
+                        fontColor='white'
+                        onPress={()=>{this.toggleCompleted()}}
+                        style={{
+                            justifyContent: 'center',
+                            alignItems:'center',
+                            backgroundColor: '#007aff'}}>
+                        Not Done
+                    </Button>
+                );
+            }
+            else{
+                return(
+                    <Button 
+                        onPress={()=>{this.toggleCompleted()}}
+                        style={{
+                            justifyContent: 'center',
+                            alignItems:'center'}}>
+                        Done
+                    </Button>
+                );
+            }
         }
     }
 
@@ -110,47 +112,41 @@ class EventPreview extends Component {
         const { avatarStyle, titleStyle, descriptionStyle } = styles;
 
         return(
-            <Card style={{
-                marginTop: 5, 
-                marginBottom: 5,
-                marginRight: 15, 
-                flexDirection: 'row', 
-                flex: 1}}>
-                <View style={avatarStyle}>
-                    <Avatar
-                        large
-                        rounded
-                        source={{uri: image}}
-                        activeOpacity={0.7}
-                        />
-                </View>
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    <View style={{flexDirection: 'column', flex: 3}}>
-                        <Text numberOfLines={1} style={titleStyle}>{title}</Text>
-                        <Text numberOfLines={1} style={descriptionStyle}>
-                            {address}
-                        </Text>
-                    </View>
-                    <View style={{flex: 1, justifyContent: 'space-around'}}>
-                    <Text style={[descriptionStyle, {marginTop: 10}]}>{duration} days</Text>
-                    <TouchableOpacity onPress={() => {this.toggleExpand()}}>
-                        <View style={{marginBottom: 10}}>
-                            <Icon
-                            name='ellipsis-h'
-                            type='font-awesome'
-                            color='black'
-                            size={35}
-                            />
+            <View style={{flex:1}}>
+                <TouchableOpacity onPress={() => {this.toggleExpand()}}>
+                    <Card style={{
+                        marginTop: 5, 
+                        marginBottom: 5,
+                        marginRight: 15, 
+                        flexDirection: 'row', 
+                        flex: 1,
+                        backgroundColor: 'white'}}>
+                        <View style={avatarStyle}>
+                            <Avatar
+                                large
+                                rounded
+                                source={{uri: image}}
+                                activeOpacity={0.7}
+                                />
                         </View>
-                    </TouchableOpacity>
-                </View>
-                </View>
-            </Card>
+                        <View style={{flex: 1, flexDirection: 'row'}}>
+                            <View style={{flexDirection: 'column', flex: 3}}>
+                                <Text numberOfLines={1} style={titleStyle}>{title}</Text>
+                                <Text numberOfLines={1} style={descriptionStyle}>
+                                    {address}
+                                </Text>
+                            </View>
+                            <View style={{flex: 1, justifyContent: 'space-around'}}>
+                            <Text style={[descriptionStyle, {marginTop: 10}]}>{duration} days</Text>
+                        </View>
+                        </View>
+                    </Card>
+                </TouchableOpacity>
+            </View>
         );
     }
 
     renderTimeLine(){
-
         if(this.state.completedEvent)
         {
             return(
@@ -173,11 +169,55 @@ class EventPreview extends Component {
         }
     }
 
+    renderEditing(){
+        return(
+            <View style={{flex: 1, flexDirection: 'row'}}>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <TouchableOpacity onPress={()=> this.onEditPress()}>
+                        <Icon
+                            name='edit'
+                            size={35}
+                            />
+                    </TouchableOpacity>
+                </View>
+                {this.renderCard()}
+            </View>
+        );
+    }
+
+    onEditPress(){
+        //Need to complete
+    }
+
+    decideMode(){
+        if (this.props.mode==='edit'){
+            return(
+                <View>
+                    {this.renderEditing()}
+                </View>
+            );
+        }
+        else if (this.props.mode==='start'){
+            return(
+                <View>
+                    {this.renderTimeLine()}
+                </View>
+            );
+        }
+        else {
+            return(
+                <View>
+                    {this.renderCard()}
+                </View>
+            );
+        }
+    }
+
     render(){
         return(
             <View>
                 {this.renderModal()}
-                {this.renderTimeLine()}
+                {this.decideMode()}
             </View>
         );
     }

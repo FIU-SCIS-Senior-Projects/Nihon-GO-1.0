@@ -69,8 +69,6 @@ const RouterComponent = () => {
 							<Scene 
 								key="itineraryCreate" 
 								back 
-								onBack={()=> 
-								Actions.itineraryList()} 
 								component={ItineraryCreate} 
 								title="Create Itinerary" />
 							<Scene 
@@ -92,6 +90,7 @@ const RouterComponent = () => {
 const headerStyle = {
   paddingTop: 20,
   height: 75,
+  backgroundColor:'#4fc3f7'
 };
 
 export default RouterComponent;

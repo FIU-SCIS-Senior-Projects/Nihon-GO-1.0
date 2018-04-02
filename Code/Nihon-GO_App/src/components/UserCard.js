@@ -11,8 +11,8 @@ import {
 	logoutUser,
 	userProfileFetch
 } from '../actions';
-import { Card, CardSection, Input, Button, Spinner } from './common';
-import { Icon, Avatar } from 'react-native-elements'
+import { Card, CardSection, Input, Spinner } from './common';
+import { Icon, Avatar, Button } from 'react-native-elements'
 
 class UserCard extends Component {
 	// Gets user profile data
@@ -70,9 +70,12 @@ class UserCard extends Component {
 		else {
 			return (
 				<View style={styles.btnContainer}>
-					<Button onPress={() => Actions.login()}>
-						Sign in / Register
-					</Button>
+					<Button
+						backgroundColor='#8bf6ff'
+						color='black'
+						raised
+						title='SIGN IN'
+						onPress={() => Actions.login()}/>
 				</View>
 			);
 		}
@@ -97,8 +100,9 @@ const styles = {
 	},
 	btnContainer: {
 		flex: 1,
+		paddingRight: 0,
 		padding: 12,
-		paddingBottom: 40
+		paddingBottom: 40,
 	},
 	textContainer: {
 		marginLeft: 12,

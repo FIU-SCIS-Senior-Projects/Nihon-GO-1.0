@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import ItineraryPreview from './ItineraryPreview';
 import { Icon } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
+import ActionBtn from './ActionBtn';
 
 class ItineraryList extends Component {
 
@@ -45,7 +46,7 @@ class ItineraryList extends Component {
                     dataSource={this.dataSource}
                     renderRow={this.renderRow}
                 />
-                {this.renderItAddButton()}
+                <ActionBtn />
             </View>
 
         );

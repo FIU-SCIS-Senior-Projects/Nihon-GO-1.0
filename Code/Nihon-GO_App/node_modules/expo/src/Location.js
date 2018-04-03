@@ -81,12 +81,14 @@ function getCurrentPositionAsync(options: LocationOptions): Promise<LocationData
           resolve(location);
           done = true;
         }
-        subscription.remove();
+        subscription && subscription.remove();
+        subscription = null;
       });
 
       // In case the callback is fired before we get here.
       if (done) {
-        subscription.remove();
+        subscription && subscription.remove();
+        subscription = null;
       }
     } catch (e) {
       reject(e);

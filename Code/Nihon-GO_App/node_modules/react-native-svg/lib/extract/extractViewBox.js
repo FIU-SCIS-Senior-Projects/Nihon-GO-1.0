@@ -1,9 +1,3 @@
-
-import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import createReactNativeComponentClass from 'react-native/Libraries/Renderer/shims/createReactNativeComponentClass.js';
-import {ViewBoxAttributes} from '../attributes';
-
 const meetOrSliceTypes = {
     meet: 0,
     slice: 1,
@@ -11,10 +5,16 @@ const meetOrSliceTypes = {
 };
 
 const alignEnum = [
-    'xMinYMin', 'xMidYMin', 'xMaxYMin',
-    'xMinYMid', 'xMidYMid', 'xMaxYMid',
-    'xMinYMax', 'xMidYMax', 'xMaxYMax',
-    'none'
+    "xMinYMin",
+    "xMidYMin",
+    "xMaxYMin",
+    "xMinYMid",
+    "xMidYMid",
+    "xMaxYMid",
+    "xMinYMax",
+    "xMidYMax",
+    "xMaxYMax",
+    "none"
 ].reduce((prev, name) => {
     prev[name] = name;
     return prev;
@@ -22,8 +22,8 @@ const alignEnum = [
 
 const spacesRegExp = /\s+/;
 
-export default function (props) {
-    const {viewBox, preserveAspectRatio} = props;
+export default function(props) {
+    const { viewBox, preserveAspectRatio } = props;
 
     if (!viewBox) {
         return null;
@@ -31,15 +31,17 @@ export default function (props) {
 
     let params = viewBox.trim().split(spacesRegExp);
 
-    if (params.length === 4 &&  params.every(param => !isNaN(+params))) {
-        console.warn('Invalid `viewBox` prop:' + viewBox);
+    if (params.length === 4 && params.every(param => !isNaN(+params))) {
+        console.warn("Invalid `viewBox` prop:" + viewBox);
         return null;
     }
 
-    let modes = preserveAspectRatio ? preserveAspectRatio.trim().split(spacesRegExp) : [];
+    let modes = preserveAspectRatio
+        ? preserveAspectRatio.trim().split(spacesRegExp)
+        : [];
 
     let meetOrSlice = meetOrSliceTypes[modes[1]] || 0;
-    let align = alignEnum[modes[0]] || 'xMidYMid';
+    let align = alignEnum[modes[0]] || "xMidYMid";
 
     return {
         minX: +params[0],
@@ -48,10 +50,7 @@ export default function (props) {
         vbHeight: +params[3],
         align,
         meetOrSlice
-    }
+    };
 }
 
-export {
-    meetOrSliceTypes,
-    alignEnum
-};
+export { meetOrSliceTypes, alignEnum };

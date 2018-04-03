@@ -137,7 +137,7 @@ class Map extends Component {
 							fontSize="10.47749996"
 							fontWeight="bold"
 							x="99.646889"
-							y="35"
+							y="45"
 						>HOKKAIDO</Text>
 						<Path
 							d="m 131.9277,48.543578 40.74791,7.673307"
@@ -164,7 +164,7 @@ class Map extends Component {
 							fontSize="10.47749996"
 							fontWeight="bold"
 							x="114.19971"
-							y="94"
+							y="104"
 						>TOHOKU</Text>
 						<Path
 							d="m 132.98609,107.28407 v 14.02364 l 21.69694,6.08572"
@@ -191,7 +191,7 @@ class Map extends Component {
 							fontSize="10.47749996"
 							fontWeight="bold"
 							x="85.048386"
-							y="130.09407"
+							y="140.09407"
 						>CHUBU</Text>
 						<Path
 							d="m 104.49469,142.45688 5.23875,14.93044"
@@ -218,7 +218,7 @@ class Map extends Component {
 							fontSize="10.47749996"
 							fontWeight="bold"
 							x="174.2632"
-							y="175.07555"
+							y="185.07555"
 						>KANTO</Text>
 						<Path
 							d="m 173.4694,181.63578 h -8.99629"
@@ -245,7 +245,7 @@ class Map extends Component {
 							fontSize="10.47749996"
 							fontWeight="bold"
 							x="92.78082"
-							y="225.25584"
+							y="235.25584"
 						>KANSAI</Text>
 						<Path
 							d="m 100.30369,216.32325 10.73944,10.21557"
@@ -272,7 +272,7 @@ class Map extends Component {
 							fontSize="10.47749996"
 							fontWeight="bold"
 							x="34.708969"
-							y="156.56439"
+							y="166.56439"
 						>CHUGOKU</Text>
 						<Path
 							d="M 55.512375,182.79525 V 168.38869"
@@ -299,7 +299,7 @@ class Map extends Component {
 							fontSize="10.47749996"
 							fontWeight="bold"
 							x="38.789612"
-							y="234.87442"
+							y="244.87442"
 						>SHIKOKU</Text>
 						<Path
 							d="m 59.957363,236.14273 -2.64597,-11.11307"
@@ -326,7 +326,7 @@ class Map extends Component {
 							fontSize="10.47749996"
 							fontWeight="bold"
 							x="0"
-							y="175.07555"
+							y="185.07555"
 						>KYUSHU</Text>
 						<Path
 							d="m 7.5671883,187.45691 0.2645962,21.43235"
@@ -360,7 +360,7 @@ class Map extends Component {
 							fontSize="10.47749996"
 							fontWeight="bold"
 							x="180.64085"
-							y="243.34154"
+							y="253.34154"
 						>OKINAWA</Text>
 					</G>
 			</Svg>

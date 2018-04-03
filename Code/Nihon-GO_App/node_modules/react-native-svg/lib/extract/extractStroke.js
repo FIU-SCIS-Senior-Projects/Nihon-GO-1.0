@@ -1,8 +1,7 @@
-import extractBrush from './extractBrush';
-import extractOpacity from './extractOpacity';
-import {strokeProps} from '../props'
-
-const separator = /\s*,\s*/;
+import extractBrush from "./extractBrush";
+import extractOpacity from "./extractOpacity";
+import { strokeProps } from "../props";
+import extractLengthList from "./extractLengthList";
 
 const caps = {
     butt: 0,
@@ -19,23 +18,30 @@ const joins = {
 const strokeKeys = Object.keys(strokeProps);
 
 export default function(props, styleProperties) {
-    strokeKeys.forEach((name) => {
+    strokeKeys.forEach(name => {
         if (props.hasOwnProperty(name)) {
             styleProperties.push(name);
         }
     });
 
-    const {stroke} = props;
-    const strokeWidth = +props.strokeWidth;
-    let strokeDasharray = props.strokeDasharray;
+    const { stroke } = props;
+    let { strokeWidth, strokeDasharray } = props;
 
-    if (typeof strokeDasharray === 'string') {
-        strokeDasharray = strokeDasharray.split(separator).map(dash => +dash);
+    if (!strokeDasharray || strokeDasharray === "none") {
+        strokeDasharray = null;
+    } else {
+        // <dasharray> It's a list of comma and/or white space separated <length>s
+        // and <percentage>s that specify the lengths of alternating dashes and gaps.
+        // If an odd number of values is provided, then the list of values is repeated
+        // to yield an even number of values. Thus, 5,3,2 is equivalent to 5,3,2,5,3,2.
+        strokeDasharray = extractLengthList(strokeDasharray);
+        if (strokeDasharray && strokeDasharray.length % 2 === 1) {
+            strokeDasharray = strokeDasharray.concat(strokeDasharray);
+        }
     }
 
-    // strokeDasharray length must be more than 1.
-    if (strokeDasharray && strokeDasharray.length === 1) {
-        strokeDasharray.push(strokeDasharray[0]);
+    if (!strokeWidth || typeof strokeWidth !== "string") {
+        strokeWidth = `${strokeWidth || 1}`;
     }
 
     return {
@@ -43,9 +49,9 @@ export default function(props, styleProperties) {
         strokeOpacity: extractOpacity(props.strokeOpacity),
         strokeLinecap: caps[props.strokeLinecap] || 0,
         strokeLinejoin: joins[props.strokeLinejoin] || 0,
-        strokeDasharray: strokeDasharray || null,
-        strokeWidth: strokeWidth || null,
-        strokeDashoffset: strokeDasharray ? (+props.strokeDashoffset || 0) : null,
+        strokeDasharray: strokeDasharray,
+        strokeWidth: strokeWidth,
+        strokeDashoffset: strokeDasharray ? +props.strokeDashoffset || 0 : null,
         strokeMiterlimit: props.strokeMiterlimit || 4
     };
 }

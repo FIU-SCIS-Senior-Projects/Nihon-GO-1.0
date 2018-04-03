@@ -171,7 +171,7 @@ export class Recording {
   _finalDurationMillis: number;
   _uri: ?string;
   _onRecordingStatusUpdate: ?(status: RecordingStatus) => void;
-  _progressUpdateTimeoutVariable: ?number;
+  _progressUpdateTimeoutVariable: ?TimeoutID;
   _progressUpdateIntervalMillis: number;
   _options: ?RecordingOptions;
 

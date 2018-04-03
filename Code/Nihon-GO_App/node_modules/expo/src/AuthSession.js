@@ -112,12 +112,7 @@ function getRedirectUrl(): string {
 }
 
 function getDefaultReturnUrl(): string {
-  // TODO: remove this when we make Constants.linkingUrl consistent everywhere
-  if (Platform.OS === 'android' && Constants.appOwnership === 'standalone') {
-    return `${Constants.linkingUrl}+expo-auth-session`;
-  } else {
-    return `${Constants.linkingUrl}expo-auth-session`;
-  }
+  return `${Constants.linkingUrl}expo-auth-session`;
 }
 
 function parseUrl(url: string): { errorCode: ?string, params: Object } {

@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2015-present, Horcrux.
  * All rights reserved.
  *
@@ -9,15 +9,10 @@
 
 package com.horcrux.svg;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import android.graphics.Canvas;
 import android.graphics.DashPathEffect;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.Region;
 
@@ -32,9 +27,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Renderable shadow node
  */
+@SuppressWarnings("WeakerAccess")
 abstract public class RenderableShadowNode extends VirtualNode {
 
     // strokeLinecap
@@ -52,9 +51,9 @@ abstract public class RenderableShadowNode extends VirtualNode {
     private static final int FILL_RULE_NONZERO = 1;
 
     public @Nullable ReadableArray mStroke;
-    public @Nullable float[] mStrokeDasharray;
+    public @Nullable String[] mStrokeDasharray;
 
-    public float mStrokeWidth = 1;
+    public String mStrokeWidth = "1";
     public float mStrokeOpacity = 1;
     public float mStrokeMiterlimit = 4;
     public float mStrokeDashoffset = 0;
@@ -65,8 +64,6 @@ abstract public class RenderableShadowNode extends VirtualNode {
     public @Nullable ReadableArray mFill;
     public float mFillOpacity = 1;
     public Path.FillType mFillRule = Path.FillType.WINDING;
-
-    protected Path mPath;
 
     private @Nullable ReadableArray mLastMergedList;
     private @Nullable ArrayList<Object> mOriginProperties;
@@ -98,7 +95,6 @@ abstract public class RenderableShadowNode extends VirtualNode {
                         "fillRule " + mFillRule + " unrecognized");
         }
 
-        mPath = null;
         markUpdated();
     }
 
@@ -116,24 +112,26 @@ abstract public class RenderableShadowNode extends VirtualNode {
 
     @ReactProp(name = "strokeDasharray")
     public void setStrokeDasharray(@Nullable ReadableArray strokeDasharray) {
-
-        mStrokeDasharray = PropHelper.toFloatArray(strokeDasharray);
-        if (mStrokeDasharray != null && mStrokeDasharray.length > 0) {
-            for (int i = 0; i < mStrokeDasharray.length; i++) {
-                mStrokeDasharray[i] = mStrokeDasharray[i] * mScale;
+        if (strokeDasharray != null) {
+            int fromSize = strokeDasharray.size();
+            mStrokeDasharray = new String[fromSize];
+            for (int i = 0; i < fromSize; i++) {
+                mStrokeDasharray[i] = strokeDasharray.getString(i);
             }
+        } else {
+            mStrokeDasharray = null;
         }
         markUpdated();
     }
 
-    @ReactProp(name = "strokeDashoffset", defaultFloat = 0f)
+    @ReactProp(name = "strokeDashoffset")
     public void setStrokeDashoffset(float strokeWidth) {
         mStrokeDashoffset = strokeWidth * mScale;
         markUpdated();
     }
 
-    @ReactProp(name = "strokeWidth", defaultFloat = 1f)
-    public void setStrokeWidth(float strokeWidth) {
+    @ReactProp(name = "strokeWidth")
+    public void setStrokeWidth(String strokeWidth) {
         mStrokeWidth = strokeWidth;
         markUpdated();
     }
@@ -201,10 +199,13 @@ abstract public class RenderableShadowNode extends VirtualNode {
         opacity *= mOpacity;
 
         if (opacity > MIN_OPACITY_FOR_DRAW) {
-            mPath = getPath(canvas, paint);
-            mPath.setFillType(mFillRule);
+            if (mPath == null) {
+                mPath = getPath(canvas, paint);
+                mPath.setFillType(mFillRule);
+            }
 
             clip(canvas, paint);
+
             if (setupFillPaint(paint, opacity * mFillOpacity)) {
                 canvas.drawPath(mPath, paint);
             }
@@ -218,10 +219,10 @@ abstract public class RenderableShadowNode extends VirtualNode {
      * Sets up paint according to the props set on a shadow view. Returns {@code true}
      * if the fill should be drawn, {@code false} if not.
      */
-    protected boolean setupFillPaint(Paint paint, float opacity) {
+    private boolean setupFillPaint(Paint paint, float opacity) {
         if (mFill != null && mFill.size() > 0) {
             paint.reset();
-            paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+            paint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
             paint.setStyle(Paint.Style.FILL);
             setupPaint(paint, opacity, mFill);
             return true;
@@ -233,27 +234,32 @@ abstract public class RenderableShadowNode extends VirtualNode {
      * Sets up paint according to the props set on a shadow view. Returns {@code true}
      * if the stroke should be drawn, {@code false} if not.
      */
-    protected boolean setupStrokePaint(Paint paint, float opacity) {
+    private boolean setupStrokePaint(Paint paint, float opacity) {
         paint.reset();
-        if (mStrokeWidth == 0 || mStroke == null || mStroke.size() == 0) {
+        double strokeWidth = relativeOnOther(mStrokeWidth);
+        if (strokeWidth == 0 || mStroke == null || mStroke.size() == 0) {
             return false;
         }
 
-        paint.setFlags(Paint.ANTI_ALIAS_FLAG);
+        paint.setFlags(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeCap(mStrokeLinecap);
         paint.setStrokeJoin(mStrokeLinejoin);
         paint.setStrokeMiter(mStrokeMiterlimit * mScale);
-        paint.setStrokeWidth(mStrokeWidth * mScale);
+        paint.setStrokeWidth((float) strokeWidth);
         setupPaint(paint, opacity, mStroke);
 
-        if (mStrokeDasharray != null && mStrokeDasharray.length > 0) {
-            paint.setPathEffect(new DashPathEffect(mStrokeDasharray, mStrokeDashoffset));
+        if (mStrokeDasharray != null) {
+            int length = mStrokeDasharray.length;
+            float[] intervals = new float[length];
+            for (int i = 0; i < length; i++) {
+                intervals[i] = (float)relativeOnOther(mStrokeDasharray[i]);
+            }
+            paint.setPathEffect(new DashPathEffect(intervals, mStrokeDashoffset));
         }
 
         return true;
     }
-
 
     private void setupPaint(Paint paint, float opacity, ReadableArray colors) {
         int colorType = colors.getInt(0);
@@ -265,69 +271,81 @@ abstract public class RenderableShadowNode extends VirtualNode {
                     (int) (colors.getDouble(2) * 255),
                     (int) (colors.getDouble(3) * 255));
         } else if (colorType == 1) {
-            RectF box = new RectF();
-            mPath.computeBounds(box, true);
-
             Brush brush = getSvgShadowNode().getDefinedBrush(colors.getString(1));
             if (brush != null) {
-                brush.setupPaint(paint, box, mScale, opacity);
+                if (mBox == null) {
+                    mBox = new RectF();
+                    mPath.computeBounds(mBox, true);
+                }
+                brush.setupPaint(paint, mBox, mScale, opacity);
             }
         }
 
     }
-
 
     abstract protected Path getPath(Canvas canvas, Paint paint);
 
     @Override
-    public int hitTest(Point point, @Nullable Matrix matrix) {
-        if (mPath == null) {
+    public int hitTest(final float[] src) {
+        if (mPath == null || !mInvertible) {
             return -1;
         }
 
-        Matrix pathMatrix = new Matrix(mMatrix);
+        float[] dst = new float[2];
+        mInvMatrix.mapPoints(dst, src);
+        int x = Math.round(dst[0]);
+        int y = Math.round(dst[1]);
 
-        if (matrix != null) {
-            pathMatrix.postConcat(matrix);
+        if (mRegion == null) {
+            mRegion = getRegion(mPath);
+        }
+        if (!mRegion.contains(x, y)) {
+            return -1;
         }
 
-        if (pathContainsPoint(mPath, pathMatrix, point)) {
-            Path clipPath = getClipPath();
-            if (clipPath != null && !pathContainsPoint(clipPath, pathMatrix, point)) {
-               return -1;
+        Path clipPath = getClipPath();
+        if (clipPath != null) {
+            if (mClipRegionPath != clipPath) {
+                mClipRegionPath = clipPath;
+                mClipRegion = getRegion(clipPath);
             }
-
-            return getReactTag();
-        } else{
-            return -1;
+            if (!mClipRegion.contains(x, y)) {
+                return -1;
+            }
         }
+
+        return getReactTag();
     }
 
-    protected boolean pathContainsPoint(Path path, Matrix matrix, Point point) {
-        Path copy = new Path(path);
-
-        copy.transform(matrix);
-
+    Region getRegion(Path path) {
         RectF rectF = new RectF();
-        copy.computeBounds(rectF, true);
-        Region region = new Region();
-        region.setPath(copy, new Region((int) rectF.left, (int) rectF.top, (int) rectF.right, (int) rectF.bottom));
+        path.computeBounds(rectF, true);
 
-        return region.contains(point.x, point.y);
+        Region region = new Region();
+        region.setPath(path,
+                new Region(
+                        (int) Math.floor(rectF.left),
+                        (int) Math.floor(rectF.top),
+                        (int) Math.ceil(rectF.right),
+                        (int) Math.ceil(rectF.bottom)
+                )
+        );
+
+        return region;
     }
 
-    public WritableArray getAttributeList() {
+    private WritableArray getAttributeList() {
         return mAttributeList;
     }
 
-    public void mergeProperties(RenderableShadowNode target) {
+    void mergeProperties(RenderableShadowNode target) {
         WritableArray targetAttributeList = target.getAttributeList();
 
         if (targetAttributeList == null ||
                 targetAttributeList.size() == 0) {
             return;
         }
-        
+
         mOriginProperties = new ArrayList<>();
         mAttributeList = clonePropList();
 
@@ -350,7 +368,7 @@ abstract public class RenderableShadowNode extends VirtualNode {
         mLastMergedList = targetAttributeList;
     }
 
-    public void resetProperties() {
+    void resetProperties() {
         if (mLastMergedList != null && mOriginProperties != null) {
             try {
                 for (int i = mLastMergedList.size() - 1; i >= 0; i--) {

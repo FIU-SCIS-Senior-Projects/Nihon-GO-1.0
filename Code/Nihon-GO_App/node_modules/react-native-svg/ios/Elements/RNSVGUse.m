@@ -22,9 +22,9 @@
 }
 
 
-- (void)renderLayerTo:(CGContextRef)context
+- (void)renderLayerTo:(CGContextRef)context rect:(CGRect)rect
 {
-    RNSVGNode* template = [[self getSvgView] getDefinedTemplate:self.href];
+    RNSVGNode* template = [self.svgView getDefinedTemplate:self.href];
     if (template) {
         [self beginTransparencyLayer:context];
         [self clip:context];
@@ -37,7 +37,7 @@
             RNSVGSymbol *symbol = (RNSVGSymbol*)template;
             [symbol renderSymbolTo:context width:[self relativeOnWidth:self.width] height:[self relativeOnWidth:self.height]];
         } else {
-            [template renderTo:context];
+            [template renderTo:context rect:rect];
         }
         
         if ([template isKindOfClass:[RNSVGRenderable class]]) {

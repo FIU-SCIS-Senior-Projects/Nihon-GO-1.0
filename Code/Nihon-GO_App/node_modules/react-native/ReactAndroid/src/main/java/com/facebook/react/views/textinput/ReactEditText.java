@@ -173,12 +173,17 @@ public class ReactEditText extends EditText {
 
   @Override
   public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-    InputConnection connection = super.onCreateInputConnection(outAttrs);
+    ReactContext reactContext = (ReactContext) getContext();
+    InputConnection inputConnection = super.onCreateInputConnection(outAttrs);
+    if (inputConnection != null) {
+      inputConnection = new ReactEditTextInputConnectionWrapper(inputConnection, reactContext, this);
+    }
+
     if (isMultiline() && getBlurOnSubmit()) {
       // Remove IME_FLAG_NO_ENTER_ACTION to keep the original IME_OPTION
       outAttrs.imeOptions &= ~EditorInfo.IME_FLAG_NO_ENTER_ACTION;
     }
-    return connection;
+    return inputConnection;
   }
 
   @Override
@@ -306,7 +311,10 @@ public class ReactEditText extends EditText {
 
   /*package*/ void commitStagedInputType() {
     if (getInputType() != mStagedInputType) {
+      int selectionStart = getSelectionStart();
+      int selectionEnd = getSelectionEnd();
       setInputType(mStagedInputType);
+      setSelection(selectionStart, selectionEnd);
     }
   }
 
@@ -522,8 +530,8 @@ public class ReactEditText extends EditText {
 
   @Override
   protected boolean verifyDrawable(Drawable drawable) {
-    if (mContainsImages && getText() instanceof Spanned) {
-      Spanned text = (Spanned) getText();
+    if (mContainsImages) {
+      Spanned text = getText();
       TextInlineImageSpan[] spans = text.getSpans(0, text.length(), TextInlineImageSpan.class);
       for (TextInlineImageSpan span : spans) {
         if (span.getDrawable() == drawable) {
@@ -536,8 +544,8 @@ public class ReactEditText extends EditText {
 
   @Override
   public void invalidateDrawable(Drawable drawable) {
-    if (mContainsImages && getText() instanceof Spanned) {
-      Spanned text = (Spanned) getText();
+    if (mContainsImages) {
+      Spanned text = getText();
       TextInlineImageSpan[] spans = text.getSpans(0, text.length(), TextInlineImageSpan.class);
       for (TextInlineImageSpan span : spans) {
         if (span.getDrawable() == drawable) {
@@ -551,8 +559,8 @@ public class ReactEditText extends EditText {
   @Override
   public void onDetachedFromWindow() {
     super.onDetachedFromWindow();
-    if (mContainsImages && getText() instanceof Spanned) {
-      Spanned text = (Spanned) getText();
+    if (mContainsImages) {
+      Spanned text = getText();
       TextInlineImageSpan[] spans = text.getSpans(0, text.length(), TextInlineImageSpan.class);
       for (TextInlineImageSpan span : spans) {
         span.onDetachedFromWindow();
@@ -563,8 +571,8 @@ public class ReactEditText extends EditText {
   @Override
   public void onStartTemporaryDetach() {
     super.onStartTemporaryDetach();
-    if (mContainsImages && getText() instanceof Spanned) {
-      Spanned text = (Spanned) getText();
+    if (mContainsImages) {
+      Spanned text = getText();
       TextInlineImageSpan[] spans = text.getSpans(0, text.length(), TextInlineImageSpan.class);
       for (TextInlineImageSpan span : spans) {
         span.onStartTemporaryDetach();
@@ -575,8 +583,8 @@ public class ReactEditText extends EditText {
   @Override
   public void onAttachedToWindow() {
     super.onAttachedToWindow();
-    if (mContainsImages && getText() instanceof Spanned) {
-      Spanned text = (Spanned) getText();
+    if (mContainsImages) {
+      Spanned text = getText();
       TextInlineImageSpan[] spans = text.getSpans(0, text.length(), TextInlineImageSpan.class);
       for (TextInlineImageSpan span : spans) {
         span.onAttachedToWindow();
@@ -587,8 +595,8 @@ public class ReactEditText extends EditText {
   @Override
   public void onFinishTemporaryDetach() {
     super.onFinishTemporaryDetach();
-    if (mContainsImages && getText() instanceof Spanned) {
-      Spanned text = (Spanned) getText();
+    if (mContainsImages) {
+      Spanned text =  getText();
       TextInlineImageSpan[] spans = text.getSpans(0, text.length(), TextInlineImageSpan.class);
       for (TextInlineImageSpan span : spans) {
         span.onFinishTemporaryDetach();

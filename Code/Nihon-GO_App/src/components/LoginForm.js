@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Text, ImageBackground, Dimensions, TextInput } from 'react-native';
+import { StyleSheet, View, Text, ImageBackground, Dimensions, TextInput, KeyboardAvoidingView } from 'react-native';
 import { connect } from 'react-redux';
 import { 
 	emailChanged, 
@@ -9,10 +9,9 @@ import {
 	guestUser,
 	logoutUser
 } from '../actions';
-import { Card, CardSection, Input, Spinner } from './common';
 import { Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
 import Modal from "react-native-modal";
+import { BlurView } from 'expo';
 
 
 const SCREEN_WIDTH = Dimensions.get('window').width;
@@ -64,12 +63,12 @@ class LoginForm extends Component {
 		}
 	}
 	
-	// Runs after user presses guest button
+	// Runs after user presses guest button NO LONGER USED
 	onGuestPress() {
 		this.props.guestUser();
 	}
 	
-	// Runs after user presses logout button
+	// Runs after user presses logout button NO LONGER USED
 	onLogoutPress() {
 		this.props.logoutUser();
 	}
@@ -80,28 +79,32 @@ class LoginForm extends Component {
 		if (!this.props.loggedIn) {
 			return (
 				<View style={styles.loginInput}>
-					<View style={{marginVertical: 10, width: 230}}>
-						<TextInput
-							placeholder="Email"
-							placeholderTextColor= 'white'
-							autoCorrect={false}
-							keyboardType= 'email-address'
-							style={{color: 'white', fontSize: 20, height: 40, fontWeight: 'bold', paddingLeft: 5}}
-							onChangeText={this.onEmailChange.bind(this)}
-							value={this.props.email}
-						/>
-					</View>
+					<BlurView tint="default" intensity={100}>
+						<View style={{marginVertical: 10, width: 230}}>
+							<TextInput
+								placeholder="Email"
+								placeholderTextColor= 'white'
+								autoCorrect={false}
+								keyboardType= 'email-address'
+								style={{color: 'white', fontSize: 20, height: 40, fontWeight: 'bold', paddingLeft: 5}}
+								onChangeText={this.onEmailChange.bind(this)}
+								value={this.props.email}
+							/>
+						</View>
+					</BlurView>
 						
-					<View style={{marginVertical: 5, width: 230}}>
-						<TextInput
-							secureTextEntry
-							placeholder="Password"
-							placeholderTextColor= 'white'
-							style={{color: 'white', fontSize: 20, height: 40, fontWeight: 'bold', paddingLeft: 5}}
-							onChangeText={this.onPasswordChange.bind(this)}
-							value={this.props.password}
-						/> 
-					</View>
+					<BlurView tint="default" intensity={100}>
+						<View style={{marginVertical: 5, width: 230, marginBottom: 18}}>
+							<TextInput
+								secureTextEntry
+								placeholder="Password"
+								placeholderTextColor= 'white'
+								style={{color: 'white', fontSize: 20, height: 40, fontWeight: 'bold', paddingLeft: 5}}
+								onChangeText={this.onPasswordChange.bind(this)}
+								value={this.props.password}
+							/> 
+						</View>
+					</BlurView>
 				</View>
 			);
 		}
@@ -223,7 +226,7 @@ class LoginForm extends Component {
 		const { retypePassword } = this.state;
 		
 		// Returns error if there is any
-		if (this.props.error) {
+		if (this.props.error && !password) {
 			if (this.state.modalVisible) {
 				return (
 					<View style={{ backgroundColor: 'transparent', marginBottom: -7, marginTop: -13}}>
@@ -234,7 +237,7 @@ class LoginForm extends Component {
 				);
 			}
 			return (
-				<View style={{ backgroundColor: 'transparent', marginBottom: -18, marginTop: -3}}>
+				<View style={{ backgroundColor: 'transparent', marginBottom: -18, marginTop: -3, width: 230}}>
 					<Text style={styles.errorTextStyle}>
 						{this.props.error}
 					</Text>
@@ -281,10 +284,6 @@ class LoginForm extends Component {
 			<View style={styles.modalContainer}>
 				<Modal
 					isVisible={this.state.modalVisible}
-					animationIn="zoomInDown"
-					animationOut="zoomOutUp"
-					animationInTiming={1500}
-					animationOutTiming={2000}
 					style={styles.centerModal}
 					onBackdropPress={() => {this.setModalVisible(!this.state.modalVisible)}}
 					onBackButtonPress={() => {this.setModalVisible(!this.state.modalVisible)}}
@@ -306,59 +305,44 @@ class LoginForm extends Component {
 	// Render login page
 	render() {
 		return (
-			<View style={styles.container}>
+			<KeyboardAvoidingView behavior="padding"  style={styles.container}>
 				<ImageBackground
 					source={BG_IMAGE}
 					style={styles.bgImage}
 				>
-				
-				<View style={styles.loginView}>
-					<View style={styles.loginTitle}>
-						<View style={{flexDirection: 'row'}}>
-							<Text style={styles.travelText}>JAPAN</Text>
-							<Text style={styles.plusText}>+</Text>
+					<View style={styles.loginView}>
+						<View style={styles.loginTitle}>
+							<View style={{flexDirection: 'row'}}>
+								<Text style={styles.travelText}>Nihon-GO</Text>
+							</View>
 						</View>
-						<View style={{marginTop: -10}}>
-							<Text style={styles.travelText}>TRAVEL</Text>
+						
+						{this.renderInput()}
+						{this.renderError()}
+						{this.renderButtons()}
+						{this.renderModal()}
+						
+						<View style={styles.footerView}>
+							<Text style={{color: 'white', fontSize: 15}}>
+								New here?
+							</Text>
+							<Button
+								title="Create an Account"
+								textStyle={{color: 'white', fontSize: 17}}
+								buttonStyle={{backgroundColor: 'transparent'}}
+								containerViewStyle={{marginTop: -10}}
+								onPress={() => {this.setModalVisible(true)}}
+							/>
 						</View>
 					</View>
-					
-					{this.renderInput()}
-					{this.renderError()}
-					{this.renderButtons()}
-					{this.renderModal()}
-					
-					<View style={styles.footerView}>
-						<Text style={{color: 'white', fontSize: 15}}>
-							New here?
-						</Text>
-						<Button
-							title="Create an Account"
-							textStyle={{color: 'white', fontSize: 17}}
-							buttonStyle={{backgroundColor: 'transparent'}}
-							containerViewStyle={{marginTop: -10}}
-							onPress={() => {this.setModalVisible(true)}}
-						/>
-					</View>
-				</View>
-				
 				</ImageBackground>
-			</View>
+			</KeyboardAvoidingView>
 		);
 	}
 }
 
 // Styles
 const styles = StyleSheet.create({
-		errorTextStyle: {
-			fontSize: 15,
-			fontWeight: 'bold',
-			alignSelf: 'center',
-			color: 'red'
-		},
-		container: {
-			flex: 1
-		},
 		bgImage: {
 			flex: 1,
 			top: 0,
@@ -368,28 +352,23 @@ const styles = StyleSheet.create({
 			justifyContent: 'center',
 			alignItems: 'center'
 		},
-		loginView: {
-			marginTop: 150,
-			backgroundColor: 'transparent',
-			width: 250,
-			height: 350,
+		centerModal: {
 			justifyContent: 'center',
-			alignItems: 'center'
-		 },
-		loginTitle: {
+			alignItems: 'center',
+			margin: 0
+		},
+		container: {
 			flex: 1
 		},
-		travelText: {
-			color: 'white',
-			fontSize: 35,
-			fontWeight: 'bold'
+		errorTextStyle: {
+			fontSize: 15,
+			fontWeight: 'bold',
+			alignSelf: 'center',
+			color: 'red'
 		},
-		plusText: {
-			color: 'white',
-			fontSize: 35
-		},
-		loginInput: {
-			flex: 1,
+		footerView: {
+			marginTop: 20,
+			flex: 0.5,
 			justifyContent: 'center',
 			alignItems: 'center'
 		},
@@ -398,9 +377,19 @@ const styles = StyleSheet.create({
 			justifyContent: 'center',
 			alignItems: 'center'
 		},
-		footerView: {
-			marginTop: 20,
-			flex: 0.5,
+		loginInput: {
+			flex: 1,
+			justifyContent: 'center',
+			alignItems: 'center'
+		},
+		loginTitle: {
+			flex: 1
+		},
+		loginView: {
+			marginTop: 150,
+			backgroundColor: 'transparent',
+			width: 250,
+			height: 350,
 			justifyContent: 'center',
 			alignItems: 'center'
 		},
@@ -413,12 +402,12 @@ const styles = StyleSheet.create({
 			padding: 10,
 			justifyContent: 'center',
 			alignItems: 'center',
-			borderRadius: 30
+			borderRadius: 5
 		},
-		centerModal: {
-			justifyContent: 'center',
-			alignItems: 'center',
-			margin: 0
+		travelText: {
+			color: 'white',
+			fontSize: 35,
+			fontWeight: 'bold'
 		}
 	}
 )

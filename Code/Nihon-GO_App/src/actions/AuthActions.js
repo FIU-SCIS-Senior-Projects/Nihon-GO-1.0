@@ -32,7 +32,6 @@ export const loginUser = ({ email, password }) => {
 			.then(user => loginUserSuccess(dispatch, user))
 			.catch((error) => {
 				console.log(error);
-				console.log("WORKED");
 				loginUserFail(dispatch);
 			});
 	};

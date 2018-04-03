@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import firebase from 'firebase';
-//import { View, Text, Image } from 'react-native';
+import * as firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { Card, CardSection, Input } from './common';
@@ -8,22 +7,27 @@ import { userProfileUpdate, userProfileFetch, userProfileImageFetch } from '../a
 import { Avatar, Divider } from 'react-native-elements';
 import LibraryList from './LibraryList'; // TESTING ONLY
 import {
-  Animated,
-  Dimensions,
-  Image,
-  ImageBackground,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
+	ActivityIndicator,
+	Animated,
+	Button,
+	Dimensions,
+	Image,
+	ImageBackground,
+	Platform,
+	ScrollView,
+	Share,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
 } from 'react-native';
 import {
-  TabBar,
-  TabViewAnimated,
-  TabViewPagerPan,
-  TabViewPagerScroll,
+	TabBar,
+	TabViewAnimated,
+	TabViewPagerPan,
+	TabViewPagerScroll,
 } from 'react-native-tab-view';
+import { ImagePicker } from 'expo';
 
 // Gets pictures for profile
 const profilePicture = require('../resources/profilePicture.png');
@@ -40,15 +44,18 @@ class UserProfile extends Component {
 		tabContainerStyle: {},
 	}
 	
-	// State of the tabs
+	// State
 	state = {
 		tabs: {
 			index: 0,
 			routes: [
 				{ key: '1', title: 'ABOUT'},
 				{ key: '2', title: 'ITINERARY'},
+				{ key: '3', title: 'FAVORITES'},
 			],
 		},
+		image: null,
+		uploading: false,
 	}
 	
 	// Used to handle tabs
@@ -80,6 +87,8 @@ class UserProfile extends Component {
 				return this.renderAbout()
 			case '2':
 				return this.renderList()
+			case '3':
+				return this.renderItinerary()
 			default:
 				return <View />
 			}
@@ -116,9 +125,14 @@ class UserProfile extends Component {
 	// Renders profile picture, background picture, and user name
 	renderContactHeader = () => {
 		const { username } = this.props;
+		let { image } = this.state;
+		if (image) {
+			console.log(image);
+			profilePicture = { uri: image };
+		}
 		return (
 			<View style={styles.headerContainer}>
-				<View style={styles.coverContainer}>
+				<TouchableOpacity style={styles.coverContainer}>
 					<ImageBackground
 						source={profileBackgroundPicture}
 						style={styles.coverImage}
@@ -131,14 +145,14 @@ class UserProfile extends Component {
 							<Text style={styles.coverName}>{username}</Text>
 						</View>
 					</ImageBackground>
-				</View>
+				</TouchableOpacity>
 				
-				<View style={styles.profileImageContainer}>
+				<TouchableOpacity onPress={this._pickImage} style={styles.profileImageContainer}>
 					<Image
 						source={profilePicture}
 						style={styles.profileImage}
 					/>
-				</View>
+				</TouchableOpacity>
 			</View>
 		);
 	}
@@ -175,9 +189,152 @@ class UserProfile extends Component {
 		);
 	}
 	
-	// Renders itinerary list
 	renderList() {
-		return <LibraryList/>
+		return <LibraryList/>;
+	}
+	
+	_maybeRenderUploadingOverlay = () => {
+		if (this.state.uploading) {
+			return (
+				<View
+					style={[
+						StyleSheet.absoluteFill,
+						{
+							backgroundColor: 'rgba(0,0,0,0.4)',
+							alignItems: 'center',
+							justifyContent: 'center',
+						},
+					]}>
+					<ActivityIndicator color="#fff" animating size="large" />
+				</View>
+			);
+		}
+	};
+  
+	_maybeRenderImage = () => {
+		let { image } = this.state;
+		console.log('image');
+		console.log(image);
+		if (!image) {
+		return;
+		}
+
+		return (
+			<View
+				style={{
+				marginTop: 30,
+				width: 250,
+				borderRadius: 3,
+				elevation: 2,
+				}}>
+				
+				<View
+					style={{
+						borderTopRightRadius: 3,
+						borderTopLeftRadius: 3,
+						shadowColor: 'rgba(0,0,0,1)',
+						shadowOpacity: 0.2,
+						shadowOffset: { width: 4, height: 4 },
+						shadowRadius: 5,
+						overflow: 'hidden',
+				}}>
+					<Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
+				</View>
+
+				<Text
+					style={{ paddingVertical: 10, paddingHorizontal: 10 }}
+				>
+					{image}
+				</Text>
+			</View>
+		);
+	};
+	
+	_takePhoto = async () => {
+		let pickerResult = await ImagePicker.launchCameraAsync({
+			allowsEditing: true,
+			aspect: [4, 3],
+		});
+		
+		this._handleImagePicked(pickerResult);
+	};
+	
+	_pickImage = async () => {
+		let pickerResult = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			aspect: [4, 3],
+		});
+		
+		this._handleImagePicked(pickerResult);
+	};
+	
+	_handleImagePicked = async pickerResult => {
+		try {
+			this.setState({ uploading: true });
+			
+			if (!pickerResult.cancelled) {
+				//uploadUrl = await uploadImageAsync(pickerResult.uri);
+				//this.setState({ image: uploadUrl });
+				this.uploadImage(pickerResult.uri);
+			}
+		} catch (e) {
+			console.log({ e });
+			alert('Upload failed, sorry :(');
+		} finally {
+			this.setState({ uploading: false });
+		}
+	};
+	
+	uploadImage = async(uri) => {
+		const response = await fetch(uri);
+		const blob = await response.blob();
+		var ref = firebase.storage().ref().child("my-image");
+		
+		//return ref.put(blob);
+		
+		ref.put(blob)
+			.then (
+				ref.getDownloadURL()
+					.then((url) => {
+						console.log(url);
+						this.setState({ image: url });
+					})
+					.catch ((error) => {
+						console.log(error);
+					})
+			);
+	}
+	
+	// Renders itinerary list
+	renderItinerary() {
+		let { image } = this.state;
+		
+		return (
+			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+				{image ? null : (
+					<Text
+						style={{
+							fontSize: 20,
+							marginBottom: 20,
+							textAlign: 'center',
+							marginHorizontal: 15,
+						}}>
+						Example: Upload ImagePicker result
+					</Text>
+				)}		
+				
+				<Button
+					onPress={this._pickImage}
+					title="Pick an image from camera roll"
+				/>
+					
+				<Button onPress={this._takePhoto} title="Take a photo" />
+				
+				{this._maybeRenderImage()}
+				{this._maybeRenderUploadingOverlay()}
+				
+			</View>
+		);
 	}
 	
 	render() {
@@ -199,6 +356,25 @@ class UserProfile extends Component {
 		  </ScrollView>
 		);
 	}
+}
+
+async function uploadImageAsync(uri) {
+	
+	const response = await fetch(uri);
+	const blob = await response.blob();
+	const ref = firebase.storage().ref().child('images');
+	const task = ref.put(blob);	
+		
+	return new Promise((resolve, reject) => {
+		task.on(
+			'state_changed',
+			() => {
+			/* noop but you can track the progress here */
+			},
+			reject /* this is where you would put an error callback! */,
+			() => resolve(task.snapshot.downloadURL)
+		);
+	});
 }
 
 const styles = {

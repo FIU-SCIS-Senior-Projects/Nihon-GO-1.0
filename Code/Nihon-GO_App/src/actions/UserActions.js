@@ -40,7 +40,7 @@ export const userProfileSave = ({ username, country, languages, description, ema
 	
 	return (dispatch) => {
 		firebase.database().ref(`/users/${currentUser.uid}`)
-			.set({ username, email, country, languages, description })
+			.update({ username, email, country, languages, description })
 			.then(() => {
 				Actions.pop();
 			});
@@ -49,6 +49,15 @@ export const userProfileSave = ({ username, country, languages, description, ema
 
 export const userProfileImageFetch = () => {
 	const picture = firebase.storage().ref('UserProfile/ProfilePicture/Floor Sticker.png');
-	console.log(picture.location);
-	return null;
+	
+	return (dispatch) => {
+		picture.getDownloadURL()
+			.then((url) => {
+				console.log(url);
+				dispatch(url);
+			})
+			.catch ((error) => {
+				console.log(error);
+			});
+	};
 };

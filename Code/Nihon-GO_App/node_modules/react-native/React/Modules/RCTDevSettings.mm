@@ -197,8 +197,7 @@ RCT_EXPORT_MODULE()
   // after the current main thread operation is done.
   dispatch_async(dispatch_get_main_queue(), ^{
     [bridge dispatchBlock:^{
-      [RCTInspectorDevServerHelper connectForContext:bridge.jsContextRef
-                                       withBundleURL:bridge.bundleURL];
+      [RCTInspectorDevServerHelper connectWithBundleURL:bridge.bundleURL];
     } queue:RCTJSThread];
   });
 #endif
@@ -256,10 +255,10 @@ static void pokeSamplingProfiler(RCTBridge *const bridge, RCTPackagerClientRespo
 - (BOOL)isNuclideDebuggingAvailable
 {
 #if RCT_ENABLE_INSPECTOR
-  return facebook::react::isCustomJSCPtr(_bridge.jsContextRef);
+  return _bridge.isInspectable;
 #else
   return false;
-#endif //RCT_ENABLE_INSPECTOR
+#endif // RCT_ENABLE_INSPECTOR
 }
 
 - (BOOL)isRemoteDebuggingAvailable

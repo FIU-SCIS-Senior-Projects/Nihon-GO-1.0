@@ -52,9 +52,6 @@
 #import "RCTDevLoadingView.h"
 #endif
 
-@interface RCTCxxBridge : RCTBridge
-@end
-
 #define RCTAssertJSThread() \
   RCTAssert(self.executorClass || self->_jsThread == [NSThread currentThread], \
             @"This method must be called on JS thread")
@@ -191,7 +188,12 @@ struct RCTInstanceCallback : public InstanceCallback {
 
 - (JSGlobalContextRef)jsContextRef
 {
-  return (JSGlobalContextRef)(self->_reactInstance ? self->_reactInstance->getJavaScriptContext() : nullptr);
+  return (JSGlobalContextRef)(_reactInstance ? _reactInstance->getJavaScriptContext() : nullptr);
+}
+
+- (BOOL)isInspectable
+{
+  return _reactInstance ? _reactInstance->isInspectable() : NO;
 }
 
 - (instancetype)initWithParentBridge:(RCTBridge *)bridge
@@ -337,6 +339,7 @@ struct RCTInstanceCallback : public InstanceCallback {
   #if RCT_PROFILE
         ("StartSamplingProfilerOnInit", (bool)self.devSettings.startSamplingProfilerOnLaunch)
   #endif
+         , nullptr
       ));
     }
   } else {
@@ -517,11 +520,6 @@ struct RCTInstanceCallback : public InstanceCallback {
   RCT_PROFILE_END_EVENT(RCTProfileTagAlways, @"");
 }
 
-- (NSArray *)configForModuleName:(NSString *)moduleName
-{
-  return _moduleDataByName[moduleName].config;
-}
-
 - (NSArray<RCTModuleData *> *)registerModulesForClasses:(NSArray<Class> *)moduleClasses
 {
   RCT_PROFILE_BEGIN_EVENT(RCTProfileTagAlways,
@@ -530,13 +528,6 @@ struct RCTInstanceCallback : public InstanceCallback {
   NSMutableArray<RCTModuleData *> *moduleDataByID = [NSMutableArray arrayWithCapacity:moduleClasses.count];
   for (Class moduleClass in moduleClasses) {
     NSString *moduleName = RCTBridgeModuleNameForClass(moduleClass);
-
-    // Don't initialize the old executor in the new bridge.
-    // TODO mhorowitz #10487027: after D3175632 lands, we won't need
-    // this, because it won't be eagerly initialized.
-    if ([moduleName isEqualToString:@"RCTJSCExecutor"]) {
-      continue;
-    }
 
     // Check for module name collisions
     RCTModuleData *moduleData = _moduleDataByName[moduleName];
@@ -680,7 +671,7 @@ struct RCTInstanceCallback : public InstanceCallback {
 
 - (void)_prepareModulesWithDispatchGroup:(dispatch_group_t)dispatchGroup
 {
-  RCT_PROFILE_BEGIN_EVENT(0, @"-[RCTBatchedBridge prepareModulesWithDispatch]", nil);
+  RCT_PROFILE_BEGIN_EVENT(0, @"-[RCTCxxBridge _prepareModulesWithDispatchGroup]", nil);
 
   BOOL initializeImmediately = NO;
   if (dispatchGroup == NULL) {
@@ -735,6 +726,8 @@ struct RCTInstanceCallback : public InstanceCallback {
 {
   // This will get called from whatever thread was actually executing JS.
   dispatch_block_t completion = ^{
+    // Log start up metrics early before processing any other js calls
+    [self logStartupFinish];
     // Flush pending calls immediately so we preserve ordering
     [self _flushPendingCalls];
 
@@ -1009,16 +1002,19 @@ RCT_NOT_IMPLEMENTED(- (instancetype)initWithBundleURL:(__unused NSURL *)bundleUR
   }
 }
 
-- (void)_flushPendingCalls
+- (void)logStartupFinish
 {
   // Log metrics about native requires during the bridge startup.
-  uint64_t nativeRequiresCount = [self->_performanceLogger valueForTag:RCTPLRAMNativeRequiresCount];
+  uint64_t nativeRequiresCount = [_performanceLogger valueForTag:RCTPLRAMNativeRequiresCount];
   [_performanceLogger setValue:nativeRequiresCount forTag:RCTPLRAMStartupNativeRequiresCount];
-  uint64_t nativeRequires = [self->_performanceLogger valueForTag:RCTPLRAMNativeRequires];
+  uint64_t nativeRequires = [_performanceLogger valueForTag:RCTPLRAMNativeRequires];
   [_performanceLogger setValue:nativeRequires forTag:RCTPLRAMStartupNativeRequires];
 
   [_performanceLogger markStopForTag:RCTPLBridgeStartup];
+}
 
+- (void)_flushPendingCalls
+{
   RCT_PROFILE_BEGIN_EVENT(0, @"Processing pendingCalls", @{ @"count": [@(_pendingCalls.count) stringValue] });
   // Phase B: _flushPendingCalls happens.  Each block in _pendingCalls is
   // executed, adding work to the queue, and _pendingCount is decremented.

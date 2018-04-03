@@ -13,6 +13,7 @@ import {
 } from '../actions';
 import { Card, CardSection, Input, Spinner } from './common';
 import { Icon, Avatar, Button } from 'react-native-elements'
+import { primary_color, primary_text_color, dark_color, dark_text_color}  from './common/AppPalette';
 
 class UserCard extends Component {
 	// Gets user profile data
@@ -71,8 +72,8 @@ class UserCard extends Component {
 			return (
 				<View style={styles.btnContainer}>
 					<Button
-						backgroundColor='#8bf6ff'
-						color='black'
+						backgroundColor={dark_color}
+						color={dark_text_color}
 						raised
 						title='SIGN IN'
 						onPress={() => Actions.login()}/>
@@ -124,7 +125,7 @@ const styles = {
 	logoutText: {
 		alignSelf: 'stretch',
 		textAlign: 'right',
-		color:'blue',
+		color:primary_text_color,
 		textDecorationLine:'underline'
 	},
 	photo: {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableHighlight } from 'react-native'
+import { View, Text, TouchableHighlight, StyleSheet } from 'react-native'
 import { Scene, Router, Actions, Drawer, Lightbox } from 'react-native-router-flux';
 import LoginForm from './components/LoginForm';
 import HomePage from './components/HomePage';
@@ -14,6 +14,7 @@ import BlogForm from './components/BlogForm';
 import BlogExpand from './components/BlogExpand';
 import MapModal from './components/MapModal';
 import { Icon } from 'react-native-elements';
+import { primary_color, primary_text_color }  from './components/common/AppPalette'
 
 //Needs to be consolidated with other features
 const RouterComponent = () => {
@@ -21,7 +22,13 @@ const RouterComponent = () => {
 		<Router>	
 			<Lightbox>
 				<Scene key="root" hideNavBar>
-						<Scene key="main" drawer drawerIcon={() => <Icon name='menu'/>} contentComponent={DrawerPanel} navigationBarStyle={headerStyle}>
+						<Scene key="main" 
+                        drawer 
+                        drawerIcon={() => <Icon name='menu' color={primary_text_color}/>} 
+                        contentComponent={DrawerPanel} 
+                        navigationBarStyle={styles.navBar}
+                        titleStyle={styles.navBarTitle}
+                        tintColor={primary_text_color}>
 							<Scene 
 								key="homepage" 
 								component={HomePage} 
@@ -86,11 +93,15 @@ const RouterComponent = () => {
 };
 
 
-//Quick fix to status bar issue
-const headerStyle = {
-  paddingTop: 20,
-  height: 75,
-  backgroundColor:'#4fc3f7'
-};
+const styles = StyleSheet.create({
+    navBar:{
+        paddingTop: 20,
+        height: 75,
+        backgroundColor: primary_color,
+    },
+    navBarTitle:{
+        color: primary_text_color
+    },
+});
 
 export default RouterComponent;

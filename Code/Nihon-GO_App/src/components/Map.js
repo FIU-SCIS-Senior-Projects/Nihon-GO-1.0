@@ -24,7 +24,7 @@ const border =  '#000000';
 const borderHighlight = '#484848';
 const fillHighlight = '#a4a4a4';
 const fill= '#757575';
-	
+
 class Map extends Component {
 	
 	

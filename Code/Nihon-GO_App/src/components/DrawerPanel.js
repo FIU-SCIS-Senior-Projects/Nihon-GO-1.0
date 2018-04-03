@@ -5,6 +5,7 @@ import { Card, CardSection, Input, Button, Spinner  } from './common';
 import { DrawerButton } from './DrawerButton';
 import UserCard from './UserCard';
 import { connect } from 'react-redux';
+import { primary_color, primary_text_color, dark_color, dark_text_color, light_color}  from './common/AppPalette';
 
 class Drawer extends Component {
 	
@@ -135,14 +136,13 @@ const styles = {
 		justifyContent:'flex-start',
 		height: 150,
 		elevation: 1,
-		backgroundColor: '#4fc3f7',
+		backgroundColor: primary_color,
 	},
 	focus: {
-		backgroundColor: '#efefef',
+		backgroundColor: light_color,
 	},
 	background: {
 		flex:1,
-		backgroundColor: 'white',
 	}
 };
 

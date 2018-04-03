@@ -2,18 +2,19 @@ import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
 import ActionButton from 'react-native-action-button';
 import { Icon } from 'react-native-elements';
- import { Actions } from 'react-native-router-flux';
- 
+import { Actions } from 'react-native-router-flux';
+import { primary_color, primary_text_color }  from './common/AppPalette';
+
 class ActionBtn extends Component {
  
   render() {
     return (
 		<ActionButton 
 			fixNativeFeedbackRadius={true} 
-			buttonColor='#4fc3f7' 
+            buttonColor={primary_color}
 			size={70} 
-			buttonTextStyle={{color: 'black'}}
-			renderIcon={() => {return(<Icon name='add' />)}}
+			buttonTextStyle={{color: primary_text_color}}
+			renderIcon={() => {return(<Icon name='add' size={35} color={primary_text_color}/>)}}
 		>
 			<ActionButton.Item buttonColor='#9b59b6' title="Top Itineraries" onPress={() => Actions.itineraryList()}>
 				<Icon name='card-travel' />

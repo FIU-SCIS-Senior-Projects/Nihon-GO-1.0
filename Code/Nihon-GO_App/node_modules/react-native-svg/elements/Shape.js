@@ -1,6 +1,6 @@
-import {Component} from 'react';
-import SvgTouchableMixin from '../lib/SvgTouchableMixin';
-import _ from 'lodash';
+import { Component } from "react";
+import SvgTouchableMixin from "../lib/SvgTouchableMixin";
+import _ from "lodash";
 
 class Shape extends Component {
     constructor() {
@@ -8,6 +8,7 @@ class Shape extends Component {
         _.forEach(SvgTouchableMixin, (method, key) => {
             this[key] = method.bind(this);
         });
+        //noinspection JSUnusedGlobalSymbols
         this.state = this.touchableGetInitialState();
     }
 }

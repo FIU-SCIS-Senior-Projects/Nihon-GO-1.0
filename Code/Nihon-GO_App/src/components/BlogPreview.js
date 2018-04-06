@@ -91,7 +91,7 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    return { selectedBlogId: state.selectedBlogId };
+    return { selectedCategory: state.selectedCategory };
 };
 
 export default connect(mapStateToProps, actions)(BlogPreview);

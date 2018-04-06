@@ -11,11 +11,13 @@ export const blogUpdate = ({prop, value}) => {
     };
 };
 
-export const blogForm = ({titleInput, location, description, image, duration}) => {
+export const blogForm = ({category, title, description}) => {
     return()  =>{
         firebase.database().ref('/blogs')
-        .push({titleInput,location,description,image, duration})
-        .then(() => Actions.pop())
+            .push({category:  "Category",
+                  title: "Title",
+                  description: "Desc"})
+            .then(() => Actions.pop())
     };
 };
 

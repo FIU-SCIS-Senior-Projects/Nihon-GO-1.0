@@ -5,7 +5,6 @@ import { EventView } from './EventView';
 import * as actions from '../actions';
 import {connect} from 'react-redux';
 import SubBlogPreview from './SubBlogPreview';
-import { BlogButton, BlogButtonPlus } from './common';
 import {ListView } from 'react-native';
 
 class BlogExpand extends Component

@@ -68,7 +68,7 @@ const RouterComponent = () => {
 								back 
 								onBack={()=> Actions.blog()}
 								component = {BlogExpand}
-								title="[Blog Name]" />
+								title="Subcategory" />
 							<Scene 
 								key="itineraryList" 
 								component={ItineraryList} 

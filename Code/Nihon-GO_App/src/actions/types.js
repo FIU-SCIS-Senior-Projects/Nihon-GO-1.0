@@ -12,6 +12,7 @@ export const USER_PROFILE_UPDATE = 'user_profile_update';
 
 //Used for Itinerary
 export const ITINERARY_UPDATE = 'itinerary_update';
+export const ITINERARY_FETCH = 'itinerary_fetch';
 
 //Used for Blogs
 export const BLOG_UPDATE = 'blog_update';

@@ -28,6 +28,7 @@ import {
 	TabViewPagerScroll,
 } from 'react-native-tab-view';
 import { ImagePicker } from 'expo';
+import { UploadPicture } from './UploadPicture';
 
 // Gets pictures for profile
 const profilePicture = require('../resources/profilePicture.png');
@@ -265,7 +266,7 @@ class UserProfile extends Component {
 			aspect: [4, 3],
 		});
 		
-		this._handleImagePicked(pickerResult);
+		UploadPicture(pickerResult, "UserProfile/ProfilePicture/0001");
 	};
 	
 	_handleImagePicked = async pickerResult => {

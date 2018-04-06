@@ -5,20 +5,17 @@ import ItineraryPreview from './ItineraryPreview';
 import { Icon } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import ActionBtn from './ActionBtn';
+import { itineraryFetch } from '../actions';
 
 class ItineraryList extends Component {
 
     componentWillMount(){
-        const ds = new ListView.DataSource({
-            rowHasChanged: (r1, r2) => r1 != r2
-        });
-
-        this.dataSource = ds.cloneWithRows(this.props.itineraries);
+			this.props.itineraryFetch();
     }
-    
+
     renderRow(itinerary){
         return(
-            <ItineraryPreview itinerary={itinerary.itinerary}/>
+            <ItineraryPreview itinerary={itinerary}/>
         );
     }
 
@@ -40,9 +37,14 @@ class ItineraryList extends Component {
     }
 
     render(){
+		const ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 != r2
+        });
+		this.dataSource = ds.cloneWithRows(this.props.itineraries);
         return (
             <View style={{flex: 1}}>
                 <ListView style={{backgroundColor: 'black'}}
+					enableEmptySections
                     dataSource={this.dataSource}
                     renderRow={this.renderRow}
                 />
@@ -50,7 +52,7 @@ class ItineraryList extends Component {
             </View>
 
         );
-    }  
+    }
 }
 
 const styles = {
@@ -65,4 +67,4 @@ const mapStateToProps = state => {
     return { itineraries: state.itineraries };
 };
 
-export default connect(mapStateToProps)(ItineraryList);
+export default connect(mapStateToProps, { itineraryFetch })(ItineraryList);

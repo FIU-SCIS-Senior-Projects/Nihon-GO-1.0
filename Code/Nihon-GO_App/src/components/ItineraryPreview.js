@@ -65,7 +65,7 @@ class ItineraryPreview extends Component {
                 </View>
                 <View style={{flex: 1, marginTop: 10,}}>
                     <TouchableOpacity 
-                        onPress={() => this.props.selectItinerary(this.props.itinerary.id)}
+                        onPress={() => this.props.selectItinerary(id)}
                         style={{flex: 1}}>
                         <Icon
                             name='angle-right'

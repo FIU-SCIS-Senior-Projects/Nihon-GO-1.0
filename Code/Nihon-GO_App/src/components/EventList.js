@@ -46,7 +46,7 @@ const styles={
 
 const mapStateToProps = state => {
     const events = state.itineraries.find(item => 
-        item.itinerary.id === state.selectedItineraryId).itinerary.event;
+        item.id === state.selectedItineraryId).data.events;
     return { events };
 };
 

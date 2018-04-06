@@ -19,23 +19,6 @@ class ItineraryList extends Component {
         );
     }
 
-    renderItAddButton(){
-        const { floatingButton } = styles;
-
-        return(
-            <View style={floatingButton}>
-                <Icon
-                    raised
-                    name='plus'
-                    type='entypo'
-                    color='#2196F3'
-                    size={30}
-                    onPress={() => {Actions.itineraryCreate()}}
-                    />
-            </View>
-        );
-    }
-
     render(){
 		const ds = new ListView.DataSource({
             rowHasChanged: (r1, r2) => r1 != r2

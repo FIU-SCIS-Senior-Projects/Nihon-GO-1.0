@@ -13,18 +13,17 @@ export const itineraryUpdate = ({ prop, value }) => {
     };
 };
 
-export const itineraryCreate = ({ titleInput, location, description, image, duration }) => {
-    
+export const itineraryCreate = ({ titleInput, location, description, image, duration, events }) => {
     return ()  =>{
         firebase.database().ref('/itineraries')
-        .push({ titleInput, location, description, image, duration })
-        .then(() => Actions.pop());
+            .push({ titleInput, location, description, image, duration, events })
+            .then(() => Actions.pop());
     }
 };
 
 export const selectItinerary = (itineraryId) => {
-	Actions.eventList();
-	console.log("TEST");
+	Actions.itineraryView();
+
 	return {
 		type: 'select_itinerary',
 		payload: itineraryId

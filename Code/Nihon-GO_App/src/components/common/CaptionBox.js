@@ -9,7 +9,6 @@ const CaptionBox = (props) => {
 
 const styles = {
     shadowBox: {
-        backgroundColor: '#20A38199',
         height: 85,
     },
 };

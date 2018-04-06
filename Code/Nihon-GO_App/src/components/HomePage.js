@@ -1,57 +1,31 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, ImageBackground, Dimensions } from 'react-native';
+import ItineraryList from './ItineraryList';
 import { Actions } from 'react-native-router-flux';
-import { connect } from 'react-redux';
-import LibraryList from './LibraryList';
-import { 
-	emailChanged, 
-	passwordChanged, 
-	loginUser, 
-	registerUser,
-	guestUser,
-	logoutUser
-} from '../actions';
-import { Card, CardSection, Input, Button, Spinner } from './common';
+import { Icon, Header } from 'react-native-elements';
+import Map from './Map';
+import ActionBtn from './ActionBtn';
+
+const SCREEN_WIDTH = Dimensions.get('window').width;
+const SCREEN_HEIGHT = Dimensions.get('window').height;
+const backgound_IMG = require('../resources/texture.jpg');
 
 class HomePage extends Component {
-	
-	renderUserprofile() {
-		if (this.props.loggedIn) {
-			return (
-				<Button onPress={() => Actions.userProfile()}>
-					User Profile
-				</Button>
-			);
-		} else {
-			return (
-				<Button onPress={() => Actions.login()}>
-					Sign in
-				</Button>
-			);
-		}
-	}
-	
-	renderButtons() {
-		// Renders login, register, and guest buttons
-		return (
-			<View style={styles.containerButton}>
-					<Button onPress={() => Actions.blog()}>
-						Guides\Tips
-					</Button>
-					{this.renderUserprofile()}
-			</View>
-		);
-	}
-	
 	// Render login page
 	render() {
 		return (
 			<View style={styles.containerStyle}>
-				<Card>
-					<Text style={styles.mapPlaceholder}>MAP</Text>
-				</Card>
-				<LibraryList/>
-				{this.renderButtons()}
+				<ImageBackground
+					source={backgound_IMG}
+					style={styles.bgImage}
+				>
+				
+					<View style={styles.containerMap}>
+						<Map/>
+					</View>
+					<ActionBtn/>
+					
+				</ImageBackground>
 			</View>
 		);
 	}
@@ -62,32 +36,25 @@ const styles = {
 		flex:1,
 		justifyContent: 'space-around'
 	},
-	containerButton: {
-		padding: 5,
-		backgroundColor: '#fff',
-		justifyContent: 'flex-start',
-		flexDirection: 'row',
-		borderColor: '#ddd',
-		position: 'relative'
+	bgImage: {
+		flex: 1,
+		top: 0,
+		left: 0,
+		width: SCREEN_WIDTH,
+		height: SCREEN_HEIGHT,
+		justifyContent: 'center',
+		alignItems: 'center'
 	},
-	mapPlaceholder:{
-		alignSelf: 'center',
-		fontSize: 32,
-		fontWeight: '600',
-		paddingTop: 10,
-		paddingBottom: 10,
-		height: 300,
-		justifyContent: 'center'
-	}
+	containerMap: {
+		flex:1,
+		width: SCREEN_WIDTH,
+		height: SCREEN_HEIGHT
+	},
+	floatingButton: {
+        bottom: 10,
+        right: 10,
+        position: 'absolute',
+    },
 };
 
-// Redux things
-const mapStateToProps = ({ auth }) => {
-	const { email, password, error, loading, loggedIn } = auth;
-	return { email, password, error, loading, loggedIn };
-};
-
-// Redux things
-export default connect(mapStateToProps, { 
-	emailChanged, passwordChanged, loginUser, registerUser, guestUser, logoutUser
-})(HomePage);
+export default HomePage

@@ -79,13 +79,13 @@ export default class Matrix2D {
      * @return {Matrix2D} This instance. Useful for chaining method calls.
      */
     setTransform = function(a, b, c, d, tx, ty) {
-        /*eslint eqeqeq:0*/
-        this.a = a == null ? 1 : a;
+        this.a = a === null || a === undefined ? 1 : a;
         this.b = b || 0;
         this.c = c || 0;
-        this.d = d == null ? 1 : d;
+        this.d = d === null || d === undefined ? 1 : d;
         this.tx = tx || 0;
         this.ty = ty || 0;
+        //noinspection JSValidateTypes
         return this;
     };
 
@@ -97,6 +97,7 @@ export default class Matrix2D {
     reset = function() {
         this.a = this.d = 1;
         this.b = this.c = this.tx = this.ty = 0;
+        //noinspection JSValidateTypes
         return this;
     };
 
@@ -109,6 +110,7 @@ export default class Matrix2D {
         return [this.a, this.b, this.c, this.d, this.tx, this.ty];
     };
 
+    //noinspection JSUnusedGlobalSymbols
     /**
      * Copies all properties from the specified matrix to this matrix.
      * @method copy
@@ -116,9 +118,18 @@ export default class Matrix2D {
      * @return {Matrix2D} This matrix. Useful for chaining method calls.
      */
     copy = function(matrix) {
-        return this.setTransform(matrix.a, matrix.b, matrix.c, matrix.d, matrix.tx, matrix.ty);
+        //noinspection JSUnresolvedVariable
+        return this.setTransform(
+            matrix.a,
+            matrix.b,
+            matrix.c,
+            matrix.d,
+            matrix.tx,
+            matrix.ty
+        );
     };
 
+    //noinspection JSUnusedGlobalSymbols
     /**
      * Clones current instance and returning a new matrix.
      * @method clone
@@ -142,16 +153,17 @@ export default class Matrix2D {
      * @return {Matrix2D} This matrix. Useful for chaining method calls.
      **/
     prepend = function(a, b, c, d, tx, ty) {
-        var a1 = this.a;
-        var c1 = this.c;
-        var tx1 = this.tx;
+        const a1 = this.a;
+        const c1 = this.c;
+        const tx1 = this.tx;
 
-        this.a  = a * a1 + c * this.b;
-        this.b  = b * a1 + d * this.b;
-        this.c  = a * c1 + c * this.d;
-        this.d  = b * c1 + d * this.d;
+        this.a = a * a1 + c * this.b;
+        this.b = b * a1 + d * this.b;
+        this.c = a * c1 + c * this.d;
+        this.d = b * c1 + d * this.d;
         this.tx = a * tx1 + c * this.ty + tx;
         this.ty = b * tx1 + d * this.ty + ty;
+        //noinspection JSValidateTypes
         return this;
     };
 
@@ -168,18 +180,19 @@ export default class Matrix2D {
      * @return {Matrix2D} This matrix. Useful for chaining method calls.
      **/
     append = function(a, b, c, d, tx, ty) {
-        var a1 = this.a;
-        var b1 = this.b;
-        var c1 = this.c;
-        var d1 = this.d;
+        const a1 = this.a;
+        const b1 = this.b;
+        const c1 = this.c;
+        const d1 = this.d;
         if (a !== 1 || b !== 0 || c !== 0 || d !== 1) {
-            this.a  = a1 * a + c1 * b;
-            this.b  = b1 * a + d1 * b;
-            this.c  = a1 * c + c1 * d;
-            this.d  = b1 * c + d1 * d;
+            this.a = a1 * a + c1 * b;
+            this.b = b1 * a + d1 * b;
+            this.c = a1 * c + c1 * d;
+            this.d = b1 * c + d1 * d;
         }
         this.tx = a1 * tx + c1 * ty + this.tx;
         this.ty = b1 * tx + d1 * ty + this.ty;
+        //noinspection JSValidateTypes
         return this;
     };
 
@@ -201,11 +214,22 @@ export default class Matrix2D {
      * @param {Number} regY Optional.
      * @return {Matrix2D} This matrix. Useful for chaining method calls.
      **/
-    appendTransform = function(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY) {
+    appendTransform = function(
+        x,
+        y,
+        scaleX,
+        scaleY,
+        rotation,
+        skewX,
+        skewY,
+        regX,
+        regY
+    ) {
+        let cos, sin;
         if (rotation % 360) {
-            var r = rotation * DEG_TO_RAD;
-            var cos = Math.cos(r);
-            var sin = Math.sin(r);
+            const r = rotation * DEG_TO_RAD;
+            cos = Math.cos(r);
+            sin = Math.sin(r);
         } else {
             cos = 1;
             sin = 0;
@@ -215,10 +239,31 @@ export default class Matrix2D {
             // TODO: can this be combined into a single append operation?
             skewX *= DEG_TO_RAD;
             skewY *= DEG_TO_RAD;
-            this.append(Math.cos(skewY), Math.sin(skewY), -Math.sin(skewX), Math.cos(skewX), x, y);
-            this.append(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, 0, 0);
+            this.append(
+                Math.cos(skewY),
+                Math.sin(skewY),
+                Math.sin(skewX),
+                Math.cos(skewX),
+                x,
+                y
+            );
+            this.append(
+                cos * scaleX,
+                sin * scaleX,
+                -sin * scaleY,
+                cos * scaleY,
+                0,
+                0
+            );
         } else {
-            this.append(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, x, y);
+            this.append(
+                cos * scaleX,
+                sin * scaleX,
+                -sin * scaleY,
+                cos * scaleY,
+                x,
+                y
+            );
         }
 
         if (regX || regY) {
@@ -226,9 +271,11 @@ export default class Matrix2D {
             this.tx -= regX * this.a + regY * this.c;
             this.ty -= regX * this.b + regY * this.d;
         }
+        //noinspection JSValidateTypes
         return this;
     };
 
+    //noinspection JSUnusedGlobalSymbols
     /**
      * Generates matrix properties from the specified display object transform properties, and prepends them to this matrix.
      * For example, you could calculate the combined transformation for a child object using:
@@ -236,9 +283,9 @@ export default class Matrix2D {
      * 	var o = myDisplayObject;
      * 	var mtx = new createjs.Matrix2D();
      * 	do  {
-	 * 		// prepend each parent's transformation in turn:
-	 * 		mtx.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.regX, o.regY);
-	 * 	} while (o = o.parent);
+     * 		// prepend each parent's transformation in turn:
+     * 		mtx.prependTransform(o.x, o.y, o.scaleX, o.scaleY, o.rotation, o.skewX, o.skewY, o.regX, o.regY);
+     * 	} while (o = o.parent);
      *
      * 	Note that the above example would not account for {{#crossLink "DisplayObject/transformMatrix:property"}}{{/crossLink}}
      * 	values. See {{#crossLink "Matrix2D/prependMatrix"}}{{/crossLink}} for an example that does.
@@ -254,11 +301,22 @@ export default class Matrix2D {
      * @param {Number} regY Optional.
      * @return {Matrix2D} This matrix. Useful for chaining method calls.
      **/
-    prependTransform = function(x, y, scaleX, scaleY, rotation, skewX, skewY, regX, regY) {
+    prependTransform = function(
+        x,
+        y,
+        scaleX,
+        scaleY,
+        rotation,
+        skewX,
+        skewY,
+        regX,
+        regY
+    ) {
+        let cos, sin;
         if (rotation % 360) {
-            var r = rotation * DEG_TO_RAD;
-            var cos = Math.cos(r);
-            var sin = Math.sin(r);
+            const r = rotation * DEG_TO_RAD;
+            cos = Math.cos(r);
+            sin = Math.sin(r);
         } else {
             cos = 1;
             sin = 0;
@@ -266,17 +324,40 @@ export default class Matrix2D {
 
         if (regX || regY) {
             // prepend the registration offset:
-            this.tx -= regX; this.ty -= regY;
+            this.tx -= regX;
+            this.ty -= regY;
         }
         if (skewX || skewY) {
             // TODO: can this be combined into a single prepend operation?
             skewX *= DEG_TO_RAD;
             skewY *= DEG_TO_RAD;
-            this.prepend(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, 0, 0);
-            this.prepend(Math.cos(skewY), Math.sin(skewY), -Math.sin(skewX), Math.cos(skewX), x, y);
+            this.prepend(
+                cos * scaleX,
+                sin * scaleX,
+                -sin * scaleY,
+                cos * scaleY,
+                0,
+                0
+            );
+            this.prepend(
+                Math.cos(skewY),
+                Math.sin(skewY),
+                -Math.sin(skewX),
+                Math.cos(skewX),
+                x,
+                y
+            );
         } else {
-            this.prepend(cos * scaleX, sin * scaleX, -sin * scaleY, cos * scaleY, x, y);
+            this.prepend(
+                cos * scaleX,
+                sin * scaleX,
+                -sin * scaleY,
+                cos * scaleY,
+                x,
+                y
+            );
         }
+        //noinspection JSValidateTypes
         return this;
     };
 }

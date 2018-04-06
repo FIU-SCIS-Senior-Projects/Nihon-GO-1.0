@@ -7,7 +7,8 @@ const INITIAL_STATE = {
     location: '',
     description: '',
     image: '',
-    duration: ''
+    duration: '',
+    events: [],
 };
 
 export default (state = INITIAL_STATE, action) => {

@@ -3,7 +3,7 @@ import {ImageBackground, Dimensions} from 'react-native';
 
 const ImageCard = (props) => {
     return(
-            <ImageBackground style={styles.imageStyle} source={props.source}>
+            <ImageBackground style={[styles.imageStyle, props.style]} source={props.source}>
                 {props.children}
             </ImageBackground>
     );
@@ -12,8 +12,9 @@ const ImageCard = (props) => {
 const styles ={
     imageStyle:{
         flex: 1,
-        height:  (Dimensions.get('window').height - 60) * .5,
-        justifyContent: 'flex-end',
+        height:  (Dimensions.get('window').width) / 1.618, //Golden Ratio
+        justifyContent: 'flex-start',
+        borderBottomWidth: 3,
     },
 };
 

@@ -1,17 +1,17 @@
-import React, {
-    Component
-} from 'react';
-import PropTypes from 'prop-types';
+//noinspection JSUnresolvedVariable
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import {
     ViewPropTypes,
     requireNativeComponent,
     StyleSheet,
     findNodeHandle,
     NativeModules
-} from 'react-native';
-import extractViewBox from '../lib/extract/extractViewBox';
-import {ViewBoxAttributes} from '../lib/attributes';
+} from "react-native";
+import extractViewBox from "../lib/extract/extractViewBox";
+import { ViewBoxAttributes } from "../lib/attributes";
 
+/** @namespace NativeModules.RNSVGSvgViewManager */
 const RNSVGSvgViewManager = NativeModules.RNSVGSvgViewManager;
 
 // Svg - Root node of all Svg elements
@@ -19,12 +19,12 @@ let id = 0;
 
 const styles = StyleSheet.create({
     svg: {
-        backgroundColor: 'transparent'
+        backgroundColor: "transparent"
     }
 });
 
-class Svg extends Component{
-    static displayName = 'Svg';
+class Svg extends Component {
+    static displayName = "Svg";
     static propTypes = {
         ...ViewPropTypes,
         opacity: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -36,13 +36,14 @@ class Svg extends Component{
     };
 
     static defaultProps = {
-        preserveAspectRatio: 'xMidYMid meet'
+        preserveAspectRatio: "xMidYMid meet"
     };
 
     constructor() {
         super(...arguments);
         id++;
         this.id = id;
+        //noinspection JSUnusedGlobalSymbols
         this.onDataURLCallbacks = [];
     }
     measureInWindow = (...args) => {
@@ -61,41 +62,61 @@ class Svg extends Component{
         this.root.setNativeProps(...args);
     };
 
-    toDataURL = (callback: Function) => {
-        callback && RNSVGSvgViewManager.toDataURL(findNodeHandle(this.root), callback);
+    toDataURL = callback => {
+        callback &&
+            RNSVGSvgViewManager.toDataURL(findNodeHandle(this.root), callback);
     };
 
     render() {
-        const {opacity, width, height, viewBox, preserveAspectRatio, style, ...props} = this.props;
+        const {
+            opacity,
+            width,
+            height,
+            viewBox,
+            preserveAspectRatio,
+            style,
+            ...props
+        } = this.props;
         let dimensions;
 
         if (width && height) {
             dimensions = {
-                width: +width,
-                height: +height,
+                width: width[width.length - 1] === "%" ? width : +width,
+                height: height[height.length - 1] === "%" ? height : +height,
                 flex: 0
             };
         }
 
-        return <NativeSvgView
-            {...props}
-            {...extractViewBox({ viewBox, preserveAspectRatio })}
-            ref={ele => {this.root = ele;}}
-            style={[
-                styles.svg,
-                style,
-                !isNaN(+opacity) && {
-                    opacity: +opacity
-                },
-                dimensions
-            ]}
-        />;
+        const w = `${width}`;
+        const h = `${height}`;
+
+        return (
+            <NativeSvgView
+                {...props}
+                bbWidth={w}
+                bbHeight={h}
+                {...extractViewBox({ viewBox, preserveAspectRatio })}
+                ref={ele => {
+                    this.root = ele;
+                }}
+                style={[
+                    styles.svg,
+                    style,
+                    !isNaN(+opacity) && {
+                        opacity: +opacity
+                    },
+                    dimensions
+                ]}
+            />
+        );
     }
 }
 
-const NativeSvgView = requireNativeComponent('RNSVGSvgView', null, {
+const NativeSvgView = requireNativeComponent("RNSVGSvgView", null, {
     nativeOnly: {
-        ...ViewBoxAttributes
+        ...ViewBoxAttributes,
+        width: true,
+        height: true
     }
 });
 

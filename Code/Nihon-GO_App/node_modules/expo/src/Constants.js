@@ -1,6 +1,7 @@
 // @flow
 
-import { NativeModules } from 'react-native';
+import { Platform, NativeModules } from 'react-native';
+import normalizeLinkingUrl from './normalizeLinkingUrl';
 
 // On Android we pass the manifest in JSON form so this step is necessary
 const { ExponentConstants } = NativeModules;
@@ -13,8 +14,12 @@ if (ExponentConstants) {
   }
 }
 
+// More information at https://github.com/expo/universe/issues/1678
+const linkingUrl = normalizeLinkingUrl(ExponentConstants, Platform.OS);
+
 export default {
   ...ExponentConstants,
-  linkingUrl: ExponentConstants.linkingUri,
+  linkingUri: linkingUrl,
+  linkingUrl,
   manifest,
 };

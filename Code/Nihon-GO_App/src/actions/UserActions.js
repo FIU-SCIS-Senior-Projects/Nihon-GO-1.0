@@ -40,9 +40,24 @@ export const userProfileSave = ({ username, country, languages, description, ema
 	
 	return (dispatch) => {
 		firebase.database().ref(`/users/${currentUser.uid}`)
-			.set({ username, email, country, languages, description })
+			.update({ username, email, country, languages, description })
 			.then(() => {
 				Actions.pop();
+			});
+	};
+};
+
+export const userProfileImageFetch = () => {
+	const picture = firebase.storage().ref('UserProfile/ProfilePicture/Floor Sticker.png');
+	
+	return (dispatch) => {
+		picture.getDownloadURL()
+			.then((url) => {
+				console.log(url);
+				dispatch(url);
+			})
+			.catch ((error) => {
+				console.log(error);
 			});
 	};
 };

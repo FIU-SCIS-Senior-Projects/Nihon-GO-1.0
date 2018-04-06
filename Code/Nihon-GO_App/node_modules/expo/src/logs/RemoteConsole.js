@@ -113,16 +113,14 @@ function createRemoteConsole(originalConsole: Console): Console {
     additionalFields: LogEntryFields,
     data: Array<mixed>
   ): void {
-    RemoteLogging.enqueueRemoteLogAsync(
-      level,
-      { groupDepth, ...additionalFields },
-      data
-    ).catch(error => {
-      originalConsole.error(
-        `There was a problem sending log messages to your development environment`,
-        error
-      );
-    });
+    RemoteLogging.enqueueRemoteLogAsync(level, { groupDepth, ...additionalFields }, data).catch(
+      error => {
+        originalConsole.error(
+          `There was a problem sending log messages to your development environment`,
+          error
+        );
+      }
+    );
   }
 
   return enhancedConsole;

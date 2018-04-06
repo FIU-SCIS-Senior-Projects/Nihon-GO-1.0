@@ -9,6 +9,7 @@ const Input = ({ label, value, onChangeText, placeholder, secureTextEntry, multi
 			<Text style={labelStyle}>{label}</Text>
 			<TextInput
 				multiline = {multiline}
+				underlineColorAndroid="transparent"
 				secureTextEntry={secureTextEntry}
 				placeholder={placeholder}
 				autoCorrect={false}

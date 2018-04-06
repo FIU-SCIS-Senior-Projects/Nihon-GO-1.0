@@ -24,7 +24,7 @@ class BlogPreview extends Component {
         const { id, image, category } = this.props.blog;
   return(
         <BlogCard >
-        <BlogCardSection >
+        <BlogCardSection /*onPress={Actions.BlogExpand()*/ >
         <View style={styles.imageContainerStyle}>
             <View >
                 <Image style={styles.imageStyle}

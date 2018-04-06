@@ -5,6 +5,7 @@ import { Card, CardSection, Input, Button, Spinner  } from './common';
 import { DrawerButton } from './DrawerButton';
 import UserCard from './UserCard';
 import { connect } from 'react-redux';
+import { primary_color, primary_text_color, dark_color, dark_text_color, light_color}  from './common/AppPalette';
 
 class Drawer extends Component {
 	
@@ -115,7 +116,7 @@ class Drawer extends Component {
 	}
 	render() {
 		return (
-			<View>
+			<View style={styles.background}>
 				{this.renderUserCard()}
 				{this.renderButtons()}
 			</View>
@@ -135,10 +136,13 @@ const styles = {
 		justifyContent:'flex-start',
 		height: 150,
 		elevation: 1,
-		backgroundColor: '#cccccc',
+		backgroundColor: primary_color,
 	},
 	focus: {
-		backgroundColor: '#95bcf2',
+		backgroundColor: light_color,
+	},
+	background: {
+		flex:1,
 	}
 };
 

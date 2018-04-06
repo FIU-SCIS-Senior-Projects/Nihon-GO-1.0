@@ -32,7 +32,6 @@ export const loginUser = ({ email, password }) => {
 			.then(user => loginUserSuccess(dispatch, user))
 			.catch((error) => {
 				console.log(error);
-				console.log("WORKED");
 				loginUserFail(dispatch);
 			});
 	};
@@ -72,6 +71,8 @@ export const logoutUser = () => {
 		dispatch({ type: LOGOUT });
 		
 		firebase.auth().signOut();
+		
+		Actions.main();
 	};
 };
 
@@ -85,7 +86,7 @@ const loginUserSuccess = (dispatch, user) => {
 		payload: user
 	});
 	
-	Actions.homepage();
+	Actions.main();
 };
 
 //tech-stack

@@ -4,6 +4,7 @@ import { Button, Icon } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 import {Hokkaido_Info, Tohoku_Info, Kanto_Info, Chubu_Info} from './regions';
 const { height: deviceHeight } = Dimensions.get("window");
+import { primary_text_color } from './common/AppPalette';
 
 export default class MapModal extends React.Component {
 	constructor(props) {
@@ -103,7 +104,7 @@ export default class MapModal extends React.Component {
 				{ transform: [{ translateY: this.state.offset }] }]}
 				>
 					{this.renderRegion()}
-					<Icon containerStyle={{position: 'absolute', top: 5, right: 5}} color="#4fc3f7" name="close" onPress={this.closeModal.bind(this)}/>
+					<Icon containerStyle={{position: 'absolute', top: 5, right: 5}} color={primary_text_color} name="close" onPress={this.closeModal.bind(this)}/>
 				</Animated.View>
 			</View>
 		);
@@ -122,6 +123,7 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 	},
 	container2:{
+		position: 'absolute',
 		borderRadius: 7,
 		width: 350,
 		height: 480,

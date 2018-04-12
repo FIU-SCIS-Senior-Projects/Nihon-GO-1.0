@@ -42,7 +42,9 @@ class ItineraryPreview extends Component {
 
     //This method renders the title, description, and selection arrow for all itinerary previews
     renderTopHalf(){
-        const { id, image, location, description } = this.props.itinerary;
+        const { itinerary, expanded } = this.props;
+        const { id, data } = itinerary;
+		const { image, description, title, location, duration } = data;
         const {titleStyle, captionStyle, linearGradient } = styles;
 
         return (
@@ -63,7 +65,7 @@ class ItineraryPreview extends Component {
                 </View>
                 <View style={{flex: 1, marginTop: 10,}}>
                     <TouchableOpacity 
-                        onPress={() => this.props.selectItinerary(this.props.itinerary.id)}
+                        onPress={() => this.props.selectItinerary(id)}
                         style={{flex: 1}}>
                         <Icon
                             name='angle-right'
@@ -79,7 +81,9 @@ class ItineraryPreview extends Component {
 
     //This method renders the comment, share, and favorites buttons when preview is expanded.
     renderBottomHalf(){
-        const { id, image, location, description } = this.props.itinerary;
+        const { itinerary, expanded } = this.props;
+        const { id, data } = itinerary;
+		const { image, description, title, location, duration } = data;
         const {titleStyle, captionStyle, linearGradient } = styles;
 
         return(
@@ -108,7 +112,8 @@ class ItineraryPreview extends Component {
 
     renderExpandedPreview(){
         const { itinerary, expanded } = this.props;
-        const { id, image, location, description } = this.props.itinerary;
+        const { id, data } = itinerary;
+		const { image, description, title, location, duration } = data;
         const {titleStyle, captionStyle, linearGradient } = styles;
 
         if (!this.state.expandedItinerary){

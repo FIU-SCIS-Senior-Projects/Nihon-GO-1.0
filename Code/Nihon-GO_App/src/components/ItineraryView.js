@@ -18,8 +18,8 @@ class ItineraryView extends Component {
     }
     renderDescription(){
         const { titleStyle, descriptionStyle } = styles;
-        const { id, title, location, description, image, duration } = this.props.itinerary;
-
+        const { id, data } = this.props.itinerary;
+		const { title, location, description, image, duration } = data;
         if(this.state.expandedDesc){
             return (
                 <Card style={{height: 200, flexDirection: 'row', marginTop: 5}}>
@@ -77,9 +77,18 @@ class ItineraryView extends Component {
             return { expandedDesc: !previousState.expandedDesc };
           });
     }
-
+	
+	rendrEvents(){
+		const { data } = this.props.itinerary;
+		if(data.events)
+			return(<EventList events={data.event} />);
+		else
+			return(<View/>);
+	}
+	
     render(){
-        const { id, title, location, description, image, duration } = this.props.itinerary;
+        const { id, data } = this.props.itinerary;
+		const { title, location, description, image, duration } = data;
         
 
         return (
@@ -91,7 +100,7 @@ class ItineraryView extends Component {
                     <View style={{flex: 2}}>
                         {this.renderDescription()}
                     <View style={{flex:1}}>
-                        <EventList events={this.props.itinerary.event} />
+                        {this.renderDescription()}
                     </View>
                     </View>
                 </View>
@@ -121,7 +130,7 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    const itinerary = state.itineraries.find(item => item.itinerary.id === state.selectedItineraryId).itinerary;
+    const itinerary = state.itineraries.find(item => item.id === state.selectedItineraryId);
     return { itinerary };
 };
 

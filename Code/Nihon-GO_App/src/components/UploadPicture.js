@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import * as firebase from 'firebase';
+import { ImagePicker } from 'expo';
 
-class UploadPicture extends Component {   
-
-	_handleImagePicked = async pickerResult => {
+export const UploadPicture = (picture, location) => {  
+	
+	handleImagePicked = async pickerResult => {
 		try {
-			this.setState({ uploading: true });
-			
 			if (!pickerResult.cancelled) {
 				//uploadUrl = await uploadImageAsync(pickerResult.uri);
 				//this.setState({ image: uploadUrl });
@@ -15,15 +14,13 @@ class UploadPicture extends Component {
 		} catch (e) {
 			console.log({ e });
 			alert('Upload failed, sorry :(');
-		} finally {
-			this.setState({ uploading: false });
 		}
 	};
 	
 	uploadImage = async(uri) => {
 		const response = await fetch(uri);
 		const blob = await response.blob();
-		var ref = firebase.storage().ref().child("my-image");
+		var ref = firebase.storage().ref().child(location);
 		
 		//return ref.put(blob);
 		
@@ -32,13 +29,13 @@ class UploadPicture extends Component {
 				ref.getDownloadURL()
 					.then((url) => {
 						console.log(url);
-						this.setState({ image: url });
+						return url;
 					})
 					.catch ((error) => {
 						console.log(error);
 					})
 			);
 	}
+	
+	this.handleImagePicked(picture);
 }
-
-export default UploadPicture;

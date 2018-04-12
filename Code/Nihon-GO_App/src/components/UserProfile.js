@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { Card, CardSection, Input } from './common';
 import { userProfileUpdate, userProfileFetch, userProfileImageFetch } from '../actions';
-import { Avatar, Divider } from 'react-native-elements';
+import { Divider, Icon } from 'react-native-elements';
 import LibraryList from './LibraryList'; // TESTING ONLY
 import {
 	ActivityIndicator,
@@ -27,16 +26,24 @@ import {
 	TabViewPagerPan,
 	TabViewPagerScroll,
 } from 'react-native-tab-view';
-import { ImagePicker } from 'expo';
+import { BlurView, ImagePicker } from 'expo';
+import { UploadPicture } from './UploadPicture';
 
 // Gets pictures for profile
 const profilePicture = require('../resources/profilePicture.png');
 const profileBackgroundPicture = require('../resources/profileBackground.jpg');
 
 class UserProfile extends Component {
+	
 	// Gets user profile data
-	componentWillMount() {
+ 	componentWillMount() {
+		const { currentUser } = firebase.auth();
+		var profilePictureLocation = `/UserProfile/ProfilePicture/${currentUser.uid}`;
+		var backgroundPictureLocation = `/UserProfile/BackgroundPicture/${currentUser.uid}`;
+		
 		this.props.userProfileFetch();
+		this.getURL(profilePictureLocation, "image");
+		this.getURL(backgroundPictureLocation, "backImage");
 	}
 	
 	static defaultProps = {
@@ -49,12 +56,13 @@ class UserProfile extends Component {
 		tabs: {
 			index: 0,
 			routes: [
-				{ key: '1', title: 'ABOUT'},
-				{ key: '2', title: 'ITINERARY'},
-				{ key: '3', title: 'FAVORITES'},
+				{ key: '1', title: 'info'},
+				{ key: '2', title: 'view-list'},
+				{ key: '3', title: 'favorite'},
 			],
 		},
 		image: null,
+		backImage: null,
 		uploading: false,
 	}
 	
@@ -68,6 +76,7 @@ class UserProfile extends Component {
 		})
 	}
 	
+	// Renders header
 	renderHeader = props => {
 		return (
 			<TabBar
@@ -96,20 +105,34 @@ class UserProfile extends Component {
 	
 	// Render tab labels
 	renderLabel = props => ({ route, index }) => {
-		const inputRange = props.navigationState.routes.map((x, i) => i)
+		// used for version 1
+		/* const inputRange = props.navigationState.routes.map((x, i) => i)
 		const outputRange = inputRange.map(
 			inputIndex => (inputIndex === index ? 'black' : 'gray')
 		)
 		const color = props.position.interpolate({
 			inputRange,
 			outputRange,
-		})
-
-		return (
+		}) */
+		
+		// version 1
+		/* return (
 			<View style={styles.tabRow}>
 				<Animated.Text style={[styles.tabLabelText, { color }]}>
 					{route.title}
 				</Animated.Text>
+			</View>
+		 )*/
+		
+		// version 2
+		return (
+			<View style={styles.tabRow}>
+				<Animated.View style={styles.tabIcon}>
+					<Icon 
+						name={route.title}
+						size={35}
+					/>
+				</Animated.View>
 			</View>
 		)
 	}
@@ -122,36 +145,148 @@ class UserProfile extends Component {
 		)
 	}
 	
-	// Renders profile picture, background picture, and user name
-	renderContactHeader = () => {
-		const { username } = this.props;
+	// allows user to take a picture
+	takePhoto = async () => {
+		let pickerResult = await ImagePicker.launchCameraAsync({
+			allowsEditing: true,
+			aspect: [4, 3],
+		});
+		
+		this._handleImagePicked(pickerResult);
+	};
+	
+	// allows user to pick a picture
+	pickImage = async () => {
 		let { image } = this.state;
-		if (image) {
-			console.log(image);
-			profilePicture = { uri: image };
+		const { currentUser } = firebase.auth();
+		const profilePictureLocation = `/UserProfile/ProfilePicture/${currentUser.uid}`;
+		
+		console.log("pickImage");
+		
+		let pickerResult = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			aspect: [4, 3],
+		});
+		
+		UploadPicture(pickerResult, profilePictureLocation);
+		this.getURL(profilePictureLocation, "image");
+		
+	};
+	
+	// allows user to pick the background picture
+	pickBackImage = async () => {
+		const { currentUser } = firebase.auth();
+		const backgroundPictureLocation = `/UserProfile/BackgroundPicture/${currentUser.uid}`;
+		
+		console.log("pickBackImage");
+		
+		let pickerResult = await ImagePicker.launchImageLibraryAsync({
+			allowsEditing: true,
+			aspect: [4, 3],
+		});
+		
+		UploadPicture(pickerResult, backgroundPictureLocation);
+		this.getURL(backgroundPictureLocation, "backImage");
+	};
+	
+	// gets the download URL for profile picture and background picture
+	getURL(location, type) {
+		let { image, backImage } = this.state;
+
+		//console.log("running getDownloadURL");
+		//console.log(location);
+		
+ 		var ref = firebase.storage().ref().child(location);
+		ref.getDownloadURL()
+			.then((url) => {
+				if (type === "image") {
+					this.setState({
+						image: url
+					});
+				} else {
+					this.setState({
+						backImage: url
+					});
+				}
+			})
+			.catch ((error) => {
+				console.log(error);
+			})
+	}
+	
+	// renders profile picture
+	renderImage = () => {
+		let { image } = this.state;
+		if (!image) {
+			return (
+				<View>
+					<Image source={profilePicture} style={styles.profileImage}/>
+				</View>
+			);
 		}
+
 		return (
-			<View style={styles.headerContainer}>
-				<TouchableOpacity style={styles.coverContainer}>
+			<View>
+				<Image source={{ uri: image }} style={styles.profileImage}/>
+			</View>
+		);
+	};
+	
+	// renders background picture
+	renderBackImage = () => {
+		const { username } = this.props;
+		let { backImage } = this.state;
+		if (!backImage) {
+			return (
+				<View>
 					<ImageBackground
 						source={profileBackgroundPicture}
 						style={styles.coverImage}
 					>
-						<View style={styles.coverTitleContainer}>
-							<Text style={styles.coverTitle} />
-						</View>
+						<View style={styles.coverTitleContainer} />
 						
-						<View style={styles.coverMetaContainer}>
-							<Text style={styles.coverName}>{username}</Text>
-						</View>
+						<BlurView tint="default" intensity={100}>
+							<View style={styles.coverMetaContainer}>
+								<Text style={styles.coverName}>{username}</Text>
+							</View>
+						</BlurView>
 					</ImageBackground>
+				</View>
+			);
+		}
+
+		return (
+			<View>
+				<ImageBackground
+						source={{ uri: backImage }}
+						style={styles.coverImage}
+					>
+						<View style={styles.coverTitleContainer} />
+						
+						<BlurView tint="default" intensity={100}>
+							<View style={styles.coverMetaContainer}>
+								<Text style={styles.coverName}>{username}</Text>
+							</View>
+						</BlurView>
+					</ImageBackground>
+			</View>
+		);
+	};
+	
+	// Renders contact header for user
+	renderContactHeader = () => {
+		return (
+			<View style={styles.headerContainer}>
+				<TouchableOpacity onPress={this.pickBackImage} style={styles.coverContainer}>
+					<View>
+						{this.renderBackImage()}
+					</View>
 				</TouchableOpacity>
 				
-				<TouchableOpacity onPress={this._pickImage} style={styles.profileImageContainer}>
-					<Image
-						source={profilePicture}
-						style={styles.profileImage}
-					/>
+				<TouchableOpacity onPress={this.pickImage} style={styles.profileImageContainer}>
+					<View>
+						{this.renderImage()}
+					</View>
 				</TouchableOpacity>
 			</View>
 		);
@@ -193,6 +328,7 @@ class UserProfile extends Component {
 		return <LibraryList/>;
 	}
 	
+	// REMOVE
 	_maybeRenderUploadingOverlay = () => {
 		if (this.state.uploading) {
 			return (
@@ -211,10 +347,10 @@ class UserProfile extends Component {
 		}
 	};
   
+	// REMOVE
 	_maybeRenderImage = () => {
 		let { image } = this.state;
-		console.log('image');
-		console.log(image);
+		
 		if (!image) {
 		return;
 		}
@@ -250,61 +386,6 @@ class UserProfile extends Component {
 		);
 	};
 	
-	_takePhoto = async () => {
-		let pickerResult = await ImagePicker.launchCameraAsync({
-			allowsEditing: true,
-			aspect: [4, 3],
-		});
-		
-		this._handleImagePicked(pickerResult);
-	};
-	
-	_pickImage = async () => {
-		let pickerResult = await ImagePicker.launchImageLibraryAsync({
-			allowsEditing: true,
-			aspect: [4, 3],
-		});
-		
-		this._handleImagePicked(pickerResult);
-	};
-	
-	_handleImagePicked = async pickerResult => {
-		try {
-			this.setState({ uploading: true });
-			
-			if (!pickerResult.cancelled) {
-				//uploadUrl = await uploadImageAsync(pickerResult.uri);
-				//this.setState({ image: uploadUrl });
-				this.uploadImage(pickerResult.uri);
-			}
-		} catch (e) {
-			console.log({ e });
-			alert('Upload failed, sorry :(');
-		} finally {
-			this.setState({ uploading: false });
-		}
-	};
-	
-	uploadImage = async(uri) => {
-		const response = await fetch(uri);
-		const blob = await response.blob();
-		var ref = firebase.storage().ref().child("my-image");
-		
-		//return ref.put(blob);
-		
-		ref.put(blob)
-			.then (
-				ref.getDownloadURL()
-					.then((url) => {
-						console.log(url);
-						this.setState({ image: url });
-					})
-					.catch ((error) => {
-						console.log(error);
-					})
-			);
-	}
-	
 	// Renders itinerary list
 	renderItinerary() {
 		let { image } = this.state;
@@ -324,11 +405,11 @@ class UserProfile extends Component {
 				)}		
 				
 				<Button
-					onPress={this._pickImage}
+					onPress={this.pickImage}
 					title="Pick an image from camera roll"
 				/>
 					
-				<Button onPress={this._takePhoto} title="Take a photo" />
+				<Button onPress={this.takePhoto} title="Take a photo" />
 				
 				{this._maybeRenderImage()}
 				{this._maybeRenderUploadingOverlay()}
@@ -358,25 +439,6 @@ class UserProfile extends Component {
 	}
 }
 
-async function uploadImageAsync(uri) {
-	
-	const response = await fetch(uri);
-	const blob = await response.blob();
-	const ref = firebase.storage().ref().child('images');
-	const task = ref.put(blob);	
-		
-	return new Promise((resolve, reject) => {
-		task.on(
-			'state_changed',
-			() => {
-			/* noop but you can track the progress here */
-			},
-			reject /* this is where you would put an error callback! */,
-			() => resolve(task.snapshot.downloadURL)
-		);
-	});
-}
-
 const styles = {
 	cardContainer: {
 		flex: 1,
@@ -402,12 +464,6 @@ const styles = {
 		fontSize: 28,
 		fontWeight: 'bold',
 		paddingBottom: 2,
-	},
-	coverTitle: {
-		color: '#FFF',
-		fontSize: 24,
-		fontWeight: 'bold',
-		textAlign: 'center',
 	},
 	coverTitleContainer: {
 		backgroundColor: 'transparent',
@@ -453,6 +509,9 @@ const styles = {
 		flexWrap: 'wrap',
 		flexDirection: 'row',
 	},
+	tabIcon: {
+		alignContent: 'center',
+	},
 	tabLabelText: {
 		color: 'black',
 		fontSize: 18,
@@ -472,7 +531,7 @@ const styles = {
 
 const mapStateToProps = (state) => {
 	const { username, country, languages, description, email } = state.user;
-	
+
 	return { username, country, languages, description, email };
 };
 

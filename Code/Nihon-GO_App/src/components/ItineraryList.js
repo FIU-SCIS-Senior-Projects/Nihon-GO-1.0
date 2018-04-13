@@ -9,7 +9,7 @@ import { itineraryFetch } from '../actions';
 
 class ItineraryList extends Component {
 
-    componentWillMount(){
+    componentDidMount(){
         this.props.itineraryFetch(this.props.region);
     }
 

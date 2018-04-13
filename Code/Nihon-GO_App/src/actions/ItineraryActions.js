@@ -13,10 +13,10 @@ export const itineraryUpdate = ({ prop, value }) => {
     };
 };
 
-export const itineraryCreate = ({ titleInput, location, description, image, duration, events }) => {
+export const itineraryCreate = ({ title, location, description, image, duration, events }) => {
     return ()  =>{
         firebase.database().ref('/itineraries')
-            .push({ titleInput, location, description, image, duration, events })
+            .push({ title, location, description, image, duration, events })
             .then(() => Actions.pop());
     }
 };

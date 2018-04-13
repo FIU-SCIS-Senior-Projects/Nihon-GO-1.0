@@ -30,7 +30,7 @@ class ItineraryView extends Component {
                         </ScrollView>
                     </View>
                     <View style={{flex: 1, justifyContent: 'space-around'}}>
-                        <Text style={[descriptionStyle, {marginTop: 10}]}>{duration} days</Text>
+                        <Text style={[descriptionStyle, {marginTop: 10}]}>{duration} Hours</Text>
                         <TouchableOpacity onPress={() => {this.toggleExpand()}}>
                             <View style={{marginBottom: 15}}>
                                 <Icon
@@ -55,7 +55,7 @@ class ItineraryView extends Component {
                         </Text>
                     </View>
                     <View style={{flex: 1, justifyContent: 'space-around'}}>
-                        <Text style={[descriptionStyle, {marginTop: 10}]}>{duration} days</Text>
+                        <Text style={[descriptionStyle, {marginTop: 10}]}>{duration} Hours</Text>
                         <TouchableOpacity onPress={() => {this.toggleExpand()}}>
                             <View style={{marginBottom: 10}}>
                                 <Icon

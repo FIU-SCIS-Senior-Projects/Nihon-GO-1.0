@@ -54,7 +54,7 @@ class ItineraryPreview extends Component {
                         <Text 
                             style={titleStyle}
                             >
-                            {location}
+                            {title}
                         </Text>
                         <Text numberOfLines={1}
                             style={captionStyle}

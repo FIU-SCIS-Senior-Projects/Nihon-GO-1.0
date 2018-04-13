@@ -21,18 +21,35 @@ export const itineraryCreate = ({ titleInput, location, description, image, dura
     }
 };
 
-// Fetch user profile data OR create a generic profile if none found
-export const itineraryFetch = () => {
+// Fetch itineraries
+export const itineraryFetch = (region) => {
 	var itineraries = [];
-	return (dispatch) => {
-		firebase.database().ref('/itineraries')
-			.once('value', function(snapshot) {
-				snapshot.forEach(function(childSnapshot) {
-						itineraries.push({id: childSnapshot.key, data: childSnapshot.val()})
-				});
-				dispatch({ type: ITINERARY_FETCH, payload: itineraries });
-			});
-	};
+    var ref = firebase.database().ref('/itineraries')
+    if (region == 'ALL'){
+        return (dispatch) => {
+            ref.orderByChild("favorites").once('value', function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                        var key = childSnapshot.key;
+                        var data_val = childSnapshot.val();
+                        itineraries.push({id: key, data: data_val})
+                });
+                dispatch({ type: ITINERARY_FETCH, payload: itineraries.reverse() });
+            });
+        };
+    }
+    else {
+        return (dispatch) => {
+            ref.orderByChild("favorites").once('value', function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                        var key = childSnapshot.key;
+                        var data_val = childSnapshot.val();
+                        if( data_val.location== region)
+                            itineraries.push({id: key, data: data_val})
+                });
+                dispatch({ type: ITINERARY_FETCH, payload: itineraries.reverse() });
+            });
+        };
+    }
 };
 
 export const selectItinerary = (itineraryId) => {

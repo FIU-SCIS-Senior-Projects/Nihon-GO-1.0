@@ -100,7 +100,7 @@ class ItineraryView extends Component {
                     <View style={{flex: 2}}>
                         {this.renderDescription()}
                     <View style={{flex:1}}>
-                        {this.renderDescription()}
+                        {this.rendrEvents()}
                     </View>
                     </View>
                 </View>

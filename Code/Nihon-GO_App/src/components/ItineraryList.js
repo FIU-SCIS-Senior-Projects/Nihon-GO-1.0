@@ -10,7 +10,7 @@ import { itineraryFetch } from '../actions';
 class ItineraryList extends Component {
 
     componentWillMount(){
-			this.props.itineraryFetch();
+        this.props.itineraryFetch(this.props.region);
     }
 
     renderRow(itinerary){

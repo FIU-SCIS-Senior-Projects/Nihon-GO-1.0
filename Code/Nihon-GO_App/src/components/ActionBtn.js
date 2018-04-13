@@ -16,7 +16,7 @@ class ActionBtn extends Component {
 			buttonTextStyle={{color: primary_text_color}}
 			renderIcon={() => {return(<Icon name='add' size={35} color={primary_text_color}/>)}}
 		>
-			<ActionButton.Item buttonColor='#9b59b6' title="Top Itineraries" onPress={() => Actions.itineraryList()}>
+			<ActionButton.Item buttonColor='#9b59b6' title="Top Itineraries" onPress={() => Actions.itineraryList({region:'ALL'})}>
 				<Icon name='card-travel' />
 			</ActionButton.Item>
 			<ActionButton.Item buttonColor='#3498db' title="Create Itinerary" onPress={() => Actions.itineraryCreate()}>

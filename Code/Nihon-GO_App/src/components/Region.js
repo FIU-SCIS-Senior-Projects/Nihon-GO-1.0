@@ -21,7 +21,7 @@ const Region = ({ region, text, img_1, img_2, img_3 }) => {
 				</Text>
 			</View>
 			<Button
-				onPress={() => Actions.itineraryList({region: region})}
+				onPress={() => Actions.itineraryList({title: 'Itineraries - ' + region, region: region})}
 				icon={{name: 'card-travel'}}
 				backgroundColor='#03A9F4'
 				buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 15}}

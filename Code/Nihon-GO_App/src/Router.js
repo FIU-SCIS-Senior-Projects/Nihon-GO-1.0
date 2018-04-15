@@ -70,21 +70,31 @@ const RouterComponent = () => {
 								component = {BlogExpand}
 								title="[Blog Name]" />
 							<Scene 
-								key="itineraryList" 
-								component={ItineraryList} 
-								title="Itineraries"/>
-							<Scene 
 								key="itineraryCreate" 
 								back 
 								component={ItineraryCreate} 
 								title="Create Itinerary" />
-							<Scene 
-								key="itineraryView"
-								back
-								onBack={()=> Actions.itineraryList()}
-								component={ItineraryView} 
-								title="Itinerary - Events" />
+                            
+
 						</Scene>
+                        <Scene
+                                hideNavBar={false}
+                                navigationBarStyle={styles.navBar}
+                                titleStyle={styles.navBarTitle}
+                                tintColor={primary_text_color}
+                                key="itineraryList"
+                                back
+                                component={ItineraryList} 
+                                title="Itineraries"/>
+                            <Scene 
+                                hideNavBar={false}
+                                navigationBarStyle={styles.navBar}
+                                titleStyle={styles.navBarTitle}
+                                tintColor={primary_text_color}
+                                key="itineraryView"
+                                back
+                                component={ItineraryView} 
+                                title="Itinerary - Events" />
 				</Scene>
 				<Scene key="mapModal" component={MapModal} />
 			</Lightbox>

@@ -9,7 +9,8 @@ import { ImageCard, CaptionBox, CountingIcon } from './common/index';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
 import { LinearGradient } from 'expo';
-import { Icon } from 'react-native-elements';
+import { Icon, Button } from 'react-native-elements';
+import { primary_color, primary_text_color }  from './common/AppPalette';
 
 class ItineraryPreview extends Component {
     constructor(props){
@@ -39,6 +40,27 @@ class ItineraryPreview extends Component {
             return { expandedItinerary: !previousState.expandedItinerary };
           });
     }
+    
+    renderIcon(){
+        if (!this.state.expandedItinerary){
+            return(
+                <Icon
+                    name='keyboard-arrow-down'
+                    color='white'
+                    size={30}
+                    />
+            );
+        }
+        else{
+            return(
+                <Icon
+                    name='keyboard-arrow-up'
+                    color='white'
+                    size={30}
+                    />
+            );
+        }
+    }
 
     //This method renders the title, description, and selection arrow for all itinerary previews
     renderTopHalf(){
@@ -59,21 +81,17 @@ class ItineraryPreview extends Component {
                         <Text numberOfLines={1}
                             style={captionStyle}
                         >
-                            {description}
+                            {location}
+                        </Text>
+                        <Text numberOfLines={1}
+                            style={captionStyle}
+                        >
+                            {duration}hrs
                         </Text>
                     </CaptionBox>
                 </View>
                 <View style={{flex: 1, marginTop: 10,}}>
-                    <TouchableOpacity 
-                        onPress={() => this.props.selectItinerary(id)}
-                        style={{flex: 1}}>
-                        <Icon
-                            name='angle-right'
-                            type='font-awesome'
-                            color='white'
-                            size={30}
-                            />
-                    </TouchableOpacity>
+                    {this.renderIcon()}
                 </View>
             </View>
         );
@@ -83,27 +101,33 @@ class ItineraryPreview extends Component {
     renderBottomHalf(){
         const { itinerary, expanded } = this.props;
         const { id, data } = itinerary;
-		const { image, description, title, location, duration } = data;
-        const {titleStyle, captionStyle, linearGradient } = styles;
+		const { image, description, title, location, duration, favorites } = data;
+        const {titleStyle, captionStyle, linearGradient, descStyle } = styles;
 
         return(
-            <View style={{flex: 1, justifyContent: 'flex-end'}}>
-                <View style={{marginBottom: 10, marginLeft: 10, flexDirection: 'row'}}>
-                    <CountingIcon 
-                        iconName='comment' 
-                        iconType='font-awesome' 
-                        count='30'
-                        iconColor='white'/>
-                    <CountingIcon 
-                        iconName='share-alt' 
-                        iconType='font-awesome' 
-                        count='25'
-                        iconColor='white'/>
+            <View style={{flex: 1, flexDirection: 'column', justifyContent: 'flex-end'}}>
+                <View style={{ margin: 10}}>
+                    <CaptionBox>
+                        <Text numberOfLines={3}
+                            style={descStyle}
+                        >
+                            {description}
+                        </Text>
+                    </CaptionBox>
+                </View>
+                <View style={{ alignSelf: 'stretch', margin: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',}}>
                     <CountingIcon 
                         iconName='heart' 
                         iconType='font-awesome' 
-                        count='1000'
+                        count={favorites}
                         iconColor='white'/>
+                    <Button
+                        raised
+                        small
+                        borderRadius={2}
+                        backgroundColor={primary_color}
+                        onPress={() => this.props.selectItinerary(id, title)}
+                        title='View' />
                 </View>
             </View>
         );
@@ -118,7 +142,7 @@ class ItineraryPreview extends Component {
 
         if (!this.state.expandedItinerary){
             return (
-                <ImageCard  source={{uri: image}} style={{height: 100}}>
+                <ImageCard  source={{uri: image}} style={{height: 104}}>
                     <LinearGradient 
                     colors={['#00000099', '#FFFFFF00']} //66 is 40% in hex
                     start={[0, 0]}
@@ -153,7 +177,7 @@ class ItineraryPreview extends Component {
 
         return(
             <TouchableWithoutFeedback onPress={() => {this.toggleExpanded()}}>
-                <View>
+                <View style={{backgroundColor: primary_color}}>
                     {this.renderExpandedPreview()}
                 </View>
             </TouchableWithoutFeedback>
@@ -173,12 +197,18 @@ const styles = {
         marginTop: 5,
     },
     captionStyle:{
-        flex: 3,
+        flex: 1.5,
         color: 'white',
         backgroundColor: 'transparent',
         fontSize: 18,
         fontStyle: 'italic',
         marginLeft: 10,
+    },
+    descStyle:{
+        flex: 3,
+        color: 'white',
+        backgroundColor: 'transparent',
+        fontSize: 18,
     },
 };
 

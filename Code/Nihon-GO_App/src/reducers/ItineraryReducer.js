@@ -1,9 +1,16 @@
-import { ITINERARY_FETCH } from '../actions/types';
+import { ITINERARY_FETCH, ITINERARY_RESET } from '../actions/types';
 
-export default (state = [], action) => {
+const INITIAL_STATE = { 
+	itineraryList: [],
+	loading: true,
+};
+
+export default (state = INITIAL_STATE, action) => {
 	switch (action.type) {
 		case ITINERARY_FETCH:
-			return action.payload;
+            return {...state, loading: false, itineraryList: action.payload};
+        case ITINERARY_RESET:
+            return INITIAL_STATE;
 		default:
 			return state;
 	}

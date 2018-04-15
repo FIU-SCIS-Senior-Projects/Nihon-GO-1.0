@@ -80,7 +80,7 @@ class Drawer extends Component {
 		if (Actions.currentScene == "_itineraryList") {
 			return (
 				<View style={styles.focus}>
-					<DrawerButton icon='globe' iconType='entypo' onPress={() => Actions.itineraryList()}>
+					<DrawerButton icon='globe' iconType='entypo' onPress={() => Actions.itineraryList({title: 'Top Itineraries', region:'ALL'})}>
 						Itineraries
 					</DrawerButton>
 				</View>
@@ -88,7 +88,7 @@ class Drawer extends Component {
 		} else {
 			return (
 				<View>
-					<DrawerButton icon='globe' iconType='entypo' onPress={() => Actions.itineraryList()}>
+					<DrawerButton icon='globe' iconType='entypo' onPress={() => Actions.itineraryList({title: 'Top Itineraries', region:'ALL'})}>
 						Itineraries
 					</DrawerButton>
 				</View>

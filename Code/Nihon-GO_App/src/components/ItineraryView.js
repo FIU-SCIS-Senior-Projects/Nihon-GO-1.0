@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import {View, 
+import {
+        Animated,
+        View, 
         Text, 
         Image, 
         TouchableWithoutFeedback, 
@@ -7,22 +9,40 @@ import {View,
         ScrollView } from 'react-native';
 import * as actions from '../actions';
 import { connect } from 'react-redux';
-import { Card } from './common/index';
-import { Icon } from 'react-native-elements';
+import { Card, Background } from './common/index';
+import { Icon, Button } from 'react-native-elements';
 import EventList from './EventList';
-
+import { primary_color}  from './common/AppPalette';
+  
 class ItineraryView extends Component {
     constructor(props) {
         super(props);
-        this.state = {expandedDesc: false};
+        this.state = {
+            expandedDesc: false,
+            offsetY: new Animated.Value(0),
+        };
     }
+    
+    animateStart(){
+        Animated.sequence([
+            Animated.timing(                  // Animate over time
+                this.state.offsetY,
+                { toValue: -30 }
+            ),
+            Animated.timing(                  // Animate over time
+                this.state.offsetY,
+                { toValue: 100 }
+            ),
+        ]).start(); // start the sequence group
+    }
+    
     renderDescription(){
         const { titleStyle, descriptionStyle } = styles;
         const { id, data } = this.props.itinerary;
 		const { title, location, description, image, duration } = data;
         if(this.state.expandedDesc){
             return (
-                <Card style={{height: 200, flexDirection: 'row', marginTop: 5}}>
+                <Card style={{height: 200, flexDirection: 'row', marginTop: 5, backgroundColor: 'white',}}>
                     <View style={{flex: 5, justifyContent:'flex-start'}}>
                         <Text style={titleStyle}>{location}</Text>
                         <ScrollView>
@@ -47,7 +67,7 @@ class ItineraryView extends Component {
         }
         else{
             return (
-                <Card style={{height: 80, flexDirection: 'row', marginTop: 5}}>
+                <Card style={{height: 80, flexDirection: 'row', marginTop: 5, backgroundColor: 'white',}}>
                     <View style={{flex: 5}}>
                         <Text numberOfLines={1} style={titleStyle}>{location}</Text>
                         <Text numberOfLines={2} style={descriptionStyle}>
@@ -85,7 +105,35 @@ class ItineraryView extends Component {
 		else
 			return(<View/>);
 	}
-	
+    
+	renderStartBtn(){
+        if(this.props.mode==='view'){
+            return(
+                <Animated.View style={{
+                    transform: [{translateY: this.state.offsetY}], 
+                    paddingBottom: 15, 
+                    position: 'absolute',
+                    alignSelf: 'center',
+                    bottom: 0,
+                }}>
+                    <Button
+                        raised
+                        large
+                        borderRadius={2}
+                        icon={{name: 'card-travel'}}
+                        title='START THIS ITINERARY!'
+                        onPress={() => {this.animateStart()}}
+                        buttonStyle={{paddingBottom: 15, backgroundColor: primary_color,}}
+                    />
+                </Animated.View>
+            );
+        }
+        else{
+            return(
+                <View/>
+            );
+        }
+    }
     render(){
         const { id, data } = this.props.itinerary;
 		const { title, location, description, image, duration } = data;
@@ -98,10 +146,13 @@ class ItineraryView extends Component {
                         <Image source={{uri: image}} style={{flex:1}} />
                     </View>
                     <View style={{flex: 2}}>
-                        {this.renderDescription()}
-                    <View style={{flex:1}}>
-                        {this.rendrEvents()}
-                    </View>
+                        <Background>
+                            {this.renderDescription()}
+                            <View style={{flex:1}}>
+                                {this.rendrEvents()}
+                            </View>
+                            {this.renderStartBtn()}
+                        </Background>
                     </View>
                 </View>
             </View>
@@ -130,7 +181,7 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    const itinerary = state.itineraries.find(item => item.id === state.selectedItineraryId);
+    const itinerary = state.itineraries.itineraryList.find(item => item.id === state.selectedItineraryId);
     return { itinerary };
 };
 

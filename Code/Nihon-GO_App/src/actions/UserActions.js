@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import { USER_PROFILE_FETCH, USER_PROFILE_UPDATE, USER_PROFILE_SAVE } from './types';
+import { startItnFetch } from './index'
 
 // Update user input as user types
 export const userProfileUpdate = ({ prop, value }) => {
@@ -18,6 +19,8 @@ export const userProfileFetch = () => {
 		firebase.database().ref(`/users/${currentUser.uid}`)
 			.on('value', snapshot => {
 				if (snapshot.val()) {
+                    const userData = snapshot.val();
+                    startItnFetch(dispatch, userData.start_itn);
 					dispatch({ type: USER_PROFILE_FETCH, payload: snapshot.val() });
 				} else {
 					console.log('Created generic profile for user.');
@@ -49,7 +52,6 @@ export const userProfileSave = ({ username, country, languages, description, ema
 
 export const userProfileImageFetch = () => {
 	const picture = firebase.storage().ref('UserProfile/ProfilePicture/Floor Sticker.png');
-	
 	return (dispatch) => {
 		picture.getDownloadURL()
 			.then((url) => {

@@ -6,6 +6,11 @@ const INITIAL_STATE = {
 	languages: '',
 	description: '',
 	email: '',
+    start_itn: {
+        events: 0,
+        progress: 0,
+        started: 'no',
+    },
 };
 
 export default (state = INITIAL_STATE, action) => {

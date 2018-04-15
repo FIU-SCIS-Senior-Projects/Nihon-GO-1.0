@@ -6,6 +6,7 @@ import UserReducer from './UserReducer'; //user profile
 import ItSelectionReducer from './ItSelectionReducer'; //Itinerary
 import ItineraryFormReducer from './ItineraryFormReducer';
 import ItineraryReducer from './ItineraryReducer';
+import StartItnReducer from './StartItnReducer';
 
 export default combineReducers({
 	auth: AuthReducer, //authentication
@@ -14,5 +15,6 @@ export default combineReducers({
 	user: UserReducer, //user profile
 	selectedItineraryId: ItSelectionReducer,
 	itineraries: ItineraryReducer,
-	itineraryForm: ItineraryFormReducer
+	itineraryForm: ItineraryFormReducer,
+    StartItn: StartItnReducer
 });

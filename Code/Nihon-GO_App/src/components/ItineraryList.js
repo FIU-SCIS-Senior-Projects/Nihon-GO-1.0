@@ -29,7 +29,7 @@ class ItineraryList extends Component {
 
     render(){
         if(this.props.itineraries.loading){
-            return (<Background><Spinner/></Background>);
+            return (<Background><Spinner size={70}/></Background>);
         }
         else{
             return (

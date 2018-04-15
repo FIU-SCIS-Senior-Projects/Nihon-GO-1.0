@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+        Dimensions,
         Animated,
         View, 
         Text, 
@@ -7,23 +8,73 @@ import {
         TouchableWithoutFeedback, 
         TouchableOpacity,
         ScrollView } from 'react-native';
-import * as actions from '../actions';
+import { startedItnUpdate, startedItnReset, startedItnSave } from '../actions';
 import { connect } from 'react-redux';
 import { Card, Background } from './common/index';
 import { Icon, Button } from 'react-native-elements';
 import EventList from './EventList';
 import { primary_color}  from './common/AppPalette';
-  
+import { Actions } from 'react-native-router-flux';
+import Toast from 'react-native-toast-native';
+
+const { width, height } = Dimensions.get("window");
+
 class ItineraryView extends Component {
     constructor(props) {
         super(props);
         this.state = {
             expandedDesc: false,
+            isDone: false,
             offsetY: new Animated.Value(0),
+            offsetX: new Animated.Value(width+100),
         };
     }
     
-    animateStart(){
+    componentDidMount(){
+        if(this.props.itinerary.id == this.props.started)
+            this.animateCancel();
+    }
+    componentWillUnmount() {
+        if(this.props.itinerary.id == this.props.started || this.state.isDone){
+            //save itinerary state to user in database
+            const events_Done = this.props.events; 
+            const progress = this.props.progress;
+            const started = this.props.started;
+            this.props.startedItnSave({ events: events_Done, progress: progress, started: started });
+        }
+    }
+    
+    cancel(){
+        //confirmation
+        this.props.startedItnReset();//clear state
+        Animated.timing(                  // reset cancelbtn
+            this.state.offsetX,
+            { toValue: width+100 }
+        ).start();
+
+        Animated.timing(                  // reset startbtn
+            this.state.offsetY,
+            { toValue: 0 }
+        ).start(onComplete = () => {
+            const events_Done = this.props.events; 
+            const progress = this.props.progress;
+            const started = this.props.started;
+            this.props.startedItnSave({ events: events_Done, progress: progress, started: started });
+        });
+    }
+    
+    done(){
+        this.props.startedItnReset();//clear state
+        this.state.isDone = true;
+        Actions.pop();
+    }
+    
+    animateCancel(){
+        console.log(width);
+        Animated.timing(                  // Animate over time
+            this.state.offsetX,
+            { toValue: 0 }
+        ).start();
         Animated.sequence([
             Animated.timing(                  // Animate over time
                 this.state.offsetY,
@@ -33,7 +84,31 @@ class ItineraryView extends Component {
                 this.state.offsetY,
                 { toValue: 100 }
             ),
-        ]).start(); // start the sequence group
+        ]).start();
+    }
+    
+    startItinerary(){
+        const { id, data } = this.props.itinerary;
+        const { events } = data;
+        const numEvents = Object.keys(events).length;
+        const val = true;
+        //Animate start button
+        Animated.sequence([
+            Animated.timing(                  // Animate over time
+                this.state.offsetY,
+                { toValue: -30 }
+            ),
+            Animated.timing(                  // Animate over time
+                this.state.offsetY,
+                { toValue: 100 }
+            ),
+        ]).start(onComplete = () => {
+            //Start itinerary
+            this.props.startedItnUpdate({ prop: 'isStarted', value: val });
+            this.props.startedItnUpdate({ prop: 'started', value: id });
+            this.props.startedItnUpdate({ prop: 'events', value: numEvents });
+            this.animateCancel();
+        }); // start the sequence group
     }
     
     renderDescription(){
@@ -99,38 +174,135 @@ class ItineraryView extends Component {
     }
 	
 	rendrEvents(){
-		const { data } = this.props.itinerary;
+		const data = this.props.itinerary.data;
+        const events_Done = this.props.events; 
+        const progress = this.props.progress;
+        const started = this.props.started;
+        const loggedIn = this.props.loggedIn;
+        const isStarted = this.props.started == this.props.itinerary.id;
 		if(data.events)
-			return(<EventList events={data.event} />);
+			return(
+                <EventList 
+                    events={data.events} 
+                    events_Done={events_Done}
+                    progress={progress}
+                    started={started}
+                    loggedIn={loggedIn}
+                    isStarted={isStarted}
+                    />
+            );
 		else
 			return(<View/>);
 	}
     
 	renderStartBtn(){
-        if(this.props.mode==='view'){
-            return(
-                <Animated.View style={{
-                    transform: [{translateY: this.state.offsetY}], 
-                    paddingBottom: 15, 
-                    position: 'absolute',
-                    alignSelf: 'center',
-                    bottom: 0,
-                }}>
-                    <Button
-                        raised
-                        large
-                        borderRadius={2}
-                        icon={{name: 'card-travel'}}
-                        title='START THIS ITINERARY!'
-                        onPress={() => {this.animateStart()}}
-                        buttonStyle={{paddingBottom: 15, backgroundColor: primary_color,}}
-                    />
-                </Animated.View>
-            );
+        const events_Done = this.props.events; 
+        const progress = this.props.progress;
+        
+        if(this.props.loggedIn){
+             //check if there isn't a started itinerary
+            if(!this.props.isStarted){
+                return(
+                    <Animated.View style={{
+                        transform: [{translateY: this.state.offsetY}], 
+                        paddingBottom: 15, 
+                        position: 'absolute',
+                        alignSelf: 'center',
+                        bottom: 0,
+                    }}>
+                        <Button
+                            raised
+                            large
+                            borderRadius={2}
+                            icon={{name: 'card-travel'}}
+                            title="START THIS ITINERARY!"
+                            onPress={() => {this.startItinerary()}}
+                            buttonStyle={{paddingBottom: 15, backgroundColor: primary_color,}}
+                        />
+                    </Animated.View>
+                );
+            }
+            //check if this is the started itinerary
+            else if(this.props.itinerary.id == this.props.started){
+                if(events_Done != progress)
+                    return(
+                        <Animated.View style={{
+                            transform: [{translateX: this.state.offsetX}], 
+                            paddingBottom: 15, 
+                            position: 'absolute',
+                            alignSelf: 'flex-end',
+                            bottom: 0,
+                        }}>
+                            <Button
+                                raised
+                                small
+                                borderRadius={2}
+                                title="Cancel"
+                                onPress={() => {this.cancel()}}
+                                buttonStyle={{paddingBottom: 15, backgroundColor: 'red',}}
+                            />
+                        </Animated.View>
+                    );
+                else{
+                    return(
+                        <View style={{
+                            paddingBottom: 15, 
+                            position: 'absolute',
+                            alignSelf: 'flex-end',
+                            bottom: 0,
+                        }}>
+                            <Button
+                                raised
+                                large
+                                borderRadius={2}
+                                title="Done!"
+                                onPress={() => {this.done()}}
+                                buttonStyle={{paddingBottom: 15, backgroundColor: 'green',}}
+                            />
+                        </View>
+                    );
+                }
+            }
+            //not the started itinerary
+            else{
+                return(
+                    <View style={{ 
+                        paddingBottom: 15, 
+                        position: 'absolute',
+                        alignSelf: 'center',
+                        bottom: 0,
+                    }}>
+                        <Button
+                            raised
+                            large
+                            borderRadius={2}
+                            icon={{name: 'card-travel'}}
+                            title="START THIS ITINERARY!"
+                            onPress={() => {Toast.show('Fininsh current itinerary first!')}}
+                            buttonStyle={{paddingBottom: 15, backgroundColor: 'grey',}}
+                        />
+                    </View>
+                );
+            }
         }
         else{
             return(
-                <View/>
+                <View style={{ 
+                        paddingBottom: 15, 
+                        position: 'absolute',
+                        alignSelf: 'center',
+                        bottom: 0,
+                    }}>
+                        <Button
+                            raised
+                            large
+                            borderRadius={2}
+                            icon={{name: 'card-travel'}}
+                            title="START THIS ITINERARY!"
+                            onPress={() => {Toast.show('Must be Logged in!')}}
+                            buttonStyle={{paddingBottom: 15, backgroundColor: 'grey',}}
+                        />
+                    </View>
             );
         }
     }
@@ -138,7 +310,6 @@ class ItineraryView extends Component {
         const { id, data } = this.props.itinerary;
 		const { title, location, description, image, duration } = data;
         
-
         return (
             <View style={{flex: 1}}>
                 <View style={{flex: 1}}>
@@ -181,8 +352,12 @@ const styles = {
 };
 
 const mapStateToProps = state => {
+    console.log(state.StartItn);
+    const { loggedIn } = state.auth;
     const itinerary = state.itineraries.itineraryList.find(item => item.id === state.selectedItineraryId);
-    return { itinerary };
+    const start_itn = state.StartItn;
+    const { events, progress, started, isStarted } = start_itn;
+    return { itinerary, events, progress, started, isStarted, loggedIn };
 };
 
-export default connect(mapStateToProps, actions)(ItineraryView);
+export default connect(mapStateToProps, { startedItnUpdate, startedItnReset, startedItnSave })(ItineraryView);

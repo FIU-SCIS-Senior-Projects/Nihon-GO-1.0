@@ -5,15 +5,30 @@ import EventPreview from './EventPreview';
 import * as actions from '../actions';
 
 class EventList extends Component {
-
-     _renderItem = ({item}) => (
-        <EventPreview event={item} mode={'start'}/>
+     constructor(props) {
+        super(props);
+    }
+    
+     _renderItem = ({item, index}) => (
+        <EventPreview event={item} index={index}/>
     );
     
-    _renderFooter = () => {
-        return (
-            <View style={styles.footer}/>
-        )
+    _renderFooter = (style) => {
+        
+        const completed = (this.props.numEvents == this.props.progress);
+        if(completed){
+            style = {...style, backgroundColor: '#2196F3' };
+        }
+        if(this.props.started == this.props.selectedItineraryId){
+            return (
+                <View style={style}/>
+            )
+        }
+        else{
+            return (
+                <View/>
+            )
+        }
     }
     
     render(){
@@ -24,10 +39,10 @@ class EventList extends Component {
                         data={this.props.events}
                         keyExtractor={(item, index) => String(index)}
                         renderItem={this._renderItem}
-                        ListFooterComponent={this._renderFooter}
+                        ListFooterComponent={this._renderFooter(styles.footer)}
                     />
                 </View>
-                <View style={styles.bottomLine}></View>
+                {this._renderFooter(styles.bottomLine)}
             </View>
         );
     }  
@@ -50,9 +65,11 @@ const styles={
 };
 
 const mapStateToProps = state => {
-    const events = state.itineraries.itineraryList.find(item => 
-        item.id === state.selectedItineraryId).data.events;
-    return { events };
+    const start_itn = state.StartItn;
+    const { events, progress, started, isStarted } = start_itn;
+    const numEvents = events;
+    const selectedItineraryId = state.selectedItineraryId;
+    return { numEvents, progress, started, isStarted, selectedItineraryId };
 };
 
 export default connect(mapStateToProps, actions)(EventList);

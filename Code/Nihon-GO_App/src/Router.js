@@ -28,12 +28,13 @@ const RouterComponent = () => {
                         contentComponent={DrawerPanel} 
                         navigationBarStyle={styles.navBar}
                         titleStyle={styles.navBarTitle}
-                        tintColor={primary_text_color}>
+                        tintColor={primary_text_color}
+                        type="reset">
 							<Scene 
 								key="homepage" 
 								component={HomePage} 
 								title="Home" 
-								initial />
+								initial/>
 							<Scene 
 								key="login" 
 								back 

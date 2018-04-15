@@ -8,7 +8,12 @@ import { connect } from 'react-redux';
 import { primary_color, primary_text_color, dark_color, dark_text_color, light_color}  from './common/AppPalette';
 
 class Drawer extends Component {
-	
+    
+	goToTopItn(){
+        Actions.main();
+        return Actions.itineraryList({title: 'Top Itineraries', region:'ALL'});
+    } 
+    
 	// Renders profile button only if logged in
 	renderProfileBtn() {
 		if (this.props.loggedIn) {
@@ -80,7 +85,7 @@ class Drawer extends Component {
 		if (Actions.currentScene == "_itineraryList") {
 			return (
 				<View style={styles.focus}>
-					<DrawerButton icon='globe' iconType='entypo' onPress={() => Actions.itineraryList({title: 'Top Itineraries', region:'ALL'})}>
+					<DrawerButton icon='globe' iconType='entypo' onPress={() => this.goToTopItn()}>
 						Itineraries
 					</DrawerButton>
 				</View>

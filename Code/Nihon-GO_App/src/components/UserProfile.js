@@ -35,11 +35,7 @@ const profilePicture = require('../resources/profilePicture.png');
 const profileBackgroundPicture = require('../resources/profileBackground.jpg');
 
 class UserProfile extends Component {
-	// Gets user profile data
-	componentWillMount() {
-		this.props.userProfileFetch();
-	}
-	
+
 	static defaultProps = {
 		containerStyle: {},
 		tabContainerStyle: {},

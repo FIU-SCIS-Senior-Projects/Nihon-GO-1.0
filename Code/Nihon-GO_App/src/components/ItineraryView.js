@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+        ToastAndroid,
         Dimensions,
         Animated,
         View, 
@@ -13,9 +14,9 @@ import { connect } from 'react-redux';
 import { Card, Background } from './common/index';
 import { Icon, Button } from 'react-native-elements';
 import EventList from './EventList';
-import { primary_color}  from './common/AppPalette';
+import { primary_color, disabled_color}  from './common/AppPalette';
 import { Actions } from 'react-native-router-flux';
-import Toast from 'react-native-toast-native';
+import Toast from 'react-native-root-toast';
 
 const { width, height } = Dimensions.get("window");
 
@@ -27,6 +28,8 @@ class ItineraryView extends Component {
             isDone: false,
             offsetY: new Animated.Value(0),
             offsetX: new Animated.Value(width+100),
+            tost_login: false,
+            tost_notStarted: false,
         };
     }
     
@@ -278,8 +281,13 @@ class ItineraryView extends Component {
                             borderRadius={2}
                             icon={{name: 'card-travel'}}
                             title="START THIS ITINERARY!"
-                            onPress={() => {Toast.show('Fininsh current itinerary first!')}}
-                            buttonStyle={{paddingBottom: 15, backgroundColor: 'grey',}}
+                            onPress={
+                                () => {
+                                    this.setState({tost_notStarted: true},
+                                () => {
+                                    setTimeout(() => this.setState({tost_notStarted: false}), 2000)})}
+                            }
+                            buttonStyle={{paddingBottom: 15, backgroundColor: disabled_color}}
                         />
                     </View>
                 );
@@ -299,8 +307,13 @@ class ItineraryView extends Component {
                             borderRadius={2}
                             icon={{name: 'card-travel'}}
                             title="START THIS ITINERARY!"
-                            onPress={() => {Toast.show('Must be Logged in!')}}
-                            buttonStyle={{paddingBottom: 15, backgroundColor: 'grey',}}
+                            onPress={
+                                () => {
+                                    this.setState({tost_login: true},
+                                () => {
+                                    setTimeout(() => this.setState({tost_login: false}), 2000)})}
+                            }
+                            buttonStyle={{paddingBottom: 15, backgroundColor: disabled_color}}
                         />
                     </View>
             );
@@ -312,6 +325,20 @@ class ItineraryView extends Component {
         
         return (
             <View style={{flex: 1}}>
+                <Toast
+                    visible={this.state.tost_login}
+                    position={50}
+                    hideOnPress={true}
+                >
+                    Must be Logged In!
+                </Toast>
+                <Toast
+                    visible={this.state.tost_notStarted}
+                    position={50}
+                    hideOnPress={true}
+                >
+                    Fininsh current itinerary first!
+                </Toast>
                 <View style={{flex: 1}}>
                     <View style={{flex: 1}}>
                         <Image source={{uri: image}} style={{flex:1}} />
@@ -352,7 +379,6 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    console.log(state.StartItn);
     const { loggedIn } = state.auth;
     const itinerary = state.itineraries.itineraryList.find(item => item.id === state.selectedItineraryId);
     const start_itn = state.StartItn;

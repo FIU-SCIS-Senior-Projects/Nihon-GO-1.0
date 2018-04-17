@@ -14,7 +14,7 @@ class EventPreview extends Component {
             completedEvent: false
         };
     }
-    
+
     toggleCompleted(){
         if(this.props.index + 1 == this.props.progress){
             this.props.startedItnUpdate({ prop: 'progress', value: (this.props.progress - 1) });
@@ -35,7 +35,7 @@ class EventPreview extends Component {
             if (this.props.index + 1 <= this.props.progress)
             {
                 return(
-                    <Button 
+                    <Button
                         fontColor='white'
                         onPress={()=>{this.toggleCompleted()}}
                         style={{
@@ -48,7 +48,7 @@ class EventPreview extends Component {
             }
             else{
                 return(
-                    <Button 
+                    <Button
                         onPress={()=>{this.toggleCompleted()}}
                         style={{
                             justifyContent: 'center',
@@ -75,11 +75,11 @@ class EventPreview extends Component {
                 onRequestClose={() => {this.toggleExpand()}}>
                 <BlurView intensity={100} style={{flex: 1}}>
                     <Card style={modalStyle}>
-                        <ImageCard source={{uri: image}} 
-                            style={{borderBottomWidth: 0, 
+                        <ImageCard source={{uri: image}}
+                            style={{borderBottomWidth: 0,
                                     alignItems: 'flex-end'}}>
                             <TouchableOpacity onPress={() => {this.toggleExpand()}}>
-                                <View style={{marginRight: 10, marginTop: 10}}>    
+                                <View style={{marginRight: 10, marginTop: 10}}>
                                     <Icon
                                         name='x'
                                         type='feather'
@@ -95,8 +95,8 @@ class EventPreview extends Component {
                                     <Text numberOfLines={1} style={titleStyle}>{title}</Text>
                                     <Text style={descriptionStyle}>{address}</Text>
                                 </View>
-                                <View  style={{marginTop: 10, marginRight: 10, 
-                                        marginTop: 15, marginBottom: 15, flex: 1, 
+                                <View  style={{marginTop: 10, marginRight: 10,
+                                        marginTop: 15, marginBottom: 15, flex: 1,
                                         justifyContent: 'center',
                                         alignItems:'center'}}>
                                     {this.renderButton()}
@@ -151,8 +151,8 @@ class EventPreview extends Component {
         if(this.props.index + 1 <= this.props.progress)
         {
             return(
-                <TimeLine 
-                    style={{marginLeft: 10}} 
+                <TimeLine
+                    style={{marginLeft: 10}}
                     checked onPress={() => {this.toggleCompleted()}}>
                     {this.renderCard()}
                 </TimeLine>
@@ -160,8 +160,8 @@ class EventPreview extends Component {
         }
         else{
             return(
-                <TimeLine 
-                    style={{marginLeft: 10}} 
+                <TimeLine
+                    style={{marginLeft: 10}}
                     onPress={() => {this.toggleCompleted()}}>
                     {this.renderCard()}
                 </TimeLine>
@@ -249,18 +249,18 @@ const styles = {
     },
     modalStyle: {
         flex: 1,
-        marginTop: 25, 
-        marginBottom: 25, 
-        marginLeft: 20, 
+        marginTop: 25,
+        marginBottom: 25,
+        marginLeft: 20,
         marginRight: 20,
         backgroundColor: 'white',
     },
     cardNotStarted: {
-        marginTop: 5, 
+        marginTop: 5,
         marginBottom: 5,
-        marginRight: 15, 
+        marginRight: 15,
         marginLeft: 15,
-        flexDirection: 'row', 
+        flexDirection: 'row',
         flex: 1,
         backgroundColor: 'white'
     },
@@ -269,8 +269,7 @@ const styles = {
 const mapStateToProps = state => {
     const start_itn = state.StartItn;
     const { events, progress, started, isStarted } = start_itn;
-    const selectedItineraryId = state.selectedItineraryId;
-    return { events, progress, started, isStarted, selectedItineraryId };
+    return { events, progress, started, isStarted };
 };
 
 export default connect(mapStateToProps, { startedItnUpdate })(EventPreview);

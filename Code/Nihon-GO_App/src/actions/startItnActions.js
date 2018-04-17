@@ -13,12 +13,12 @@ export const startedItnUpdate = ({ prop, value }) => {
 // Fetch started data
 export const startItnFetch = (dispatch, startedData) => {
 
-	const { events, progress, started } = startedData;
+	const { events, progress, started, title } = startedData;
     const isStarted = started != 'no';
 
     dispatch({
         type: STARTED_FETCH,
-        payload: { isStarted, events, progress, started }
+        payload: { isStarted, events, progress, started, title, isViewing: false }
     });
 };
 
@@ -34,11 +34,11 @@ export const startedItnReset = (dispatch) => {
 };
 
 // Updates user profile using user inputed data
-export const startedItnSave = ({ events, progress, started }) => {
+export const startedItnSave = ({ events, progress, started, title }) => {
 	const { currentUser } = firebase.auth();
-	
+
 	return (dispatch) => {
 		firebase.database().ref(`/users/${currentUser.uid}/start_itn`)
-			.update({ events, progress, started })
+			.update({ events, progress, started, title })
 	};
 };

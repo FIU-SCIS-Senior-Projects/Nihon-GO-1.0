@@ -6,6 +6,7 @@ import {
 	ITINERARY_FETCH,
     ITINERARY_RESET
 } from './types';
+import { startItnFetch, startedItnUpdate } from './index'
 
 export const itineraryUpdate = ({ prop, value }) => {
     return {
@@ -28,41 +29,39 @@ export const itineraryCreate = ({ title, location, description, image, duration,
 };
 
 // Fetch itineraries
-export const itineraryFetch = (region) => {
-	var itineraries = [];
-    var ref = firebase.database().ref('/itineraries')
-    if (region == 'ALL'){
+export const itineraryFetch = (filters) => {
+
+    var itineraries = [];
+    var ref = firebase.database().ref('/itineraries');
+
+    //filter by region
+    if (filters.hasOwnProperty('region')){
         return (dispatch) => {
             ref.orderByChild("favorites").once('value', function(snapshot) {
                 snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key;
-                        var data_val = childSnapshot.val();
+                    var key = childSnapshot.key;
+                    var data_val = childSnapshot.val();
+                    if( filters.region == 'ALL' || data_val.location == filters.region){
                         itineraries.push({id: key, data: data_val})
+                    }
                 });
                 dispatch({ type: ITINERARY_FETCH, payload: itineraries.reverse() });
+
             });
         };
     }
-    else {
+    //filter by key
+    else if (filters.hasOwnProperty('id')){
         return (dispatch) => {
-            ref.orderByChild("favorites").once('value', function(snapshot) {
+            ref.orderByKey().equalTo(filters.id).once('value', function(snapshot) {
                 snapshot.forEach(function(childSnapshot) {
-                        var key = childSnapshot.key;
-                        var data_val = childSnapshot.val();
-                        if( data_val.location== region)
-                            itineraries.push({id: key, data: data_val})
+                    var key = childSnapshot.key;
+                    var data_val = childSnapshot.val();
+                    itineraries.push({id: key, data: data_val});
+                    Actions.itineraryView({ title: itineraries[0].data.title, itinerary: itineraries[0]});
                 });
-                dispatch({ type: ITINERARY_FETCH, payload: itineraries.reverse() });
+                dispatch({ type: ITINERARY_FETCH, payload: itineraries });
             });
         };
     }
-};
-
-export const selectItinerary = (itineraryId, itinerarytitle) => {
-	Actions.itineraryView({ title: itinerarytitle, mode:'view' });
-
-	return {
-		type: 'select_itinerary',
-		payload: itineraryId
-	};
 };

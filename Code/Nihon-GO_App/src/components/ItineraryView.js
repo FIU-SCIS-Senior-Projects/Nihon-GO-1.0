@@ -3,15 +3,15 @@ import {
         ToastAndroid,
         Dimensions,
         Animated,
-        View, 
-        Text, 
-        Image, 
-        TouchableWithoutFeedback, 
+        View,
+        Text,
+        Image,
+        TouchableWithoutFeedback,
         TouchableOpacity,
         ScrollView } from 'react-native';
-import { startedItnUpdate, startedItnReset, startedItnSave } from '../actions';
+import { startedItnUpdate, startedItnReset, startedItnSave, itineraryReset } from '../actions';
 import { connect } from 'react-redux';
-import { Card, Background } from './common/index';
+import { Card, Background, Spinner } from './common';
 import { Icon, Button } from 'react-native-elements';
 import EventList from './EventList';
 import { primary_color, disabled_color}  from './common/AppPalette';
@@ -32,7 +32,7 @@ class ItineraryView extends Component {
             tost_notStarted: false,
         };
     }
-    
+
     componentDidMount(){
         if(this.props.itinerary.id == this.props.started)
             this.animateCancel();
@@ -40,13 +40,17 @@ class ItineraryView extends Component {
     componentWillUnmount() {
         if(this.props.itinerary.id == this.props.started || this.state.isDone){
             //save itinerary state to user in database
-            const events_Done = this.props.events; 
+            const events_Done = this.props.events;
             const progress = this.props.progress;
             const started = this.props.started;
-            this.props.startedItnSave({ events: events_Done, progress: progress, started: started });
+            const startedTitle = this.props.startedTitle;
+            this.props.startedItnSave({ events: events_Done, progress: progress, started: started, title: startedTitle });
         }
+        if(this.props.isViewing)
+          this.props.startedItnUpdate({ prop: 'isViewing', value: false });
+          this.props.itineraryReset();
     }
-    
+
     cancel(){
         //confirmation
         this.props.startedItnReset();//clear state
@@ -59,21 +63,21 @@ class ItineraryView extends Component {
             this.state.offsetY,
             { toValue: 0 }
         ).start(onComplete = () => {
-            const events_Done = this.props.events; 
+            const events_Done = this.props.events;
             const progress = this.props.progress;
             const started = this.props.started;
-            this.props.startedItnSave({ events: events_Done, progress: progress, started: started });
+            const startedTitle = this.props.startedTitle;
+            this.props.startedItnSave({ events: events_Done, progress: progress, started: started, title: startedTitle });
         });
     }
-    
+
     done(){
         this.props.startedItnReset();//clear state
         this.state.isDone = true;
         Actions.pop();
     }
-    
+
     animateCancel(){
-        console.log(width);
         Animated.timing(                  // Animate over time
             this.state.offsetX,
             { toValue: 0 }
@@ -89,10 +93,10 @@ class ItineraryView extends Component {
             ),
         ]).start();
     }
-    
+
     startItinerary(){
         const { id, data } = this.props.itinerary;
-        const { events } = data;
+        const { events, title } = data;
         const numEvents = Object.keys(events).length;
         const val = true;
         //Animate start button
@@ -110,14 +114,15 @@ class ItineraryView extends Component {
             this.props.startedItnUpdate({ prop: 'isStarted', value: val });
             this.props.startedItnUpdate({ prop: 'started', value: id });
             this.props.startedItnUpdate({ prop: 'events', value: numEvents });
+            this.props.startedItnUpdate({ prop: 'title', value: title });
             this.animateCancel();
         }); // start the sequence group
     }
-    
+
     renderDescription(){
         const { titleStyle, descriptionStyle } = styles;
         const { id, data } = this.props.itinerary;
-		const { title, location, description, image, duration } = data;
+	      const { title, location, description, image, duration } = data;
         if(this.state.expandedDesc){
             return (
                 <Card style={{height: 200, flexDirection: 'row', marginTop: 5, backgroundColor: 'white',}}>
@@ -175,18 +180,19 @@ class ItineraryView extends Component {
             return { expandedDesc: !previousState.expandedDesc };
           });
     }
-	
+
 	rendrEvents(){
-		const data = this.props.itinerary.data;
-        const events_Done = this.props.events; 
+		    const { id, data } = this.props.itinerary;
+        const events_Done = this.props.events;
         const progress = this.props.progress;
         const started = this.props.started;
         const loggedIn = this.props.loggedIn;
         const isStarted = this.props.started == this.props.itinerary.id;
 		if(data.events)
 			return(
-                <EventList 
-                    events={data.events} 
+                <EventList
+                    selectedItineraryId={id}
+                    events={data.events}
                     events_Done={events_Done}
                     progress={progress}
                     started={started}
@@ -197,18 +203,18 @@ class ItineraryView extends Component {
 		else
 			return(<View/>);
 	}
-    
+
 	renderStartBtn(){
-        const events_Done = this.props.events; 
+        const events_Done = this.props.events;
         const progress = this.props.progress;
-        
+
         if(this.props.loggedIn){
              //check if there isn't a started itinerary
             if(!this.props.isStarted){
                 return(
                     <Animated.View style={{
-                        transform: [{translateY: this.state.offsetY}], 
-                        paddingBottom: 15, 
+                        transform: [{translateY: this.state.offsetY}],
+                        paddingBottom: 15,
                         position: 'absolute',
                         alignSelf: 'center',
                         bottom: 0,
@@ -230,8 +236,8 @@ class ItineraryView extends Component {
                 if(events_Done != progress)
                     return(
                         <Animated.View style={{
-                            transform: [{translateX: this.state.offsetX}], 
-                            paddingBottom: 15, 
+                            transform: [{translateX: this.state.offsetX}],
+                            paddingBottom: 15,
                             position: 'absolute',
                             alignSelf: 'flex-end',
                             bottom: 0,
@@ -249,7 +255,7 @@ class ItineraryView extends Component {
                 else{
                     return(
                         <View style={{
-                            paddingBottom: 15, 
+                            paddingBottom: 15,
                             position: 'absolute',
                             alignSelf: 'flex-end',
                             bottom: 0,
@@ -269,8 +275,8 @@ class ItineraryView extends Component {
             //not the started itinerary
             else{
                 return(
-                    <View style={{ 
-                        paddingBottom: 15, 
+                    <View style={{
+                        paddingBottom: 15,
                         position: 'absolute',
                         alignSelf: 'center',
                         bottom: 0,
@@ -295,8 +301,8 @@ class ItineraryView extends Component {
         }
         else{
             return(
-                <View style={{ 
-                        paddingBottom: 15, 
+                <View style={{
+                        paddingBottom: 15,
                         position: 'absolute',
                         alignSelf: 'center',
                         bottom: 0,
@@ -321,40 +327,45 @@ class ItineraryView extends Component {
     }
     render(){
         const { id, data } = this.props.itinerary;
-		const { title, location, description, image, duration } = data;
-        
-        return (
-            <View style={{flex: 1}}>
-                <Toast
-                    visible={this.state.tost_login}
-                    position={50}
-                    hideOnPress={true}
-                >
-                    Must be Logged In!
-                </Toast>
-                <Toast
-                    visible={this.state.tost_notStarted}
-                    position={50}
-                    hideOnPress={true}
-                >
-                    Fininsh current itinerary first!
-                </Toast>
+        const { title, location, description, image, duration } = data;
+
+        if(this.props.loading){
+            return (<Background><Spinner size={70}/></Background>);
+        }
+        else{
+            return (
                 <View style={{flex: 1}}>
+                    <Toast
+                        visible={this.state.tost_login}
+                        position={50}
+                        hideOnPress={true}
+                    >
+                        Must be Logged In!
+                    </Toast>
+                    <Toast
+                        visible={this.state.tost_notStarted}
+                        position={50}
+                        hideOnPress={true}
+                    >
+                        Fininsh current itinerary first!
+                    </Toast>
                     <View style={{flex: 1}}>
-                        <Image source={{uri: image}} style={{flex:1}} />
-                    </View>
-                    <View style={{flex: 2}}>
-                        <Background>
-                            {this.renderDescription()}
-                            <View style={{flex:1}}>
-                                {this.rendrEvents()}
-                            </View>
-                            {this.renderStartBtn()}
-                        </Background>
+                        <View style={{flex: 1}}>
+                            <Image source={{uri: image}} style={{flex:1}} />
+                        </View>
+                        <View style={{flex: 2}}>
+                            <Background>
+                                {this.renderDescription()}
+                                <View style={{flex:1}}>
+                                    {this.rendrEvents()}
+                                </View>
+                                {this.renderStartBtn()}
+                            </Background>
+                        </View>
                     </View>
                 </View>
-            </View>
-        );
+            );
+        }
     }
 }
 
@@ -380,10 +391,11 @@ const styles = {
 
 const mapStateToProps = state => {
     const { loggedIn } = state.auth;
-    const itinerary = state.itineraries.itineraryList.find(item => item.id === state.selectedItineraryId);
+    const loading = state.itineraries.loading;
     const start_itn = state.StartItn;
-    const { events, progress, started, isStarted } = start_itn;
-    return { itinerary, events, progress, started, isStarted, loggedIn };
+    const { events, progress, started, isStarted, title, isViewing } = start_itn;
+    const startedTitle = title;
+    return { loading, events, progress, started, isStarted, isViewing, loggedIn, startedTitle };
 };
 
-export default connect(mapStateToProps, { startedItnUpdate, startedItnReset, startedItnSave })(ItineraryView);
+export default connect(mapStateToProps, { startedItnUpdate, startedItnReset, startedItnSave, itineraryReset })(ItineraryView);

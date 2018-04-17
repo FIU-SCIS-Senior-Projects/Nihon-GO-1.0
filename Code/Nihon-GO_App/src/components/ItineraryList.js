@@ -11,16 +11,18 @@ import { Background, Spinner } from './common';
 class ItineraryList extends Component {
 
     componentDidMount(){
-        this.props.itineraryFetch(this.props.region);
+        this.props.itineraryFetch(this.props.filters);
     }
+
     componentWillUnmount() {
         this.props.itineraryReset();
+        Actions.main();
     }
-    
+
     _renderItem = ({item}) => (
         <ItineraryPreview itinerary={item}/>
     );
-    
+
     _renderFooter = () => {
         return (
             <View style={{height:200, backgroundColor: 'transparent',}}/>

@@ -8,13 +8,13 @@ class EventList extends Component {
      constructor(props) {
         super(props);
     }
-    
+
      _renderItem = ({item, index}) => (
-        <EventPreview event={item} index={index}/>
+        <EventPreview event={item} selectedItineraryId={this.props.selectedItineraryId} index={index}/>
     );
-    
+
     _renderFooter = (style) => {
-        
+
         const completed = (this.props.numEvents == this.props.progress);
         if(completed){
             style = {...style, backgroundColor: '#2196F3' };
@@ -26,11 +26,11 @@ class EventList extends Component {
         }
         else{
             return (
-                <View/>
+                <View style={{height:200,}}/>
             )
         }
     }
-    
+
     render(){
         return (
             <View style={{flex:1}}>
@@ -45,7 +45,7 @@ class EventList extends Component {
                 {this._renderFooter(styles.bottomLine)}
             </View>
         );
-    }  
+    }
 }
 
 const styles={
@@ -60,7 +60,7 @@ const styles={
         width: 4,
         backgroundColor: '#424242',
         marginLeft: 22,
-        height:200, 
+        height:200,
     }
 };
 
@@ -68,8 +68,7 @@ const mapStateToProps = state => {
     const start_itn = state.StartItn;
     const { events, progress, started, isStarted } = start_itn;
     const numEvents = events;
-    const selectedItineraryId = state.selectedItineraryId;
-    return { numEvents, progress, started, isStarted, selectedItineraryId };
+    return { numEvents, progress, started, isStarted };
 };
 
 export default connect(mapStateToProps, actions)(EventList);

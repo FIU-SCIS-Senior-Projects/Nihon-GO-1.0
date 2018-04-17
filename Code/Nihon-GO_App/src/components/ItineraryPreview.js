@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
 import {Text,
-        View, 
+        View,
         TouchableWithoutFeedback,
-        TouchableOpacity, 
-        UIManager, 
+        TouchableOpacity,
+        UIManager,
         LayoutAnimation } from 'react-native';
 import { ImageCard, CaptionBox, CountingIcon } from './common/index';
-import * as actions from '../actions';
-import { connect } from 'react-redux';
 import { LinearGradient } from 'expo';
 import { Icon, Button } from 'react-native-elements';
 import { primary_color, primary_text_color }  from './common/AppPalette';
+import { Actions } from 'react-native-router-flux';
 
 class ItineraryPreview extends Component {
     constructor(props){
         super(props);
         this.state = {
             expandedItinerary: false
-        }; 
+        };
     }
     componentWillUpdate() {
         var CustomLayoutLinear = {
@@ -40,7 +39,7 @@ class ItineraryPreview extends Component {
             return { expandedItinerary: !previousState.expandedItinerary };
           });
     }
-    
+
     renderIcon(){
         if (!this.state.expandedItinerary){
             return(
@@ -73,7 +72,7 @@ class ItineraryPreview extends Component {
             <View style={{flex: 1, flexDirection: 'row'}}>
                 <View style={{flex: 5}}>
                     <CaptionBox>
-                        <Text 
+                        <Text
                             style={titleStyle}
                             >
                             {title}
@@ -101,7 +100,7 @@ class ItineraryPreview extends Component {
     renderBottomHalf(){
         const { itinerary, expanded } = this.props;
         const { id, data } = itinerary;
-		const { image, description, title, location, duration, favorites } = data;
+	      const { image, description, title, location, duration, favorites } = data;
         const {titleStyle, captionStyle, linearGradient, descStyle } = styles;
 
         return(
@@ -116,9 +115,9 @@ class ItineraryPreview extends Component {
                     </CaptionBox>
                 </View>
                 <View style={{ alignSelf: 'stretch', margin: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',}}>
-                    <CountingIcon 
-                        iconName='heart' 
-                        iconType='font-awesome' 
+                    <CountingIcon
+                        iconName='heart'
+                        iconType='font-awesome'
                         count={favorites}
                         iconColor='white'/>
                     <Button
@@ -126,7 +125,7 @@ class ItineraryPreview extends Component {
                         small
                         borderRadius={2}
                         backgroundColor={primary_color}
-                        onPress={() => this.props.selectItinerary(id, title)}
+                        onPress={() => Actions.itineraryView({ title: title, itinerary: itinerary})}
                         title='View' />
                 </View>
             </View>
@@ -143,7 +142,7 @@ class ItineraryPreview extends Component {
         if (!this.state.expandedItinerary){
             return (
                 <ImageCard  source={{uri: image}} style={{height: 104}}>
-                    <LinearGradient 
+                    <LinearGradient
                     colors={['#00000099', '#FFFFFF00']} //66 is 40% in hex
                     start={[0, 0]}
                     style={{flex:1,}}
@@ -156,14 +155,14 @@ class ItineraryPreview extends Component {
         else{
             return (
                 <ImageCard  source={{uri: image}}>
-                    <LinearGradient 
+                    <LinearGradient
                         colors={['#00000066', '#FFFFFF00']} //66 is 40% in hex
                         start={[0, 0]}
                         style={{flex: 1,}}
                         >
                         {this.renderTopHalf()}
                     </LinearGradient>
-                    <LinearGradient 
+                    <LinearGradient
                         colors={['#FFFFFF00', '#00000066']} //66 is 40% in hex
                         style={{flex: 1,}}
                         >
@@ -173,7 +172,7 @@ class ItineraryPreview extends Component {
             );
         }
     }
-    render(){       
+    render(){
 
         return(
             <TouchableWithoutFeedback onPress={() => {this.toggleExpanded()}}>
@@ -181,7 +180,7 @@ class ItineraryPreview extends Component {
                     {this.renderExpandedPreview()}
                 </View>
             </TouchableWithoutFeedback>
-            
+
         );
     }
 }
@@ -212,10 +211,4 @@ const styles = {
     },
 };
 
-const mapStateToProps = (state, ownProps) => {
-    const expanded = state.selectedItineraryId === ownProps.itinerary.id;
-
-    return { expanded };
-};
-
-export default connect(mapStateToProps, actions)(ItineraryPreview);
+export default ItineraryPreview;

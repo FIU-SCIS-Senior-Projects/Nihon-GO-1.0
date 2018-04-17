@@ -3,8 +3,10 @@ import { STARTED_FETCH, STARTED_UPDATE, STARTED_RESET } from '../actions/types';
 const INITIAL_STATE = {
 	isStarted: false,
 	events: 0,
-    progress: 0,
-    started: 'no',
+  progress: 0,
+	title: '',
+  started: 'no',
+	isViewing: false
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -13,7 +15,7 @@ export default (state = INITIAL_STATE, action) => {
 			return action.payload;
 		case STARTED_UPDATE:
 			return {...state, [action.payload.prop]: action.payload.value };
-        case STARTED_RESET:
+    case STARTED_RESET:
 			return INITIAL_STATE;
 		default:
 			return state;

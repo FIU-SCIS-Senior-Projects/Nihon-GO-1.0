@@ -6,6 +6,9 @@ const INITIAL_STATE = {
 	languages: '',
 	description: '',
 	email: '',
+	profileImage: '',
+	profileBackImage: '',
+	fav_itinerary: ''
 };
 
 export default (state = INITIAL_STATE, action) => {

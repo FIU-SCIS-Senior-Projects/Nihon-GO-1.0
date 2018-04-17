@@ -2,13 +2,12 @@ import React, { Component } from 'react';
 import * as firebase from 'firebase';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
-import { userProfileUpdate, userProfileFetch, userProfileImageFetch } from '../actions';
-import { Divider, Icon } from 'react-native-elements';
+import { userProfileSave, userProfileUpdate, userProfileFetch, userUpdateFavorites } from '../actions';
+import { Button, Divider, Icon } from 'react-native-elements';
 import LibraryList from './LibraryList'; // TESTING ONLY
 import {
 	ActivityIndicator,
 	Animated,
-	Button,
 	Dimensions,
 	Image,
 	ImageBackground,
@@ -17,6 +16,7 @@ import {
 	Share,
 	StyleSheet,
 	Text,
+	TextInput,
 	TouchableOpacity,
 	View,
 } from 'react-native';
@@ -37,18 +37,7 @@ class UserProfile extends Component {
 	
 	// Gets user profile data
  	componentWillMount() {
-		const { currentUser } = firebase.auth();
-		var profilePictureLocation = `/UserProfile/ProfilePicture/${currentUser.uid}`;
-		var backgroundPictureLocation = `/UserProfile/BackgroundPicture/${currentUser.uid}`;
-		
 		this.props.userProfileFetch();
-		this.getURL(profilePictureLocation, "image");
-		this.getURL(backgroundPictureLocation, "backImage");
-	}
-	
-	static defaultProps = {
-		containerStyle: {},
-		tabContainerStyle: {},
 	}
 	
 	// State
@@ -61,9 +50,12 @@ class UserProfile extends Component {
 				{ key: '3', title: 'favorite'},
 			],
 		},
-		image: null,
-		backImage: null,
-		uploading: false,
+		edit: false
+	}
+	
+	// Used for user information
+	setEditable(editable) {
+		this.setState({edit: editable});
 	}
 	
 	// Used to handle tabs
@@ -95,9 +87,9 @@ class UserProfile extends Component {
 			case '1':
 				return this.renderAbout()
 			case '2':
-				return this.renderList()
+				return this.renderUserItineraries()
 			case '3':
-				return this.renderItinerary()
+				return this.renderFavoriteItineraries()
 			default:
 				return <View />
 			}
@@ -145,7 +137,7 @@ class UserProfile extends Component {
 		)
 	}
 	
-	// allows user to take a picture
+	// allows user to take a picture **NOT USED**
 	takePhoto = async () => {
 		let pickerResult = await ImagePicker.launchCameraAsync({
 			allowsEditing: true,
@@ -157,67 +149,47 @@ class UserProfile extends Component {
 	
 	// allows user to pick a picture
 	pickImage = async () => {
-		let { image } = this.state;
 		const { currentUser } = firebase.auth();
+		const { profileImage } = this.props;
 		const profilePictureLocation = `/UserProfile/ProfilePicture/${currentUser.uid}`;
-		
-		console.log("pickImage");
 		
 		let pickerResult = await ImagePicker.launchImageLibraryAsync({
 			allowsEditing: true,
 			aspect: [4, 3],
 		});
 		
-		UploadPicture(pickerResult, profilePictureLocation);
-		this.getURL(profilePictureLocation, "image");
+		function updateImage(value) {
+			this.props.userProfileSave({ profileImage: value });
+			this.props.userProfileUpdate({ prop: 'profileImage', value });
+		}
 		
+		UploadPicture(pickerResult, profilePictureLocation, updateImage.bind(this));
 	};
 	
 	// allows user to pick the background picture
 	pickBackImage = async () => {
 		const { currentUser } = firebase.auth();
+		const { profileBackImage } = this.props;
 		const backgroundPictureLocation = `/UserProfile/BackgroundPicture/${currentUser.uid}`;
-		
-		console.log("pickBackImage");
 		
 		let pickerResult = await ImagePicker.launchImageLibraryAsync({
 			allowsEditing: true,
 			aspect: [4, 3],
 		});
 		
-		UploadPicture(pickerResult, backgroundPictureLocation);
-		this.getURL(backgroundPictureLocation, "backImage");
-	};
-	
-	// gets the download URL for profile picture and background picture
-	getURL(location, type) {
-		let { image, backImage } = this.state;
-
-		//console.log("running getDownloadURL");
-		//console.log(location);
+		function updateImage(value) {
+			this.props.userProfileSave({ profileBackImage: value });
+			this.props.userProfileUpdate({ prop: 'profileBackImage', value });
+		}
 		
- 		var ref = firebase.storage().ref().child(location);
-		ref.getDownloadURL()
-			.then((url) => {
-				if (type === "image") {
-					this.setState({
-						image: url
-					});
-				} else {
-					this.setState({
-						backImage: url
-					});
-				}
-			})
-			.catch ((error) => {
-				console.log(error);
-			})
-	}
+		UploadPicture(pickerResult, backgroundPictureLocation, updateImage.bind(this));
+	};
 	
 	// renders profile picture
 	renderImage = () => {
-		let { image } = this.state;
-		if (!image) {
+		const { profileImage } = this.props;
+		
+		if (!profileImage) {
 			return (
 				<View>
 					<Image source={profilePicture} style={styles.profileImage}/>
@@ -227,7 +199,7 @@ class UserProfile extends Component {
 
 		return (
 			<View>
-				<Image source={{ uri: image }} style={styles.profileImage}/>
+				<Image source={{ uri: profileImage }} style={styles.profileImage}/>
 			</View>
 		);
 	};
@@ -235,8 +207,9 @@ class UserProfile extends Component {
 	// renders background picture
 	renderBackImage = () => {
 		const { username } = this.props;
-		let { backImage } = this.state;
-		if (!backImage) {
+		const { profileBackImage } = this.props;
+		
+		if (!profileBackImage) {
 			return (
 				<View>
 					<ImageBackground
@@ -258,7 +231,7 @@ class UserProfile extends Component {
 		return (
 			<View>
 				<ImageBackground
-						source={{ uri: backImage }}
+						source={{ uri: profileBackImage }}
 						style={styles.coverImage}
 					>
 						<View style={styles.coverTitleContainer} />
@@ -292,136 +265,100 @@ class UserProfile extends Component {
 		);
 	}
 	
-	// Render about tab - countains user information
+	// Render about tab - contains user information
 	renderAbout() {
 		const { username, country, languages, description } = this.props;
+
 		return (
 			<View>
 				<Text style={styles.titleTextStyle}>Bio</Text>
 				<Divider style={{ backgroundColor: 'blue' }} />
-				<Text style={styles.textStyle}>
-					{description}
-				</Text>
-				
+				<TextInput
+					placeholder="Short bio of yourself"
+					style={styles.textStyle}
+					onChangeText={value => this.props.userProfileUpdate({ prop: 'description', value })}
+					value={description}
+					underlineColorAndroid="transparent"
+					editable={this.state.edit}
+					multiline = {true}
+				/>
+
 				<Text style={styles.titleTextStyle}>Info</Text>
 				<Divider style={{ backgroundColor: 'blue' }} />
-				<Text style={styles.textStyle}>
-					Name: {username}
-				</Text>
-				<Text style={styles.textStyle}>
-					Country: {country}
-				</Text>
-				<Text style={styles.textStyle}>
-					Languages: {languages}
-				</Text>
-				
+				<TextInput
+					placeholder="Name"
+					style={styles.textStyle}
+					onChangeText={value => this.props.userProfileUpdate({ prop: 'username', value })}
+					value={username}
+					underlineColorAndroid="transparent"
+					editable={this.state.edit}
+				/>
+				<TextInput
+					placeholder="Where are you from?"
+					style={styles.textStyle}
+					onChangeText={value => this.props.userProfileUpdate({ prop: 'country', value })}
+					value={country}
+					underlineColorAndroid="transparent"
+					editable={this.state.edit}
+				/>
+				<TextInput
+					placeholder="What languages do you speak?"
+					style={styles.textStyle}
+					onChangeText={value => this.props.userProfileUpdate({ prop: 'languages', value })}
+					value={languages}
+					underlineColorAndroid="transparent"
+					editable={this.state.edit}
+				/>
+
 				<Text style={styles.titleTextStyle}>Extra</Text>
 				<Divider style={{ backgroundColor: 'blue' }} />
 				<Text style={styles.textStyle}>
 					Nothing
 				</Text>
+
+				{this.renderAboutButtons()}
 			</View>
 		);
 	}
 	
-	renderList() {
+	renderAboutButtons() {
+		const { username, country, languages, description } = this.props;
+		
+		if (this.state.edit) {
+			return (	
+				<Button
+					title ='Done Editing'
+					onPress={() => {this.setEditable(!this.state.edit)}}
+					buttonStyle={{backgroundColor: '#2196f3'}}
+					containerViewStyle={{marginTop: 20}}
+				/>
+			);
+		}
+		
+		return (
+			<Button
+				title ='Edit Profile'
+				onPress={() => {this.setEditable(!this.state.edit)}}
+				buttonStyle={{backgroundColor: '#2196f3'}}
+				containerViewStyle={{marginTop: 20}}
+			/>
+		);
+	}
+	
+	// Renders user itineraries tab
+	renderUserItineraries() {
 		return <LibraryList/>;
 	}
 	
-	// REMOVE
-	_maybeRenderUploadingOverlay = () => {
-		if (this.state.uploading) {
-			return (
-				<View
-					style={[
-						StyleSheet.absoluteFill,
-						{
-							backgroundColor: 'rgba(0,0,0,0.4)',
-							alignItems: 'center',
-							justifyContent: 'center',
-						},
-					]}>
-					<ActivityIndicator color="#fff" animating size="large" />
-				</View>
-			);
-		}
-	};
-  
-	// REMOVE
-	_maybeRenderImage = () => {
-		let { image } = this.state;
-		
-		if (!image) {
-		return;
-		}
-
-		return (
-			<View
-				style={{
-				marginTop: 30,
-				width: 250,
-				borderRadius: 3,
-				elevation: 2,
-				}}>
-				
-				<View
-					style={{
-						borderTopRightRadius: 3,
-						borderTopLeftRadius: 3,
-						shadowColor: 'rgba(0,0,0,1)',
-						shadowOpacity: 0.2,
-						shadowOffset: { width: 4, height: 4 },
-						shadowRadius: 5,
-						overflow: 'hidden',
-				}}>
-					<Image source={{ uri: image }} style={{ width: 250, height: 250 }} />
-				</View>
-
-				<Text
-					style={{ paddingVertical: 10, paddingHorizontal: 10 }}
-				>
-					{image}
-				</Text>
-			</View>
-		);
-	};
-	
-	// Renders itinerary list
-	renderItinerary() {
-		let { image } = this.state;
-		
-		return (
-			<View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-				{image ? null : (
-					<Text
-						style={{
-							fontSize: 20,
-							marginBottom: 20,
-							textAlign: 'center',
-							marginHorizontal: 15,
-						}}>
-						Example: Upload ImagePicker result
-					</Text>
-				)}		
-				
-				<Button
-					onPress={this.pickImage}
-					title="Pick an image from camera roll"
-				/>
-					
-				<Button onPress={this.takePhoto} title="Take a photo" />
-				
-				{this._maybeRenderImage()}
-				{this._maybeRenderUploadingOverlay()}
-				
-			</View>
-		);
+	// Renders favorite itineraries tab
+	renderFavoriteItineraries() {
+		return <LibraryList/>;
 	}
 	
 	render() {
 		return (
 			<ScrollView style={styles.scroll}>
-				<View style={[styles.container, this.props.containerStyle]}>
+				<View style={styles.container}>
 					<View style={styles.cardContainer}>
 						{this.renderContactHeader()}
 						<TabViewAnimated
@@ -430,11 +367,11 @@ class UserProfile extends Component {
 							renderHeader={this.renderHeader}
 							renderPager={this.renderPager}
 							renderScene={this.renderScene}
-							style={[styles.tabContainer, this.props.tabContainerStyle]}
+							style={styles.tabContainer}
 						/>
 					</View>
 				</View>
-		  </ScrollView>
+			</ScrollView>
 		);
 	}
 }
@@ -530,9 +467,9 @@ const styles = {
 };
 
 const mapStateToProps = (state) => {
-	const { username, country, languages, description, email } = state.user;
+	const { username, country, languages, description, email, profileImage, profileBackImage, fav_itinerary } = state.user;
 
-	return { username, country, languages, description, email };
+	return { username, country, languages, description, email, profileImage, profileBackImage, fav_itinerary };
 };
 
-export default connect(mapStateToProps, { userProfileUpdate, userProfileFetch, userProfileImageFetch })(UserProfile);
+export default connect(mapStateToProps, { userProfileSave, userProfileUpdate, userProfileFetch, userUpdateFavorites })(UserProfile);

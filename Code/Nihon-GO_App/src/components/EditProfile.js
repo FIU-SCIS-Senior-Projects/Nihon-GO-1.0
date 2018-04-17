@@ -66,12 +66,6 @@ class EditProfile extends Component {
 				</CardSection>
 				
 				<CardSection>
-					<Text style={styles.titleTextStyle}>
-						Picture:
-					</Text>
-				</CardSection>
-				
-				<CardSection>
 					<Button onPress={this.onButtonPress.bind(this)}>
 						Save Changes
 					</Button>

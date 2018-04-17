@@ -10,6 +10,7 @@ import * as actions from '../actions';
 import { connect } from 'react-redux';
 import { LinearGradient } from 'expo';
 import { Icon } from 'react-native-elements';
+import * as firebase from 'firebase';
 
 class ItineraryPreview extends Component {
     constructor(props){
@@ -86,6 +87,9 @@ class ItineraryPreview extends Component {
 		const { image, description, title, location, duration } = data;
         const {titleStyle, captionStyle, linearGradient } = styles;
 
+		console.log("id");
+		console.log(id);
+		
         return(
             <View style={{flex: 1, justifyContent: 'flex-end'}}>
                 <View style={{marginBottom: 10, marginLeft: 10, flexDirection: 'row'}}>
@@ -100,6 +104,7 @@ class ItineraryPreview extends Component {
                         count='25'
                         iconColor='white'/>
                     <CountingIcon 
+						onPress={this.props.userUpdateFavorites(id)}
                         iconName='heart' 
                         iconType='font-awesome' 
                         count='1000'
@@ -109,7 +114,7 @@ class ItineraryPreview extends Component {
         );
 
     }
-
+	
     renderExpandedPreview(){
         const { itinerary, expanded } = this.props;
         const { id, data } = itinerary;

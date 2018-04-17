@@ -13,11 +13,10 @@ import { Button } from 'react-native-elements';
 import Modal from "react-native-modal";
 import { BlurView } from 'expo';
 
-
+// Constants for image
 const SCREEN_WIDTH = Dimensions.get('window').width;
 const SCREEN_HEIGHT = Dimensions.get('window').height;
 const BG_IMAGE = require('../resources/bg_screen1.jpg');
-
 
 class LoginForm extends Component {
 	// Used for register modal
@@ -60,6 +59,8 @@ class LoginForm extends Component {
 		
 		if ((password == retypePassword) && (password > 5) && email) {
 			this.props.registerUser({ email, password });
+			this.setState({retypePassword: ''});
+			this.setModalVisible(!this.state.modalVisible);
 		}
 	}
 	
@@ -68,7 +69,7 @@ class LoginForm extends Component {
 		this.props.guestUser();
 	}
 	
-	// Runs after user presses logout button NO LONGER USED
+	// Runs after user presses logout button
 	onLogoutPress() {
 		this.props.logoutUser();
 	}
@@ -277,6 +278,7 @@ class LoginForm extends Component {
 		}
 	}
 	
+	// Render modal - appears after user clicked Create Account
 	renderModal() {
 		const { retypePassword } = this.state;
 		
@@ -313,7 +315,7 @@ class LoginForm extends Component {
 					<View style={styles.loginView}>
 						<View style={styles.loginTitle}>
 							<View style={{flexDirection: 'row'}}>
-								<Text style={styles.travelText}>Nihon-GO</Text>
+								<Text style={styles.headerText}>Nihon-GO</Text>
 							</View>
 						</View>
 						
@@ -372,6 +374,11 @@ const styles = StyleSheet.create({
 			justifyContent: 'center',
 			alignItems: 'center'
 		},
+		headerText: {
+			color: 'white',
+			fontSize: 35,
+			fontWeight: 'bold'
+		},
 		loginButton: {
 			flex: 1,
 			justifyContent: 'center',
@@ -403,11 +410,6 @@ const styles = StyleSheet.create({
 			justifyContent: 'center',
 			alignItems: 'center',
 			borderRadius: 5
-		},
-		travelText: {
-			color: 'white',
-			fontSize: 35,
-			fontWeight: 'bold'
 		}
 	}
 )

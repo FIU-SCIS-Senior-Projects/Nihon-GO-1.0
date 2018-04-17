@@ -11,6 +11,8 @@ import * as actions from '../actions';
 import {ListView } from 'react-native';
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
+import {Icon} from 'react-native-elements';
+import ActionButton from 'react-native-action-button';
 
 
 class BlogPreview extends Component {
@@ -19,34 +21,39 @@ class BlogPreview extends Component {
     }
 
 
+  
+
     render(){
         const {titleStyle, captionStyle } = styles;
-        const { id, image, category } = this.props.blog;
-  return(
-        <BlogCard >
-        <BlogCardSection /*onPress={Actions.BlogExpand()*/ >
-        <View style={styles.imageContainerStyle}>
-            <View >
-                <Image style={styles.imageStyle}
-                    source={ { uri: image } } />
-            </View>
-            <View style={styles.textContainerStyle}>
-                <Text style={styles.titleText}>
-                    {category}
-                </Text>
-            </View>
-        </View>
-        </BlogCardSection>
-        <BlogCardSection >
-            <BlogButton onPress={ () => this.props.selectCategory(this.props.blog.category)}>
-                View
-            </BlogButton>
-            <BlogButton >
-                Suggest Changes
-            </BlogButton>
-        </BlogCardSection>
-        </BlogCard>
-    );
+        const { category, image } = this.props.blog;
+        return(
+                <BlogCard>
+                <BlogCardSection>
+                <View style={styles.imageContainerStyle}>
+                    <View >
+                        <Icon
+                            size = {100}
+                            name={image.name} 
+                            iconStyle={styles.imageStyle}
+                            type={image.type}/>
+                    </View>
+                    <View style={styles.textContainerStyle}>
+                        <Text style={styles.titleText}>
+                            {category}
+                        </Text>
+                    </View>
+                </View>
+                </BlogCardSection>
+                <BlogCardSection >
+                    <BlogButton onPress={ () => this.props.selectCategory(category)}>
+                        View
+                    </BlogButton>
+                    <BlogButton >
+                        Suggest Changes
+                    </BlogButton>
+                </BlogCardSection>
+                </BlogCard>
+            );
 }
 };
 
@@ -56,24 +63,27 @@ const styles = {
         flex: 1,
         color: 'black',
         backgroundColor: 'transparent',
-        fontSize: 24,
+        fontSize: 40,
     },
     captionText:{
         flex: 1,
         color: 'black',
         backgroundColor: 'transparent',
-        fontSize: 18,
+        fontSize: 22,
     },
     imageStyle: {
+        marginLeft: 15,
         height: 100,
         width: 100,
     },
     imageContainerStyle: {
+        flex:1,
         flexDirection: 'row',
         justifyContent: 'flex-start'
     },
     textContainerStyle: {
-        marginLeft: 15,
+        marginLeft: 35,
+        marginTop: 25,
         flexDirection: 'column',
         justifyContent: 'space-around',
 
@@ -91,7 +101,7 @@ const styles = {
 };
 
 const mapStateToProps = state => {
-    return { selectedCategory: state.selectedCategory };
+    return { selectCategory: state.selectCategory };
 };
 
 export default connect(mapStateToProps, actions)(BlogPreview);

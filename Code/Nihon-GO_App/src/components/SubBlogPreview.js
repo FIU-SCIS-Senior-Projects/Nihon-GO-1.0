@@ -10,6 +10,8 @@ import {
 import * as actions from '../actions';
 import { Actions} from 'react-native-router-flux';
 import { connect } from 'react-redux';
+import { Icon } from 'react-native-elements';
+
 
 class SubBlogPreview extends Component {
     constructor(props){
@@ -31,9 +33,8 @@ class SubBlogPreview extends Component {
 
     renderCat(){
       const {titleStyle, captionStyle } = styles;
-      const {id ,title, description, category } = this.props.blog;
+      const {title, description} = this.props.blog.data;
 
-      if (this.props.selectedCategory === category){
         if (this.state.expandedSubBlog){
           return(
 
@@ -80,7 +81,6 @@ class SubBlogPreview extends Component {
             </TouchableWithoutFeedback>
           );
         }
-      }
     }
 
     render(){
@@ -99,9 +99,10 @@ const styles = {
         flex: 1,
         color: 'black',
         backgroundColor: 'transparent',
-        fontSize: 24,
+        fontSize: 30,
     },
     captionText:{
+        marginLeft:4,
         flex: 1,
         color: 'black',
         backgroundColor: 'transparent',
@@ -116,7 +117,7 @@ const styles = {
         justifyContent: 'flex-start'
     },
     textContainerStyle: {
-        marginLeft: 15,
+        marginLeft: 6,
         flexDirection: 'column',
         justifyContent: 'space-around',
 

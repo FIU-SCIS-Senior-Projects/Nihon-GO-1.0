@@ -12,8 +12,7 @@ const BlogCardSection = (props) => {
 const styles = {
 	containerStyles: {
 		borderBottomWidth: 1,
-		paddingTop: 5,
-		backgroundColor: '#fff',
+		backgroundColor: '#BAD9FF',
 		justifyContent: 'flex-start',
 		flexDirection: 'row',
 		borderColor: '#666E6D',

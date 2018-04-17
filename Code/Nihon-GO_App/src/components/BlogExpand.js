@@ -5,32 +5,47 @@ import { EventView } from './EventView';
 import * as actions from '../actions';
 import {connect} from 'react-redux';
 import SubBlogPreview from './SubBlogPreview';
-import {ListView } from 'react-native';
+import {ListView, FlatList } from 'react-native';
 
 class BlogExpand extends Component
 {
-    componentWillMount()
-    {
-            const ds = new ListView.DataSource({
-                rowHasChanged: (r1, r2) => r1 != r2
-            });
-
-            this.dataSource = ds.cloneWithRows(this.props.subblogs);
-    }
-
     renderRow(blog)
     {
         return(
-            <SubBlogPreview blog={blog.subcategory}/>
+            <SubBlogPreview blog={blog}/>
         );
     }
 
     render()
     {
-        return (
-            <ListView style={{backgroundColor: '#D4DBDA',paddingTop:60}}
+        const ds = new ListView.DataSource({
+            rowHasChanged: (r1, r2) => r1 != r2
+        });
+        
+        var blogList = [];
+        switch (this.props.selectedCategory){
+            case 'Culture' :
+                blogList = this.props.blogs.Culture;
+                break;
+            case 'Currency' :
+                blogList = this.props.blogs.Currency;
+                break;
+            case 'Travel' :
+                blogList = this.props.blogs.Travel;
+                break;
+            case 'Weather' :
+                blogList = this.props.blogs.Weather;
+                break;
+            case 'Transportation' :
+                blogList = this.props.blogs.Transportation;
+                break;
+        } 
+        this.dataSource = ds.cloneWithRows(blogList);
+        return (            
+            <ListView style={{backgroundColor: 'black'}}
             dataSource={this.dataSource}
             renderRow={this.renderRow}
+            enableEmptySections
             />
         );
     }
@@ -49,7 +64,8 @@ const styles = {
 };
 
  const mapStateToProps = state => {
-    return { subblogs: state.subblogs};
+    const {blogs, selectedCategory} = state;
+    return {blogs, selectedCategory};
 };
 
 export default connect(mapStateToProps)(BlogExpand);

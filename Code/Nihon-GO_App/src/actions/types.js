@@ -15,3 +15,5 @@ export const ITINERARY_UPDATE = 'itinerary_update';
 
 //Used for Blogs
 export const BLOG_UPDATE = 'blog_update';
+export const BLOG_SUB_RESET = 'blog_subcategory_reset';
+export const BLOG_FETCH = 'blog_fetch';

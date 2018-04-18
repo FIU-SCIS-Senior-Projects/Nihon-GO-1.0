@@ -1,0 +1,12 @@
+{
+  "expo": {
+	"name": "Nihon-GO",
+	"description": "Social platform for users to share unique experiences in Japan.",
+    "sdkVersion": "26.0.0",
+	"splash": {
+		"image": "./src/resources/splashscreen.png"
+	},
+	"orientation": "portrait",
+	"version": "1.0"
+  }
+}

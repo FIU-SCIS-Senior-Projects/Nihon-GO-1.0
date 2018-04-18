@@ -1,0 +1,65 @@
+[
+	{
+		"location":"Kyoto",
+		"address":"Kyoto, Japan",
+		"description":"Beautiful, perfect, spiritual.",
+		"image":"https://fastjapan.com/en/wp-content/uploads/2016/11/kyoto.jpg",
+		"duration":"rest of their lives"
+	},
+	{
+		"location":"Nara",
+		"address":"Nara, Japan",
+		"description":"Deer, ancient capital, quiet.",
+		"image":"https://www.japan-guide.com/g16/4100_top.jpg",
+		"duration":"2 days"
+	},
+	{
+		"location":"Fukuoka",
+		"address":"Fukuoka, Japan",
+		"description":"Young crowd, proximity to Asia.",
+		"image":"https://blog.gaijinpot.com/wp-content/uploads/sites/4/2016/10/Fukuoka.jpg",
+		"duration":"a week"
+	},
+	{
+		"location":"Hakodate",
+		"address":"Hakodate, Hokkaido, Japan",
+		"description":"Star fort, underwater shinkansen.",
+		"image":"https://upload.wikimedia.org/wikipedia/commons/d/d5/Hakodate_Goryokaku_Panorama_1.JPG",
+		"duration":"5 hours"
+	},
+	{
+		"location":"Saitama",
+		"address":"Saitama, Japan",
+		"description":"Not an anime.",
+		"image":"https://resources.matcha-jp.com/old_thumbnails/720x2000/1521.jpg",
+		"duration":"1 hour"
+	},
+	{
+		"location":"Kobe",
+		"address":"Kobe, Japan",
+		"description":"Kobe Beef!",
+		"image":"https://nihonomnom.files.wordpress.com/2012/05/kobe-city.jpg",
+		"duration":"1 day"
+	},
+	{
+		"location":"Tottori",
+		"address":"Tottori, Japan",
+		"description":"Riley!",
+		"image":"https://pregamestraining.tokyo2020.jp/assets/img/module/upload/lg/camp/31_000_camp_1.jpg",
+		"duration":"1 day"
+	},
+	{
+		"location":"Chiba",
+		"address":"Chiba, Japan",
+		"description":"Yuko!",
+		"image":"https://www.japanvisitor.com/images/content_images/chiba-guide-2.jpg",
+		"duration":"3 day"
+	},
+	{
+		"location":"Yamanashi",
+		"address":"Yamanashi, Japan",
+		"description":"Pam!",
+		"image":"https://theodora.com/wfb/photos/japan/mount_chureito_peace_pagoda_sengen_park_yamanashi_pref_japan_photo_jnto.jpg",
+		"duration":"2 day"
+	}
+]

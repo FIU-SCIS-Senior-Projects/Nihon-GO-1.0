@@ -1,23 +1,27 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, Image, ScrollView, Modal } from 'react-native';
-import * as actions from '../actions';
 import { Card, TimeLine, ImageCard, Button } from './common/index';
 import { Avatar, Icon } from 'react-native-elements';
 import { BlurView } from 'expo';
+import { connect } from 'react-redux';
+import { startedItnUpdate } from '../actions';
 
 class EventPreview extends Component {
     constructor(props){
         super(props);
         this.state = {
             expandedEvent: false,
-            completedEvent: false}
-        ;
+            completedEvent: false
+        };
     }
 
     toggleCompleted(){
-        this.setState(previousState => {
-            return { completedEvent: !previousState.completedEvent };
-          });
+        if(this.props.index + 1 == this.props.progress){
+            this.props.startedItnUpdate({ prop: 'progress', value: (this.props.progress - 1) });
+        }
+        else if(this.props.index == this.props.progress){
+            this.props.startedItnUpdate({ prop: 'progress', value: (this.props.progress + 1) });
+        }
     }
 
     toggleExpand(){
@@ -27,11 +31,11 @@ class EventPreview extends Component {
     }
 
     renderButton(){
-        if (this.props.mode === 'start'){
-            if (this.state.completedEvent)
+        if (this.props.started == this.props.selectedItineraryId && (this.props.index + 1 == this.props.progress || this.props.index == this.props.progress)){
+            if (this.props.index + 1 <= this.props.progress)
             {
                 return(
-                    <Button 
+                    <Button
                         fontColor='white'
                         onPress={()=>{this.toggleCompleted()}}
                         style={{
@@ -44,7 +48,7 @@ class EventPreview extends Component {
             }
             else{
                 return(
-                    <Button 
+                    <Button
                         onPress={()=>{this.toggleCompleted()}}
                         style={{
                             justifyContent: 'center',
@@ -53,6 +57,9 @@ class EventPreview extends Component {
                     </Button>
                 );
             }
+        }
+        else{
+            <View/>
         }
     }
 
@@ -68,11 +75,11 @@ class EventPreview extends Component {
                 onRequestClose={() => {this.toggleExpand()}}>
                 <BlurView intensity={100} style={{flex: 1}}>
                     <Card style={modalStyle}>
-                        <ImageCard source={{uri: image}} 
-                            style={{borderBottomWidth: 0, 
+                        <ImageCard source={{uri: image}}
+                            style={{borderBottomWidth: 0,
                                     alignItems: 'flex-end'}}>
                             <TouchableOpacity onPress={() => {this.toggleExpand()}}>
-                                <View style={{marginRight: 10, marginTop: 10}}>    
+                                <View style={{marginRight: 10, marginTop: 10}}>
                                     <Icon
                                         name='x'
                                         type='feather'
@@ -88,8 +95,8 @@ class EventPreview extends Component {
                                     <Text numberOfLines={1} style={titleStyle}>{title}</Text>
                                     <Text style={descriptionStyle}>{address}</Text>
                                 </View>
-                                <View  style={{marginTop: 10, marginRight: 10, 
-                                        marginTop: 15, marginBottom: 15, flex: 1, 
+                                <View  style={{marginTop: 10, marginRight: 10,
+                                        marginTop: 15, marginBottom: 15, flex: 1,
                                         justifyContent: 'center',
                                         alignItems:'center'}}>
                                     {this.renderButton()}
@@ -109,18 +116,12 @@ class EventPreview extends Component {
 
     renderCard(){
         const { id, title, address, description, image, duration } = this.props.event;
-        const { avatarStyle, titleStyle, descriptionStyle } = styles;
+        const { avatarStyle, titleStyle, descriptionStyle, cardNotStarted } = styles;
 
         return(
             <View style={{flex:1}}>
                 <TouchableOpacity onPress={() => {this.toggleExpand()}}>
-                    <Card style={{
-                        marginTop: 5, 
-                        marginBottom: 5,
-                        marginRight: 15, 
-                        flexDirection: 'row', 
-                        flex: 1,
-                        backgroundColor: 'white'}}>
+                    <Card style={cardNotStarted}>
                         <View style={avatarStyle}>
                             <Avatar
                                 large
@@ -137,8 +138,8 @@ class EventPreview extends Component {
                                 </Text>
                             </View>
                             <View style={{flex: 1, justifyContent: 'space-around'}}>
-                            <Text style={[descriptionStyle, {marginTop: 10}]}>{duration} days</Text>
-                        </View>
+                                <Text style={[descriptionStyle, {marginTop: 10}]}>{duration} days</Text>
+                            </View>
                         </View>
                     </Card>
                 </TouchableOpacity>
@@ -147,21 +148,20 @@ class EventPreview extends Component {
     }
 
     renderTimeLine(){
-        if(this.state.completedEvent)
+        if(this.props.index + 1 <= this.props.progress)
         {
             return(
-                <TimeLine 
-                    style={{marginLeft: 10}} 
-                    checked onPress={() => {this.toggleCompleted()}}
-                    checked>
+                <TimeLine
+                    style={{marginLeft: 10}}
+                    checked onPress={() => {this.toggleCompleted()}}>
                     {this.renderCard()}
                 </TimeLine>
             );
         }
         else{
             return(
-                <TimeLine 
-                    style={{marginLeft: 10}} 
+                <TimeLine
+                    style={{marginLeft: 10}}
                     onPress={() => {this.toggleCompleted()}}>
                     {this.renderCard()}
                 </TimeLine>
@@ -197,7 +197,7 @@ class EventPreview extends Component {
                 </View>
             );
         }
-        else if (this.props.mode==='start'){
+        else if (this.props.started == this.props.selectedItineraryId){
             return(
                 <View>
                     {this.renderTimeLine()}
@@ -249,12 +249,27 @@ const styles = {
     },
     modalStyle: {
         flex: 1,
-        marginTop: 25, 
-        marginBottom: 25, 
-        marginLeft: 20, 
+        marginTop: 25,
+        marginBottom: 25,
+        marginLeft: 20,
         marginRight: 20,
         backgroundColor: 'white',
     },
+    cardNotStarted: {
+        marginTop: 5,
+        marginBottom: 5,
+        marginRight: 15,
+        marginLeft: 15,
+        flexDirection: 'row',
+        flex: 1,
+        backgroundColor: 'white'
+    },
 };
 
-export default EventPreview;
+const mapStateToProps = state => {
+    const start_itn = state.StartItn;
+    const { events, progress, started, isStarted } = start_itn;
+    return { events, progress, started, isStarted };
+};
+
+export default connect(mapStateToProps, { startedItnUpdate })(EventPreview);

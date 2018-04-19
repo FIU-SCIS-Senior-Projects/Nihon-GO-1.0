@@ -19,72 +19,78 @@ import { primary_color, primary_text_color }  from './components/common/AppPalet
 //Needs to be consolidated with other features
 const RouterComponent = () => {
 	return (
-		<Router>	
+		<Router>
 			<Lightbox>
 				<Scene key="root" hideNavBar>
-						<Scene key="main" 
-                        drawer 
-                        drawerIcon={() => <Icon name='menu' color={primary_text_color}/>} 
-                        contentComponent={DrawerPanel} 
-                        navigationBarStyle={styles.navBar}
-                        titleStyle={styles.navBarTitle}
-                        tintColor={primary_text_color}>
-							<Scene 
-								key="homepage" 
-								component={HomePage} 
-								title="Home" 
-								initial />
-							<Scene 
-								key="login" 
-								back 
-								component={LoginForm} 
+						<Scene key="main"
+                drawer
+                drawerIcon={() => <Icon name='menu' color={primary_text_color}/>}
+                contentComponent={DrawerPanel}
+                navigationBarStyle={styles.navBar}
+                titleStyle={styles.navBarTitle}
+                tintColor={primary_text_color}
+                type="reset">
+							<Scene
+								key="homepage"
+								component={HomePage}
+								title="Home"
+								initial/>
+							<Scene
+								key="login"
+								back
+								component={LoginForm}
 								title="Please Login" />
-							<Scene 
-								onRight={() => Actions.editProfile()}
-								rightTitle="Edit"
-								key="userProfile" 
-								component={UserProfile} 
+							<Scene
+								key="userProfile"
+								component={UserProfile}
 								title="User Profile" />
-							<Scene 
-								key="editProfile" 
-								back 
-								onBack={()=> Actions.userProfile()} 
-								component={EditProfile} 
+							<Scene
+								key="editProfile"
+								back
+								component={EditProfile}
 								title="Edit Profile" />
-							<Scene 
+							<Scene
 								rightTitle="Add Blog"
 								onRight={()=> Actions.BlogForm()}
 								title="Blog"
 								component={BlogList}
 								key="blog" />
-							<Scene 
-								key="BlogForm" 
-								back 
+							<Scene
+								key="BlogForm"
+								back
 								onBack={()=> Actions.blog()}
 								component = {BlogForm}
 								title="Create Blog" />
 							<Scene
 								key="BlogExpand"
-								back 
+								back
 								onBack={()=> Actions.blog()}
 								component = {BlogExpand}
 								title="[Blog Name]" />
-							<Scene 
-								key="itineraryList" 
-								component={ItineraryList} 
-								title="Itineraries"/>
-							<Scene 
-								key="itineraryCreate" 
-								back 
-								component={ItineraryCreate} 
-								title="Create Itinerary" />
-							<Scene 
-								key="itineraryView"
+							<Scene
+								key="itineraryCreate"
 								back
-								onBack={()=> Actions.itineraryList()}
-								component={ItineraryView} 
-								title="Itinerary - Events" />
+								component={ItineraryCreate}
+								title="Create Itinerary" />
 						</Scene>
+						<Scene
+							navigationBarStyle={styles.navBar}
+							titleStyle={styles.navBarTitle}
+							tintColor={primary_text_color}
+							hideNavBar={false}
+							key="itineraryList"
+							back
+							component={ItineraryList}
+							title="Itineraries"/>
+						<Scene
+							navigationBarStyle={styles.navBar}
+							titleStyle={styles.navBarTitle}
+							tintColor={primary_text_color}
+							hideNavBar={false}
+							key="itineraryView"
+							back
+							component={ItineraryView}
+							title="Itinerary - Events" />
 				</Scene>
 				<Scene key="mapModal" component={MapModal} />
 			</Lightbox>

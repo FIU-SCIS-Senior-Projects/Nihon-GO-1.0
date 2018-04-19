@@ -1,6 +1,7 @@
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
-import { 
+import { userProfileFetch, startedItnReset } from './index'
+import {
 	EMAIL_CHANGED,
 	PASSWORD_CHANGED,
 	LOGIN_USER_SUCCESS,
@@ -27,7 +28,7 @@ export const passwordChanged = (text) => {
 export const loginUser = ({ email, password }) => {
 	return (dispatch) => {
 		dispatch({ type: LOGIN_USER_START_SPINNER });
-		
+
 		firebase.auth().signInWithEmailAndPassword(email, password)
 			.then(user => loginUserSuccess(dispatch, user))
 			.catch((error) => {
@@ -41,7 +42,7 @@ export const loginUser = ({ email, password }) => {
 export const registerUser = ({ email, password }) => {
 	return (dispatch) => {
 		dispatch({ type: LOGIN_USER_START_SPINNER });
-		
+
 		firebase.auth().createUserWithEmailAndPassword(email, password)
 			.then(user => loginUserSuccess(dispatch, user))
 			.catch((error) => {
@@ -55,7 +56,7 @@ export const registerUser = ({ email, password }) => {
 export const guestUser = () => {
 	return (dispatch) => {
 		dispatch({ type: LOGIN_USER_START_SPINNER });
-		
+
 		firebase.auth().signInAnonymously()
 			.then(user => loginUserSuccess(dispatch, user))
 			.catch((error) => {
@@ -69,9 +70,9 @@ export const guestUser = () => {
 export const logoutUser = () => {
 	return (dispatch) => {
 		dispatch({ type: LOGOUT });
-		
+
 		firebase.auth().signOut();
-		
+		startedItnReset(dispatch);
 		Actions.main();
 	};
 };
@@ -85,8 +86,8 @@ const loginUserSuccess = (dispatch, user) => {
 		type: LOGIN_USER_SUCCESS,
 		payload: user
 	});
-	
-	Actions.main();
+	userProfileFetch();
+	Actions.pop();
 };
 
 //tech-stack

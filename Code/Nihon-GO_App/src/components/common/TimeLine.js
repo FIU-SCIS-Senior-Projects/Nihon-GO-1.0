@@ -55,11 +55,11 @@ class TimeLine extends Component {
                 <View style={{flexDirection: 'column'}}>
                     <View style={[
                         topLine, 
-                        {backgroundColor: uncheckedColor || '#9E9E9E'}, 
+                        {backgroundColor: uncheckedColor || '#424242'}, 
                         {width: lineWidth || 4 }]}/>
                     <View style={[
                         node,
-                        {borderColor: uncheckedColor || '#9E9E9E'},
+                        {borderColor: uncheckedColor || '#424242'},
                         {borderWidth: lineWidth /2 || 2},
                         {width: nodeSize || 28},
                         {height: nodeSize || 28},
@@ -68,7 +68,7 @@ class TimeLine extends Component {
                     </View>
                     <View style={[
                         bottomLine,
-                        {backgroundColor: uncheckedColor || '#9E9E9E'}, 
+                        {backgroundColor: uncheckedColor || '#424242'}, 
                         {width: lineWidth || 4 }
                         ]}/>
                 </View>
@@ -98,6 +98,7 @@ const styles = {
         alignSelf: 'center',
     },
     node: {
+        backgroundColor:'white',
         justifyContent: 'center',
         alignItems: 'center',
     },

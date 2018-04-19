@@ -3,8 +3,10 @@ import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import {
     ITINERARY_UPDATE,
-	ITINERARY_FETCH
+	ITINERARY_FETCH,
+    ITINERARY_RESET
 } from './types';
+import { startItnFetch, startedItnUpdate } from './index'
 
 export const itineraryUpdate = ({ prop, value }) => {
     return {
@@ -13,33 +15,53 @@ export const itineraryUpdate = ({ prop, value }) => {
     };
 };
 
-export const itineraryCreate = ({ titleInput, location, description, image, duration, events }) => {
+export const itineraryReset= () => {
+    return {
+        type: ITINERARY_RESET
+    };
+};
+export const itineraryCreate = ({ title, location, description, image, duration, events }) => {
     return ()  =>{
         firebase.database().ref('/itineraries')
-            .push({ titleInput, location, description, image, duration, events })
+            .push({ title, location, description, image, duration, events })
             .then(() => Actions.pop());
     }
 };
 
-// Fetch user profile data OR create a generic profile if none found
-export const itineraryFetch = () => {
-	var itineraries = [];
-	return (dispatch) => {
-		firebase.database().ref('/itineraries')
-			.once('value', function(snapshot) {
-				snapshot.forEach(function(childSnapshot) {
-						itineraries.push({id: childSnapshot.key, data: childSnapshot.val()})
-				});
-				dispatch({ type: ITINERARY_FETCH, payload: itineraries });
-			});
-	};
-};
+// Fetch itineraries
+export const itineraryFetch = (filters) => {
 
-export const selectItinerary = (itineraryId) => {
-	Actions.itineraryView();
+    var itineraries = [];
+    var ref = firebase.database().ref('/itineraries');
 
-	return {
-		type: 'select_itinerary',
-		payload: itineraryId
-	};
+    //filter by region
+    if (filters.hasOwnProperty('region')){
+        return (dispatch) => {
+            ref.orderByChild("favorites").once('value', function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                    var key = childSnapshot.key;
+                    var data_val = childSnapshot.val();
+                    if( filters.region == 'ALL' || data_val.location == filters.region){
+                        itineraries.push({id: key, data: data_val})
+                    }
+                });
+                dispatch({ type: ITINERARY_FETCH, payload: itineraries.reverse() });
+
+            });
+        };
+    }
+    //filter by key
+    else if (filters.hasOwnProperty('id')){
+        return (dispatch) => {
+            ref.orderByKey().equalTo(filters.id).once('value', function(snapshot) {
+                snapshot.forEach(function(childSnapshot) {
+                    var key = childSnapshot.key;
+                    var data_val = childSnapshot.val();
+                    itineraries.push({id: key, data: data_val});
+                    Actions.itineraryView({ title: itineraries[0].data.title, itinerary: itineraries[0]});
+                });
+                dispatch({ type: ITINERARY_FETCH, payload: itineraries });
+            });
+        };
+    }
 };

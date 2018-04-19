@@ -29,6 +29,7 @@ import {
 	KyushuColor,
 	OkinawaColor
 } from './common/AppPalette';
+import regionData from './Regions_Data';
 
 const { width, height } = Dimensions.get("window");
 const border =  '#000000';
@@ -83,39 +84,39 @@ class Map extends Component {
     };
 	
 	select1 = () => {
-		Actions.mapModal({data: 'Hokkaido'});
+		Actions.mapModal({data: regionData.Hokkaido});
 		this.toggle1();
 	}
 	select2 = () => {
-		Actions.mapModal({data: 'Tohoku'});
+        Actions.mapModal({data: regionData.Tohoku});
 		this.toggle2();
 	}
 	select3 = () => {
-		Actions.mapModal({data: 'Chubu'});
+        Actions.mapModal({data: regionData.Chubu});
 		this.toggle3();
 	}
 	select4 = () => {
-		Actions.mapModal({data: 'Kanto'});
+        Actions.mapModal({data: regionData.Kanto});
 		this.toggle4();
 	}
 	select5 = () => {
-		Actions.mapModal({data: 'Kansai'});
+        Actions.mapModal({data: regionData.Kansai});
 		this.toggle5();
 	}
 	select6 = () => {
-		Actions.mapModal({data: 'Chugoku'});
+        Actions.mapModal({data: regionData.Chugoku});
 		this.toggle6();
 	}
 	select7 = () => {
-		Actions.mapModal({data: 'Shikoku'});
+        Actions.mapModal({data: regionData.Shikoku});
 		this.toggle7();
 	}
 	select8 = () => {
-		Actions.mapModal({data: 'Kyushu'});
+        Actions.mapModal({data: regionData.Kyushu});
 		this.toggle8();
 	}
 	select9 = () => {
-		Actions.mapModal({data: 'Okinawa'});
+        Actions.mapModal({data: regionData.Okinawa});
 		this.toggle9();
 	}
 	

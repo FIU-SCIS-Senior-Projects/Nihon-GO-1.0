@@ -2,9 +2,11 @@ import React from 'react';
 import { View, Text, StyleSheet, Animated, Dimensions } from 'react-native';
 import { Button, Icon } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
-import {Hokkaido_Info, Tohoku_Info, Kanto_Info, Chubu_Info} from './regions';
-const { height: deviceHeight } = Dimensions.get("window");
 import { primary_text_color } from './common/AppPalette';
+import regionData from './Regions_Data';
+import { Region } from './Region';
+
+const { height: deviceHeight } = Dimensions.get("window");
 
 export default class MapModal extends React.Component {
 	constructor(props) {
@@ -28,83 +30,28 @@ export default class MapModal extends React.Component {
 			toValue: -deviceHeight
 		}).start(Actions.pop);
 	}
-	
-	renderRegion(){
-		switch(this.props.data) {
-			case "Hokkaido":
-				return(
-					<Hokkaido_Info/>
-				)
-				break;
-			case "Tohoku":
-				return(
-					<Tohoku_Info/>
-				)
-				break;
-			case "Chubu":
-				return(
-					<Chubu_Info/>
-				)
-				break;
-			case "Kanto":
-				return(
-					<Kanto_Info/>
-				)
-				break;
-			case "kansai":
-				return(
-					<View>
-						<Text style={styles.textStyle}>{this.props.data}</Text>
-					</View>
-				)
-				break;
-			case "Chugoku":
-				return(
-					<View>
-						<Text style={styles.textStyle}>{this.props.data}</Text>
-					</View>
-				)
-				break;
-			case "Shikoku":
-				return(
-					<View>
-						<Text style={styles.textStyle}>{this.props.data}</Text>
-					</View>
-				)
-				break;
-			case "Kyushu":
-				return(
-					<View>
-						<Text style={styles.textStyle}>{this.props.data}</Text>
-					</View>
-				)
-				break;
-			case "Okinawa":
-				return(
-					<View>
-						<Text style={styles.textStyle}>{this.props.data}</Text>
-					</View>
-				)
-				break;
-			default:
-				return(
-					<View>
-						<Text style={styles.textStyle}>!</Text>
-					</View>
-				)
-		}
-	}
   
 	render() {
 		return (
 			<View style={styles.container}>
 				<Animated.View
-				style={[styles.container2, 
-				{ backgroundColor: 'white' },
-				{ transform: [{ translateY: this.state.offset }] }]}
+                    style={[styles.container2, 
+                        { backgroundColor: 'white' },
+                        { transform: [{ translateY: this.state.offset }] }]}
 				>
-					{this.renderRegion()}
-					<Icon containerStyle={{position: 'absolute', top: 5, right: 5}} color={primary_text_color} name="close" onPress={this.closeModal.bind(this)}/>
+					<Region
+                        region = {this.props.data.region}
+                        text = {this.props.data.text}
+                        img_1 = {this.props.data.img_1}
+                        img_2 = {this.props.data.img_2}
+                        img_3 = {this.props.data.img_3}
+                    />
+					<Icon 
+                        containerStyle={{position: 'absolute', top: 5, right: 5}} 
+                        color={primary_text_color} 
+                        name="close" 
+                        onPress={this.closeModal.bind(this)}
+                    />
 				</Animated.View>
 			</View>
 		);

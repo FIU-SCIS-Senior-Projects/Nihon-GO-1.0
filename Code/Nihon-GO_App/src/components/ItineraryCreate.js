@@ -36,12 +36,12 @@ class ItineraryCreate extends Component{
     }
 
     onSubmitPress(){
-        const { titleInput, location, description, image, duration, events } = this.props;
-        if (!titleInput && !location && !description && !image && !duration && !events){
+        const { title, location, description, image, duration, events } = this.props;
+        if (!title && !location && !description && !image && !duration && !events){
             console.log("All fields required!");
         }
         else{
-            this.props.itineraryCreate({ titleInput, location, description, image, duration, events });
+            this.props.itineraryCreate({ title, location, description, image, duration, events });
         }
     }
 
@@ -276,8 +276,8 @@ class ItineraryCreate extends Component{
                     <Input
                         label="Title"
                         placeholder="Enter a title"
-                        value={this.props.titleInput}
-                        onChangeText={value => this.props.itineraryUpdate({prop: 'titleInput', value})}
+                        value={this.props.title}
+                        onChangeText={value => this.props.itineraryUpdate({prop: 'title', value})}
                     />
                 </CardSection>
 
@@ -345,9 +345,9 @@ const styles={
 }
 
 const mapStateToProps = (state) =>{
-    const { location, description, image, duration, titleInput, events } = state.itineraryForm;
+    const { location, description, image, duration, title, events } = state.itineraryForm;
 
-    return { location, description, image, duration, titleInput, events }
+    return { location, description, image, duration, title, events }
 }
 
 export default connect(mapStateToProps, {

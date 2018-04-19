@@ -7,6 +7,9 @@ import ReduxThunk from 'redux-thunk';
 import reducers from './src/reducers';
 import Router from './src/Router';
 
+// Redux things
+const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
+
 export default class App extends Component {
 	constructor(){
 		super();
@@ -14,7 +17,7 @@ export default class App extends Component {
 			'Setting a timer'
 		];
 	}
-	
+
 	componentWillMount() {
 		// Initialize Firebase
 		const config = {
@@ -25,15 +28,13 @@ export default class App extends Component {
 			storageBucket: "nihon-go-fiu.appspot.com",
 			messagingSenderId: "75675857241"
 		};
-		
+
 		firebase.initializeApp(config);
 	}
-	
+
 	// Render application
 	render() {
-		// Redux things
-		const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
-		
+
 		// Home view
 		return (
 			// TIP: Provider ONLY allows one component

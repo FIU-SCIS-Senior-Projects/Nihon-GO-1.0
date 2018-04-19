@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 import { userProfileSave, userProfileUpdate, userProfileFetch, userUpdateFavorites } from '../actions';
 import { Button, Divider, Icon } from 'react-native-elements';
-import LibraryList from './LibraryList'; // TESTING ONLY
 import {
 	ActivityIndicator,
 	Animated,
@@ -34,7 +33,7 @@ const profilePicture = require('../resources/profilePicture.png');
 const profileBackgroundPicture = require('../resources/profileBackground.jpg');
 
 class UserProfile extends Component {
-	
+    
 	// Gets user profile data
  	componentWillMount() {
 		this.props.userProfileFetch();
@@ -347,12 +346,12 @@ class UserProfile extends Component {
 	
 	// Renders user itineraries tab
 	renderUserItineraries() {
-		return <LibraryList/>;
+		return <View/>;
 	}
 	
 	// Renders favorite itineraries tab
 	renderFavoriteItineraries() {
-		return <LibraryList/>;
+		return <View/>;
 	}
 	
 	render() {

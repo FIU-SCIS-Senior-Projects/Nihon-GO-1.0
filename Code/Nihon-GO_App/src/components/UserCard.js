@@ -2,18 +2,10 @@ import React, { Component } from 'react';
 import { View, Text, Image, TouchableNativeFeedback } from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
-import { 
-	emailChanged, 
-	passwordChanged, 
-	loginUser, 
-	registerUser,
-	guestUser,
-	logoutUser,
-	userProfileFetch
-} from '../actions';
+import { logoutUser, userProfileFetch } from '../actions';
 import { Card, CardSection, Input, Spinner } from './common';
 import { Icon, Avatar, Button } from 'react-native-elements'
-import { primary_color, primary_text_color, dark_color, dark_text_color}  from './common/AppPalette';
+import { primary_color, primary_text_color, dark_color, dark_text_color, light_color}  from './common/AppPalette';
 
 class UserCard extends Component {
 	// Gets user profile data
@@ -22,19 +14,19 @@ class UserCard extends Component {
 			this.props.userProfileFetch();
 		}
 	}
-	
+
 	// Runs after user presses logout button
 	onLogoutPress() {
 		this.props.logoutUser();
 	}
-	
+
 	renderAvatar(){
 		if (this.props.loggedIn) {
 			return (
 				<View>
 					<Avatar
 						rounded
-						source={{uri: "https://image.freepik.com/free-icon/male-user-shadow_318-34042.jpg"}}
+						source={{uri: "https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg"}}
 						large/>
 				</View>
 			);
@@ -42,6 +34,7 @@ class UserCard extends Component {
 			return (
 				<View>
 					<Avatar
+						overlayContainerStyle={{backgroundColor: 'grey'}}
 						rounded
 						title="?"
 						large/>
@@ -49,7 +42,7 @@ class UserCard extends Component {
 			);
 		}
 	}
-	
+
 	//Renders right side of card
 	renderUsername() {
 		//if logged in show username and logout button
@@ -66,13 +59,14 @@ class UserCard extends Component {
 					</TouchableNativeFeedback>
 				</View>
 			);
-		} 
+		}
 		//render login button
 		else {
 			return (
 				<View style={styles.btnContainer}>
 					<Button
-						backgroundColor={dark_color}
+						borderRadius={2}
+						backgroundColor={light_color}
 						color={dark_text_color}
 						raised
 						title='SIGN IN'
@@ -81,7 +75,7 @@ class UserCard extends Component {
 			);
 		}
 	}
-	
+
 	//renders card with image on left
 	render() {
 		return (
@@ -95,37 +89,44 @@ class UserCard extends Component {
 
 const styles = {
 	container: {
+		paddingLeft: 10,
+		paddingTop: 5,
 		flex: 1,
-		flexDirection: 'row',
-		padding: 12,
+		flexDirection: 'column',
+		justifyContent: 'flex-end',
 	},
 	btnContainer: {
+		paddingBottom: 5,
 		flex: 1,
-		paddingRight: 0,
-		padding: 12,
-		paddingBottom: 40,
+		justifyContent:'flex-end',
+		alignItems: 'flex-end',
 	},
 	textContainer: {
-		marginLeft: 12,
-		marginRight: 0,
 		flex: 1,
-		paddingTop: 12,
-		flexDirection: 'column',
-		alignItems: 'flex-start',
+		marginLeft:5,
+		marginRight:5,
+		flexDirection: 'row',
+		justifyContent: 'space-between',
+		alignItems: 'flex-end',
 	},
 	userName: {
+		fontWeight: 'bold',
+		color:'white',
 		fontSize: 20,
-		height:68,
 	},
 	logoutBtn: {
+		padding: 10,
+		marginRight: 7,
 		flex: 1,
-		alignSelf: 'stretch',
 		justifyContent:'flex-end',
+		alignItems: 'flex-end',
 	},
 	logoutText: {
-		alignSelf: 'stretch',
+		flex: 1,
+		justifyContent:'flex-end',
+		alignSelf: 'flex-end',
 		textAlign: 'right',
-		color:primary_text_color,
+		color:'black',
 		textDecorationLine:'underline'
 	},
 	photo: {
@@ -138,7 +139,7 @@ const styles = {
 // Redux things
 const mapStateToProps = (state) => {
 	const { loggedIn } = state.auth;
-	const { username } = state.user;
+	const { username,  } = state.user;
 	return { username, loggedIn };
 };
 

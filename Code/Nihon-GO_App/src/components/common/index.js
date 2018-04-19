@@ -13,5 +13,6 @@ export * from './ImageCard';
 export * from './Input';
 export * from './Spinner';
 export * from './CountingIcon';
+export * from './Background';
 export * from './TimeLine';
 

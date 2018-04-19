@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {
-        ToastAndroid,
+        Alert,
         Dimensions,
         Animated,
         View,
@@ -16,7 +16,6 @@ import { Icon, Button } from 'react-native-elements';
 import EventList from './EventList';
 import { primary_color, disabled_color}  from './common/AppPalette';
 import { Actions } from 'react-native-router-flux';
-import Toast from 'react-native-root-toast';
 
 const { width, height } = Dimensions.get("window");
 
@@ -28,8 +27,6 @@ class ItineraryView extends Component {
             isDone: false,
             offsetY: new Animated.Value(0),
             offsetX: new Animated.Value(width+100),
-            tost_login: false,
-            tost_notStarted: false,
         };
     }
 
@@ -46,9 +43,10 @@ class ItineraryView extends Component {
             const startedTitle = this.props.startedTitle;
             this.props.startedItnSave({ events: events_Done, progress: progress, started: started, title: startedTitle });
         }
-        if(this.props.isViewing)
+        if(this.props.isViewing){
           this.props.startedItnUpdate({ prop: 'isViewing', value: false });
           this.props.itineraryReset();
+        }
     }
 
     cancel(){
@@ -287,11 +285,14 @@ class ItineraryView extends Component {
                             borderRadius={2}
                             icon={{name: 'card-travel'}}
                             title="START THIS ITINERARY!"
-                            onPress={
-                                () => {
-                                    this.setState({tost_notStarted: true},
-                                () => {
-                                    setTimeout(() => this.setState({tost_notStarted: false}), 2000)})}
+                            onPress={() => {
+                              Alert.alert(
+                                'Notice',
+                                'Finish current itinerary first!',
+                                [
+                                  {text: 'Ok', onPress: () => console.log("cancel")},
+                                ]
+                              );}
                             }
                             buttonStyle={{paddingBottom: 15, backgroundColor: disabled_color}}
                         />
@@ -313,11 +314,14 @@ class ItineraryView extends Component {
                             borderRadius={2}
                             icon={{name: 'card-travel'}}
                             title="START THIS ITINERARY!"
-                            onPress={
-                                () => {
-                                    this.setState({tost_login: true},
-                                () => {
-                                    setTimeout(() => this.setState({tost_login: false}), 2000)})}
+                            onPress={() => {
+                              Alert.alert(
+                                'Notice',
+                                'Need to be logged in to do this!',
+                                [
+                                  {text: 'Sign In Now', onPress: () => Actions.login()},
+                                ]
+                              );}
                             }
                             buttonStyle={{paddingBottom: 15, backgroundColor: disabled_color}}
                         />
@@ -335,20 +339,6 @@ class ItineraryView extends Component {
         else{
             return (
                 <View style={{flex: 1}}>
-                    <Toast
-                        visible={this.state.tost_login}
-                        position={50}
-                        hideOnPress={true}
-                    >
-                        Must be Logged In!
-                    </Toast>
-                    <Toast
-                        visible={this.state.tost_notStarted}
-                        position={50}
-                        hideOnPress={true}
-                    >
-                        Fininsh current itinerary first!
-                    </Toast>
                     <View style={{flex: 1}}>
                         <View style={{flex: 1}}>
                             <Image source={{uri: image}} style={{flex:1}} />

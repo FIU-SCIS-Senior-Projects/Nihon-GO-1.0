@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Card, CardSection, Input, ImageCard} from './common';
+import { Card, CardSection, ImageCard, Input} from './common';
 import {connect} from 'react-redux';
 import { itineraryUpdate, itineraryCreate } from '../actions';
 import {Text, View, Modal, TouchableOpacity, ListView, Picker, Image, Dimensions, ScrollView, Alert} from 'react-native';

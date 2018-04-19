@@ -10,6 +10,7 @@ import {
 	Dimensions,
 	Image,
 	ImageBackground,
+	KeyboardAvoidingView,
 	Platform,
 	ScrollView,
 	Share,
@@ -27,15 +28,15 @@ import {
 } from 'react-native-tab-view';
 import { BlurView, ImagePicker } from 'expo';
 import { UploadPicture } from './UploadPicture';
+import ItineraryListProfile from './ItineraryListProfile';
 
 // Gets pictures for profile
 const profilePicture = require('../resources/profilePicture.png');
 const profileBackgroundPicture = require('../resources/profileBackground.jpg');
 
 class UserProfile extends Component {
-    
-	// Gets user profile data
- 	componentWillMount() {
+	
+    componentWillMount() {
 		this.props.userProfileFetch();
 	}
 	
@@ -273,7 +274,7 @@ class UserProfile extends Component {
 				<Text style={styles.titleTextStyle}>Bio</Text>
 				<Divider style={{ backgroundColor: 'blue' }} />
 				<TextInput
-					placeholder="Short bio of yourself"
+					placeholder="Write a short bio on yourself"
 					style={styles.textStyle}
 					onChangeText={value => this.props.userProfileUpdate({ prop: 'description', value })}
 					value={description}
@@ -285,7 +286,7 @@ class UserProfile extends Component {
 				<Text style={styles.titleTextStyle}>Info</Text>
 				<Divider style={{ backgroundColor: 'blue' }} />
 				<TextInput
-					placeholder="Name"
+					placeholder="Edit Name"
 					style={styles.textStyle}
 					onChangeText={value => this.props.userProfileUpdate({ prop: 'username', value })}
 					value={username}
@@ -322,12 +323,14 @@ class UserProfile extends Component {
 	
 	renderAboutButtons() {
 		const { username, country, languages, description } = this.props;
-		
 		if (this.state.edit) {
 			return (	
 				<Button
 					title ='Done Editing'
-					onPress={() => {this.setEditable(!this.state.edit)}}
+					onPress={() => {
+						this.setEditable(!this.state.edit)
+						this.props.userProfileSave({ username, country, languages, description })
+					}}
 					buttonStyle={{backgroundColor: '#2196f3'}}
 					containerViewStyle={{marginTop: 20}}
 				/>
@@ -346,7 +349,7 @@ class UserProfile extends Component {
 	
 	// Renders user itineraries tab
 	renderUserItineraries() {
-		return <View/>;
+		return <ItineraryListProfile itineraries={this.props.publishedItn}/>;
 	}
 	
 	// Renders favorite itineraries tab
@@ -356,21 +359,23 @@ class UserProfile extends Component {
 	
 	render() {
 		return (
-			<ScrollView style={styles.scroll}>
-				<View style={styles.container}>
-					<View style={styles.cardContainer}>
-						{this.renderContactHeader()}
-						<TabViewAnimated
-							navigationState={this.state.tabs}
-							onIndexChange={this.handleIndexChange}
-							renderHeader={this.renderHeader}
-							renderPager={this.renderPager}
-							renderScene={this.renderScene}
-							style={styles.tabContainer}
-						/>
+			<KeyboardAvoidingView keyboardVerticalOffset={100} behavior="padding">
+				<ScrollView style={styles.scroll}>
+					<View style={styles.container}>
+						<View style={styles.cardContainer}>
+							{this.renderContactHeader()}
+							<TabViewAnimated
+								navigationState={this.state.tabs}
+								onIndexChange={this.handleIndexChange}
+								renderHeader={this.renderHeader}
+								renderPager={this.renderPager}
+								renderScene={this.renderScene}
+								style={styles.tabContainer}
+							/>
+						</View>
 					</View>
-				</View>
-			</ScrollView>
+				</ScrollView>
+			</KeyboardAvoidingView>
 		);
 	}
 }
@@ -467,8 +472,8 @@ const styles = {
 
 const mapStateToProps = (state) => {
 	const { username, country, languages, description, email, profileImage, profileBackImage, fav_itinerary } = state.user;
-
-	return { username, country, languages, description, email, profileImage, profileBackImage, fav_itinerary };
+	const publishedItn = state.publishedItn;
+	return { username, country, languages, description, email, profileImage, profileBackImage, fav_itinerary, publishedItn };
 };
 
 export default connect(mapStateToProps, { userProfileSave, userProfileUpdate, userProfileFetch, userUpdateFavorites })(UserProfile);

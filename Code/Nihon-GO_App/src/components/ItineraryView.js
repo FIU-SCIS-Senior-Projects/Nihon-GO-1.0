@@ -333,29 +333,24 @@ class ItineraryView extends Component {
         const { id, data } = this.props.itinerary;
         const { title, location, description, image, duration } = data;
 
-        if(this.props.loading){
-            return (<Background><Spinner size={70}/></Background>);
-        }
-        else{
-            return (
-                <View style={{flex: 1}}>
-                    <View style={{flex: 1}}>
-                        <View style={{flex: 1}}>
-                            <Image source={{uri: image}} style={{flex:1}} />
-                        </View>
-                        <View style={{flex: 2}}>
-                            <Background>
-                                {this.renderDescription()}
-                                <View style={{flex:1}}>
-                                    {this.rendrEvents()}
-                                </View>
-                                {this.renderStartBtn()}
-                            </Background>
-                        </View>
-                    </View>
-                </View>
-            );
-        }
+		return (
+			<View style={{flex: 1}}>
+				<View style={{flex: 1}}>
+					<View style={{flex: 1}}>
+						<Image source={{uri: image}} style={{flex:1}} />
+					</View>
+					<View style={{flex: 2}}>
+						<Background>
+							{this.renderDescription()}
+							<View style={{flex:1}}>
+								{this.rendrEvents()}
+							</View>
+							{this.renderStartBtn()}
+						</Background>
+					</View>
+				</View>
+			</View>
+		);
     }
 }
 
@@ -381,11 +376,10 @@ const styles = {
 
 const mapStateToProps = state => {
     const { loggedIn } = state.auth;
-    const loading = state.itineraries.loading;
     const start_itn = state.StartItn;
     const { events, progress, started, isStarted, title, isViewing } = start_itn;
     const startedTitle = title;
-    return { loading, events, progress, started, isStarted, isViewing, loggedIn, startedTitle };
+    return { events, progress, started, isStarted, isViewing, loggedIn, startedTitle };
 };
 
 export default connect(mapStateToProps, { startedItnUpdate, startedItnReset, startedItnSave, itineraryReset })(ItineraryView);

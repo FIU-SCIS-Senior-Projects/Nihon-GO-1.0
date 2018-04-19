@@ -10,11 +10,13 @@ export const LOGOUT = 'logout';
 export const USER_PROFILE_FETCH = 'user_profile_fetch';
 export const USER_PROFILE_UPDATE = 'user_profile_update';
 
-//Used for Itinerary
+// Used for Itinerary
 export const ITINERARY_UPDATE = 'itinerary_update';
 export const ITINERARY_FETCH = 'itinerary_fetch';
 export const ITINERARY_RESET = 'itinerary_reset';
 export const RESET_ITINERARY_FORM = 'reset_itinerary_form';
+
+// Used for published itineraries
 export const PUBLISHED_ITN_FETCH = 'published_itn_fetch';
 export const PUBLISHED_ITN_RESET = 'published_itn_reset';
 

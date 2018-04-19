@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
-import { userProfileFetch, startedItnReset } from './index'
+import { userProfileFetch, startedItnReset, publishedItnReset } from './index'
 import {
 	EMAIL_CHANGED,
 	PASSWORD_CHANGED,
@@ -73,6 +73,7 @@ export const logoutUser = () => {
 
 		firebase.auth().signOut();
 		startedItnReset(dispatch);
+		publishedItnReset(dispatch);
 		Actions.main();
 	};
 };

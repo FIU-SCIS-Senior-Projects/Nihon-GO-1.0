@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Card, CardSection, Input, ImageCard} from './common';
+import { Card, CardSection, ImageCard} from './common';
 import {connect} from 'react-redux';
 import { itineraryUpdate, itineraryCreate } from '../actions';
-import {Text, View, Modal, TouchableOpacity, ListView, Picker, Image, Dimensions, ScrollView, Alert} from 'react-native';
+import {Text, View, Modal, TouchableOpacity, ListView, Picker, Image, Dimensions, ScrollView, Alert, Input} from 'react-native';
 import {BlurView, ImagePicker, ImageManipulator} from 'expo';
 import { Icon, Button, Avatar } from 'react-native-elements';
 import ActionButton from 'react-native-action-button';

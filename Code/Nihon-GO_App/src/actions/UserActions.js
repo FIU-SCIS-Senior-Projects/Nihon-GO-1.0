@@ -22,14 +22,15 @@ export const userProfileFetch = () => {
                     startItnFetch(dispatch, userData.start_itn);
 					dispatch({ type: USER_PROFILE_FETCH, payload: snapshot.val() });
 				} else {
-					console.log('Created generic profile for user.');
 					firebase.database().ref(`/users/${currentUser.uid}`)
 						.set({ 
-							username: "Flopsy Bunny",
+							username: "Edit Name on Profile",
 							email: currentUser.email,
-							country: "Hopperland",
-							languages: "Bunnish",
-							description: "I come from a land, from a far away place."
+							start_itn: {
+                                events: 0,
+                                progress: 0,
+                                started: 'no',
+                            }
 						});
 				};
 			});

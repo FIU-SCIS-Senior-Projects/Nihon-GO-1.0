@@ -1,12 +1,23 @@
-
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import {
     ITINERARY_UPDATE,
 	ITINERARY_FETCH,
-    ITINERARY_RESET
+    ITINERARY_RESET,
+    RESET_ITINERARY_FORM
 } from './types';
 import { startItnFetch, startedItnUpdate } from './index'
+import { UploadPicture } from '../components/UploadPicture';
+import { YellowBox } from 'react-native';
+import _ from 'lodash';
+
+YellowBox.ignoreWarnings(['Setting a timer']);
+const _console = _.clone(console);
+console.warn = message => {
+  if (message.indexOf('Setting a timer') <= -1) {
+    _console.warn(message);
+  }
+};
 
 export const itineraryUpdate = ({ prop, value }) => {
     return {
@@ -20,13 +31,85 @@ export const itineraryReset= () => {
         type: ITINERARY_RESET
     };
 };
-export const itineraryCreate = ({ title, location, description, image, duration, events }) => {
-    return ()  =>{
+
+export const itineraryCreate = ({ titleInput, location, description, itineraryImage, duration, events }) => {
+    Actions.pop();
+    return (dispatch)  =>{
+        const { currentUser } = firebase.auth();
         firebase.database().ref('/itineraries')
-            .push({ title, location, description, image, duration, events })
-            .then(() => Actions.pop());
+            .push({ 
+                title: titleInput,
+                location,
+                description,
+                image: '',
+                duration,
+                events,
+                publisher: currentUser.uid,
+                favorites: 0,
+            })
+            .then((snap) => {
+                const key = snap.key;
+                var itineraryImageLocation = '/Itinerary/Main/' + key + '_main';
+                
+                //Uploading Itinerary Image
+                function updateImageUrl (key, imageUrl){
+                    firebase.database().ref('/itineraries/' + key).update({
+                        image: imageUrl
+                    })
+                    .catch ((error) => {
+                        console.log(error)
+                    });
+                }
+
+                UploadPicture(itineraryImage, itineraryImageLocation, updateImageUrl, key);
+                
+                //Uploads all event images
+                uploadEventImages(events, key);           
+            }).then(dispatch({type: RESET_ITINERARY_FORM}))
+            .catch ((error) => {
+						console.log(error);
+            });
+            
     }
 };
+
+const uploadEventImages = (events, key) =>{
+    //Recursive callback function that calls itselft to upload multiple pictures at once (event images)
+    function uploadAnother({count, index, proxyEvents, key, urlList, uploadAnother}, imageUrl){
+        urlList.push(imageUrl);
+        if(count>0){
+            var eventsImageLocation = 'Itinerary/Events/' + key + '_event_' + index;
+            UploadPicture(proxyEvents[index].image, eventsImageLocation, uploadAnother, 
+                {count: count - 1, index: index + 1, proxyEvents, key, urlList, uploadAnother});
+        }else{  
+            //All recursive calls done
+            var newEvents = [];
+            for (var i = 0; i< proxyEvents.length; i++){
+                var p = proxyEvents[i];
+
+                event={
+                    title: p.title,
+                    address: p.address,
+                    description: p.description,
+                    duration: p.duration,
+                    image: urlList[i]
+                }
+
+                newEvents.push(event);
+            }
+
+            firebase.database().ref('/itineraries/' + key).update({
+                events: newEvents
+            })
+        }
+    }
+
+    var urlList = [];
+    var eventsImageLocation = 'Itinerary/Events/' + key + '_event_' + 0;
+
+    UploadPicture(events[0].image, eventsImageLocation, uploadAnother, 
+        {count: events.length - 1, index: 1, proxyEvents: events, key, urlList, uploadAnother});
+}
 
 // Fetch itineraries
 export const itineraryFetch = (filters) => {

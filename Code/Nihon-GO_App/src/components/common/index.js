@@ -15,4 +15,3 @@ export * from './Spinner';
 export * from './CountingIcon';
 export * from './Background';
 export * from './TimeLine';
-

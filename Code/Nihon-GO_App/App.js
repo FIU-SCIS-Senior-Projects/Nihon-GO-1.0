@@ -17,7 +17,7 @@ export default class App extends Component {
 			'Setting a timer'
 		];
 	}
-
+    
 	componentWillMount() {
 		// Initialize Firebase
 		const config = {

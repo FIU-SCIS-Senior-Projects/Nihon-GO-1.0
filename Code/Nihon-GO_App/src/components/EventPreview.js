@@ -138,7 +138,7 @@ class EventPreview extends Component {
                                 </Text>
                             </View>
                             <View style={{flex: 1, justifyContent: 'space-around'}}>
-                                <Text style={[descriptionStyle, {marginTop: 10}]}>{duration} days</Text>
+                                <Text style={[descriptionStyle, {marginTop: 10}]}>{duration} Hours</Text>
                             </View>
                         </View>
                     </Card>

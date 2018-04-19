@@ -14,6 +14,7 @@ export const USER_PROFILE_UPDATE = 'user_profile_update';
 export const ITINERARY_UPDATE = 'itinerary_update';
 export const ITINERARY_FETCH = 'itinerary_fetch';
 export const ITINERARY_RESET = 'itinerary_reset';
+export const RESET_ITINERARY_FORM = 'reset_itinerary_form';
 
 //Used for starting itinerary_fetch
 export const STARTED_UPDATE = 'startItn_update';

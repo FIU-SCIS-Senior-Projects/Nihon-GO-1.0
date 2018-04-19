@@ -1,0 +1,34 @@
+[
+    {
+        "subcategory": {
+            "id": 1,
+            "category": "Currency",
+            "title": "Tips",
+            "description":" Japan = No tips dude"
+        }
+    },
+    {
+        "subcategory": {
+            "id": 2,
+            "category": "Currency",
+            "title": "Banking",
+            "description":" About he same as usual"
+        }
+    },
+    {
+        "subcategory": {
+            "id": 3,
+            "category": "Travel",
+            "title": "Tickets",
+            "description":" You can go anywhere"
+        }
+    },
+    {
+        "subcategory": {
+            "id": 4,
+            "category": "Travel",
+            "title": "Travel Agent",
+            "description":" Talk to the guy"
+        }
+    }
+]    

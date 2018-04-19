@@ -15,6 +15,8 @@ export const ITINERARY_UPDATE = 'itinerary_update';
 export const ITINERARY_FETCH = 'itinerary_fetch';
 export const ITINERARY_RESET = 'itinerary_reset';
 export const RESET_ITINERARY_FORM = 'reset_itinerary_form';
+export const PUBLISHED_ITN_FETCH = 'published_itn_fetch';
+export const PUBLISHED_ITN_RESET = 'published_itn_reset';
 
 //Used for starting itinerary_fetch
 export const STARTED_UPDATE = 'startItn_update';

@@ -4,7 +4,8 @@ import {
     ITINERARY_UPDATE,
 	ITINERARY_FETCH,
     ITINERARY_RESET,
-    RESET_ITINERARY_FORM
+    RESET_ITINERARY_FORM,
+    PUBLISHED_ITN_FETCH
 } from './types';
 import { startItnFetch, startedItnUpdate } from './index'
 import { UploadPicture } from '../components/UploadPicture';
@@ -113,7 +114,6 @@ const uploadEventImages = (events, key) =>{
 
 // Fetch itineraries
 export const itineraryFetch = (filters) => {
-
     var itineraries = [];
     var ref = firebase.database().ref('/itineraries');
 
@@ -148,3 +148,20 @@ export const itineraryFetch = (filters) => {
         };
     }
 };
+
+export const publishedItnFetch = (dispatch, uid) => {
+    var itineraries = [];
+    var ref = firebase.database().ref('/itineraries');
+    console.log(uid);
+    ref.orderByChild("favorites").once('value', function(snapshot) {
+        snapshot.forEach(function(childSnapshot) {
+            var key = childSnapshot.key;
+            var data_val = childSnapshot.val();
+            if(data_val.publisher == uid){
+                itineraries.push({id: key, data: data_val})
+            }
+        });
+        dispatch({ type: PUBLISHED_ITN_FETCH, payload: itineraries.reverse() });
+
+    });
+}

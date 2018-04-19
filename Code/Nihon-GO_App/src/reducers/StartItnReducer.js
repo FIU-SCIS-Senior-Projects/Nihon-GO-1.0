@@ -3,9 +3,9 @@ import { STARTED_FETCH, STARTED_UPDATE, STARTED_RESET } from '../actions/types';
 const INITIAL_STATE = {
 	isStarted: false,
 	events: 0,
-  progress: 0,
+    progress: 0,
 	title: '',
-  started: 'no',
+    started: 'no',
 	isViewing: false
 };
 

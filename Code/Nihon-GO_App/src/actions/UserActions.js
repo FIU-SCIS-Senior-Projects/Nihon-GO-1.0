@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import { USER_PROFILE_FETCH, USER_PROFILE_UPDATE, USER_PROFILE_SAVE } from './types';
-import { startItnFetch } from './index'
+import { startItnFetch, publishedItnFetch } from './index'
 
 // Update user information
 export const userProfileUpdate = ({ prop, value }) => {
@@ -20,6 +20,7 @@ export const userProfileFetch = () => {
 				if (snapshot.val()) {
                     const userData = snapshot.val();
                     startItnFetch(dispatch, userData.start_itn);
+                    publishedItnFetch(dispatch, currentUser.uid);
 					dispatch({ type: USER_PROFILE_FETCH, payload: snapshot.val() });
 				} else {
 					console.log('Created generic profile for user.');
@@ -29,7 +30,12 @@ export const userProfileFetch = () => {
 							email: currentUser.email,
 							country: "Hopperland",
 							languages: "Bunnish",
-							description: "I come from a land, from a far away place."
+							description: "I come from a land, from a far away place.",
+                            start_itn: {
+                                events: 0,
+                                progress: 0,
+                                started: 'no',
+                            },
 						});
 				};
 			});

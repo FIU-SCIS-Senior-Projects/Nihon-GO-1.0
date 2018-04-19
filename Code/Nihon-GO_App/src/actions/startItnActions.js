@@ -15,7 +15,7 @@ export const startItnFetch = (dispatch, startedData) => {
 
 	const { events, progress, started, title } = startedData;
     const isStarted = started != 'no';
-
+    
     dispatch({
         type: STARTED_FETCH,
         payload: { isStarted, events, progress, started, title, isViewing: false }

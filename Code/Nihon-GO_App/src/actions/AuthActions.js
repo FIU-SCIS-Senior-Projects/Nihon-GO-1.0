@@ -87,7 +87,7 @@ const loginUserSuccess = (dispatch, user) => {
 		payload: user
 	});
 	userProfileFetch();
-	Actions.pop();
+	Actions.main();
 };
 
 //tech-stack

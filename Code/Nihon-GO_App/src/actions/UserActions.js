@@ -14,7 +14,6 @@ export const userProfileUpdate = ({ prop, value }) => {
 // Fetch user profile data OR create a generic profile if none found
 export const userProfileFetch = () => {
 	const { currentUser } = firebase.auth();
-	
 	return (dispatch) => {
 		firebase.database().ref(`/users/${currentUser.uid}`)
 			.on('value', snapshot => {

@@ -5,6 +5,9 @@ import UserReducer from './UserReducer'; //user profile
 import ItineraryFormReducer from './ItineraryFormReducer';
 import ItineraryReducer from './ItineraryReducer';
 import StartItnReducer from './StartItnReducer';
+import BlFormReducer from './BlFormReducer';
+import BlReducer from './BlReducer';
+import BlCategoryReducer from './BlCategoryReducer';
 
 export default combineReducers({
 	auth: AuthReducer, //authentication
@@ -12,5 +15,8 @@ export default combineReducers({
 	user: UserReducer, //user profile
 	itineraries: ItineraryReducer,
 	itineraryForm: ItineraryFormReducer,
-  StartItn: StartItnReducer
+    StartItn: StartItnReducer,
+	blogCreate: BlFormReducer,
+	blogs: BlReducer,
+	selectedCategory: BlCategoryReducer
 });

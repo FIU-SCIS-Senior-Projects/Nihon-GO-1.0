@@ -49,10 +49,8 @@ const RouterComponent = () => {
 								back
 								component={EditProfile}
 								title="Edit Profile" />
-							<Scene
-								rightTitle="Add Blog"
-								onRight={()=> Actions.BlogForm()}
-								title="Blog"
+							<Scene 
+								title="Categories"
 								component={BlogList}
 								key="blog" />
 							<Scene
@@ -66,11 +64,11 @@ const RouterComponent = () => {
 								back
 								onBack={()=> Actions.blog()}
 								component = {BlogExpand}
-								title="[Blog Name]" />
-							<Scene
-								key="itineraryCreate"
-								back
-								component={ItineraryCreate}
+								title="Blogs" />
+							<Scene 
+								key="itineraryCreate" 
+								back 
+								component={ItineraryCreate} 
 								title="Create Itinerary" />
 						</Scene>
 						<Scene

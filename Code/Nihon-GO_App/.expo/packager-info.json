@@ -1,5 +1,8 @@
 {
-  "expoServerPort": null,
+  "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 10284
+  "packagerPid": 10124,
+  "expoServerNgrokUrl": "https://wf-fhi.daeddy.nihon-go-app.exp.direct",
+  "packagerNgrokUrl": "https://packager.wf-fhi.daeddy.nihon-go-app.exp.direct",
+  "ngrokPid": 13456
 }

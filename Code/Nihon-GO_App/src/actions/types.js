@@ -22,3 +22,5 @@ export const STARTED_RESET = 'startItn_Reset';
 
 //Used for Blogs
 export const BLOG_UPDATE = 'blog_update';
+export const BLOG_SUB_RESET = 'blog_subcategory_reset';
+export const BLOG_FETCH = 'blog_fetch';

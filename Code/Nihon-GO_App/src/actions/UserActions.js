@@ -26,8 +26,11 @@ export const userProfileFetch = () => {
 				} else {
 					firebase.database().ref(`/users/${currentUser.uid}`)
 						.set({ 
-							username: "Edit Name on Profile",
+							username: 'Edit Name on Profile',
 							email: currentUser.email,
+							country: '',
+							languages: '',
+							description: '',
 							start_itn: {
                                 events: 0,
                                 progress: 0,

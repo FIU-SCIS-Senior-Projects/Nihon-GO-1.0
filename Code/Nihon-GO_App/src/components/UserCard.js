@@ -4,7 +4,7 @@ import { Actions } from 'react-native-router-flux';
 import { connect } from 'react-redux';
 import { logoutUser, userProfileFetch } from '../actions';
 import { Card, CardSection, Input, Spinner } from './common';
-import { Icon, Avatar, Button } from 'react-native-elements'
+import { Button } from 'react-native-elements'
 import { primary_color, primary_text_color, dark_color, dark_text_color, light_color}  from './common/AppPalette';
 
 const profilePicture = require('../resources/profilePicture.png');
@@ -41,14 +41,10 @@ class UserCard extends Component {
 			);
 		} else {
 			return (
-				<View>
-					<Avatar
-						overlayContainerStyle={{backgroundColor: 'grey'}}
-						rounded
-						title="?"
-						large/>
-				</View>
-			);
+					<View>
+						<Image source={profilePicture} style={styles.profileImage}/>
+					</View>
+				);
 		}
 	}
 

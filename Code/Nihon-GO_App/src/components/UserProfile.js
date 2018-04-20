@@ -332,7 +332,7 @@ class UserProfile extends Component {
 						this.props.userProfileSave({ username, country, languages, description })
 					}}
 					buttonStyle={{backgroundColor: '#2196f3'}}
-					containerViewStyle={{marginTop: 20}}
+					containerViewStyle={{marginTop: 20, marginBottom: 12}}
 				/>
 			);
 		}
@@ -342,7 +342,7 @@ class UserProfile extends Component {
 				title ='Edit Profile'
 				onPress={() => {this.setEditable(!this.state.edit)}}
 				buttonStyle={{backgroundColor: '#2196f3'}}
-				containerViewStyle={{marginTop: 20}}
+				containerViewStyle={{marginTop: 20, marginBottom: 12}}
 			/>
 		);
 	}
@@ -441,7 +441,6 @@ const styles = {
 	},
 	tabContainer: {
 		flex: 1,
-		marginBottom: 12,
 		marginTop: -55,
 		position: 'relative',
 		zIndex: 10,

@@ -7,6 +7,8 @@ import { Card, CardSection, Input, Spinner } from './common';
 import { Icon, Avatar, Button } from 'react-native-elements'
 import { primary_color, primary_text_color, dark_color, dark_text_color, light_color}  from './common/AppPalette';
 
+const profilePicture = require('../resources/profilePicture.png');
+
 class UserCard extends Component {
 	// Gets user profile data
 	componentWillMount() {
@@ -21,12 +23,16 @@ class UserCard extends Component {
 	}
 
 	renderAvatar(){
+		const { profileImage } = this.props;
+		console.log(profileImage);
+		
 		if (this.props.loggedIn) {
 			return (
 				<View>
 					<Avatar
 						rounded
-						source={{uri: "https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg"}}
+						source={{ uri: profileImage }}
+						containerStyle={{borderColor: '#FFF', borderWidth: 2}}
 						large/>
 				</View>
 			);
@@ -139,8 +145,8 @@ const styles = {
 // Redux things
 const mapStateToProps = (state) => {
 	const { loggedIn } = state.auth;
-	const { username,  } = state.user;
-	return { username, loggedIn };
+	const { username, profileImage } = state.user;
+	return { username, profileImage, loggedIn };
 };
 
 // Redux things

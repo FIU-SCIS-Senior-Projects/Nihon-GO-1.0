@@ -8,7 +8,7 @@ const INITIAL_STATE = {
 	email: '',
 	profileImage: '',
 	profileBackImage: '',
-	fav_itinerary: '',
+	fav_itinerary: [],
     start_itn: {
         events: 0,
         progress: 0,

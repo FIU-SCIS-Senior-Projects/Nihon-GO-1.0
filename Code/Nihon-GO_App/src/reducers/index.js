@@ -9,6 +9,7 @@ import BlFormReducer from './BlFormReducer';
 import BlReducer from './BlReducer';
 import BlCategoryReducer from './BlCategoryReducer';
 import publishedItnReducer from './publishedItnReducer';
+import FavItnReducer from './FavItnReducer';
 
 export default combineReducers({
 	auth: AuthReducer, //authentication
@@ -21,4 +22,5 @@ export default combineReducers({
 	blogs: BlReducer,
 	selectedCategory: BlCategoryReducer,
     publishedItn: publishedItnReducer,
+	favItn: FavItnReducer,
 });

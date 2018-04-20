@@ -20,6 +20,10 @@ export const RESET_ITINERARY_FORM = 'reset_itinerary_form';
 export const PUBLISHED_ITN_FETCH = 'published_itn_fetch';
 export const PUBLISHED_ITN_RESET = 'published_itn_reset';
 
+// Used for fav itineraries
+export const FAV_ITN_FETCH = 'fav_itn_fetch';
+export const FAV_ITN_RESET = 'fav_itn_reset';
+
 //Used for starting itinerary_fetch
 export const STARTED_UPDATE = 'startItn_update';
 export const STARTED_FETCH = 'startItn_Fetch';

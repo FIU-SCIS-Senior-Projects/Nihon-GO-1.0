@@ -10,14 +10,15 @@ import { LinearGradient } from 'expo';
 import { Icon, Button } from 'react-native-elements';
 import { primary_color, primary_text_color }  from './common/AppPalette';
 import { Actions } from 'react-native-router-flux';
-import { userUpdateFavorites } from '../actions';
+import { userUpdateFavorites, favUpdate, userProfileSave, userProfileUpdate } from '../actions';
 import { connect } from 'react-redux';
 
 class ItineraryPreview extends Component {
     constructor(props){
         super(props);
         this.state = {
-            expandedItinerary: false
+            expandedItinerary: false,
+			favorites: this.props.itinerary.data.favorites
         };
     }
     componentWillUpdate() {
@@ -102,7 +103,7 @@ class ItineraryPreview extends Component {
     renderBottomHalf(){
         const { itinerary, expanded } = this.props;
         const { id, data } = itinerary;
-	      const { image, description, title, location, duration, favorites } = data;
+	    const { image, description, title, location, duration } = data;
         const {titleStyle, captionStyle, linearGradient, descStyle } = styles;
 
         return(
@@ -117,12 +118,7 @@ class ItineraryPreview extends Component {
                     </CaptionBox>
                 </View>
                 <View style={{ alignSelf: 'stretch', margin: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',}}>
-                    <CountingIcon
-                        iconName='heart'
-                        iconType='font-awesome'
-                        count={favorites}
-                        onPress={this.props.userUpdateFavorites(id)}
-                        iconColor='white'/>
+                    {this.renderHeartIcon()}
                     <Button
                         raised
                         small
@@ -135,6 +131,59 @@ class ItineraryPreview extends Component {
         );
 
     }
+	
+	renderHeartIcon() {
+		const { id } = this.props.itinerary;
+		var value = this.props.fav_itinerary;
+		var heartType = 'heart-o';
+		
+		if (!value) {
+			heartType = 'heart-o';
+		}
+		else if (value.includes(id)) {
+			heartType = 'heart';
+		}
+		
+		return (
+			<CountingIcon
+				iconName={heartType}
+				iconType='font-awesome'
+				count={this.state.favorites}
+				onPress={() => {this.updateFavorites()}}
+				iconColor='white'/>
+		);
+	}
+	
+	updateFavorites() {
+        const { id } = this.props.itinerary;
+		
+		var favorites = this.state.favorites;
+		var value = this.props.fav_itinerary;
+		var addSub = favorites + 1;
+		
+		// Check if user has any favorites
+		if (!value){
+			value = [];
+			value.push(id);
+		}
+		// Remove if in favorites
+		else if (value.includes(id)) {
+			addSub = favorites - 1;
+			var i = value.indexOf(id);
+			if(i != -1) {
+				value.splice(i, 1);
+			}
+		}
+		// Add to favorites
+		else {
+			value.push(id);			
+		}
+		
+		this.props.favUpdate(id, addSub);
+		this.setState({favorites: addSub});
+		this.props.userProfileUpdate({prop: 'fav_itinerary', value});
+		this.props.userProfileSave({fav_itinerary: value});
+	}
 	
     renderExpandedPreview(){
         const { itinerary, expanded } = this.props;
@@ -215,11 +264,10 @@ const styles = {
     },
 };
 
-// TODO
 const mapStateToProps = (state, ownProps) => {
-    const test = 0
+    const { fav_itinerary } = state.user; 
 
-    return { test };
+    return { fav_itinerary };
 };
 
-export default connect(mapStateToProps, { userUpdateFavorites })(ItineraryPreview);
+export default connect(mapStateToProps, { userUpdateFavorites, favUpdate, userProfileSave, userProfileUpdate })(ItineraryPreview);

@@ -1,7 +1,7 @@
 import firebase from 'firebase';
 import { Actions } from 'react-native-router-flux';
 import { USER_PROFILE_FETCH, USER_PROFILE_UPDATE, USER_PROFILE_SAVE } from './types';
-import { startItnFetch, publishedItnFetch } from './index'
+import { startItnFetch, publishedItnFetch, favItnFetch } from './index'
 
 // Update user information
 export const userProfileUpdate = ({ prop, value }) => {
@@ -21,6 +21,7 @@ export const userProfileFetch = () => {
                     const userData = snapshot.val();
                     startItnFetch(dispatch, userData.start_itn);
                     publishedItnFetch(dispatch, currentUser.uid);
+					favItnFetch(dispatch, userData.fav_itinerary);
 					dispatch({ type: USER_PROFILE_FETCH, payload: snapshot.val() });
 				} else {
 					firebase.database().ref(`/users/${currentUser.uid}`)
@@ -48,11 +49,9 @@ export const userProfileSave = (data) => {
 	};
 };
 
-// Updates user fav itineraries
+// NOT USED
 export const userUpdateFavorites = (key) => {
 	const { currentUser } = firebase.auth();
-	console.log('id');
-	console.log(key);
     
 	return (dispatch) => {
 		firebase.database().ref(`/users/${currentUser.uid}/fav_itinerary`)

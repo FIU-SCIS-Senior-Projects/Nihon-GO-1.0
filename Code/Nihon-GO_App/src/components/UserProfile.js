@@ -354,7 +354,7 @@ class UserProfile extends Component {
 	
 	// Renders favorite itineraries tab
 	renderFavoriteItineraries() {
-		return <View/>;
+		return <ItineraryListProfile itineraries={this.props.favItn}/>;
 	}
 	
 	render() {
@@ -473,7 +473,9 @@ const styles = {
 const mapStateToProps = (state) => {
 	const { username, country, languages, description, email, profileImage, profileBackImage, fav_itinerary } = state.user;
 	const publishedItn = state.publishedItn;
-	return { username, country, languages, description, email, profileImage, profileBackImage, fav_itinerary, publishedItn };
+	const favItn = state.favItn;
+	
+	return { username, country, languages, description, email, profileImage, profileBackImage, fav_itinerary, publishedItn, favItn };
 };
 
 export default connect(mapStateToProps, { userProfileSave, userProfileUpdate, userProfileFetch, userUpdateFavorites })(UserProfile);

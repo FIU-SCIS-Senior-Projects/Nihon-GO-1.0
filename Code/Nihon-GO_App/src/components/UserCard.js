@@ -24,16 +24,11 @@ class UserCard extends Component {
 
 	renderAvatar(){
 		const { profileImage } = this.props;
-		console.log(profileImage);
 		
 		if (this.props.loggedIn) {
 			return (
 				<View>
-					<Avatar
-						rounded
-						source={{ uri: profileImage }}
-						containerStyle={{borderColor: '#FFF', borderWidth: 2}}
-						large/>
+					<Image source={{ uri: profileImage }} style={styles.profileImage}/>
 				</View>
 			);
 		} else {
@@ -139,6 +134,12 @@ const styles = {
 		height: 70,
 		width: 70,
 		borderRadius: 35,
+	},
+	profileImage: {
+		borderColor: '#FFF',
+		borderRadius: 55,
+		height: 75,
+		width: 75,
 	},
 };
 

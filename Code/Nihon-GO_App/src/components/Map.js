@@ -2,6 +2,7 @@ import React, { Component }  from 'react';
 import {View, Dimensions} from 'react-native';
 import { Actions } from 'react-native-router-flux';
 import Svg,{
+	TSpan,
     Circle,
     Ellipse,
     G,
@@ -19,6 +20,7 @@ import Svg,{
     Stop
 } from 'react-native-svg';
 import {
+	primary_color,
 	HokkaidoColor,
 	TohokuColor,
 	ChubuColor,
@@ -125,6 +127,18 @@ class Map extends Component {
 		return (
 			<View style={styles.containerStyle}>
 				<Svg  width={width} height={height} viewBox="-5 0 240 330" preserveAspectRatio="xMidYMin meet">
+					<Text
+							fill='black'
+							stroke='black'
+							fontWeight="bold"
+							strokeWidth="0.7px"
+							fontSize="16"
+							x="9"
+							y="68.852448"
+					>
+							<TSpan>Click on a region</TSpan>
+							<TSpan  x="13" dy="15">to Explore Japan!</TSpan>
+					</Text>
 					<G
 						delayPressIn={0}
 						onPressIn={this.select1}
@@ -142,11 +156,11 @@ class Map extends Component {
 							stroke={this.state.hover1 ? borderHighlight :border}
 							fontSize="10.47749996"
 							fontWeight="bold"
-							x="99.646889"
-							y="45"
+							x="125.31676"
+							y="41.18539"
 						>HOKKAIDO</Text>
 						<Path
-							d="m 131.9277,48.543578 40.74791,7.673307"
+							d="m 172.59844,57.065251 -20.69307,-12.573"
 							stroke={this.state.hover1 ? borderHighlight :border}
 							strokeWidth="1"
 						/>
@@ -169,11 +183,11 @@ class Map extends Component {
 							stroke={this.state.hover2 ? borderHighlight :border}
 							fontSize="10.47749996"
 							fontWeight="bold"
-							x="114.19971"
-							y="104"
+							x="112.10421"
+							y="116.70053"
 						>TOHOKU</Text>
 						<Path
-							d="m 132.98609,107.28407 v 14.02364 l 21.69694,6.08572"
+							d="M 152.42925,131.97938 136.713,129.36 l -1.83356,-9.16781"
 							fill='none'
 							stroke={this.state.hover2 ? borderHighlight :border}
 							strokeWidth="1"

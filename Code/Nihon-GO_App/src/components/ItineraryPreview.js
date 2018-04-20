@@ -110,24 +110,14 @@ class ItineraryPreview extends Component {
 
         return(
             <View style={{flex: 1, flexDirection: 'column', justifyContent: 'flex-end'}}>
-                <View style={{ margin: 10}}>
-                    <CaptionBox>
-                        <Text numberOfLines={3}
-                            style={descStyle}
-                        >
-                            {description}
-                        </Text>
-                    </CaptionBox>
-                </View>
                 <View style={{ alignSelf: 'stretch', margin: 10, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center',}}>
                     {this.renderHeartIcon()}
-                    <Button
-                        raised
-                        small
-                        borderRadius={2}
-                        backgroundColor={primary_color}
-                        onPress={() => Actions.itineraryView({ title: title, itinerary: itinerary})}
-                        title='View' />
+                    <TouchableOpacity onPress={() => Actions.itineraryView({ title: title, itinerary: itinerary})}>
+                        <View style={{flexDirection: 'row', alignItems: 'center', marginRight: 10}}>
+                            <Text style={{fontSize: 18, color: 'white'}}>View  </Text>
+                            <Icon size={30} name='arrow-forward' color='white'/>
+                        </View>
+                    </TouchableOpacity>
                 </View>
             </View>
         );

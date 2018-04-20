@@ -13,7 +13,7 @@ import DrawerPanel from './components/DrawerPanel';
 import BlogForm from './components/BlogForm';
 import BlogExpand from './components/BlogExpand';
 import MapModal from './components/MapModal';
-import { Icon } from 'react-native-elements';
+import { Icon, SearchBar  } from 'react-native-elements';
 import { primary_color, primary_text_color }  from './components/common/AppPalette'
 
 //Needs to be consolidated with other features
@@ -23,13 +23,13 @@ const RouterComponent = () => {
 			<Lightbox>
 				<Scene key="root" hideNavBar>
 						<Scene key="main"
-                drawer
-                drawerIcon={() => <Icon name='menu' color={primary_text_color}/>}
-                contentComponent={DrawerPanel}
-                navigationBarStyle={styles.navBar}
-                titleStyle={styles.navBarTitle}
-                tintColor={primary_text_color}
-                type="reset">
+							drawer
+							drawerIcon={() => <Icon name='menu' color={primary_text_color}/>}
+							contentComponent={DrawerPanel}
+							navigationBarStyle={styles.navBar}
+							titleStyle={styles.navBarTitle}
+							tintColor={primary_text_color}
+							type="reset">
 							<Scene
 								key="homepage"
 								component={HomePage}

@@ -11,7 +11,7 @@ class EventPreview extends Component {
         super(props);
         this.state = {
             expandedEvent: false,
-            completedEvent: false
+            completedEvent: false,
         };
     }
 
@@ -77,7 +77,7 @@ class EventPreview extends Component {
                     <Card style={modalStyle}>
                         <ImageCard source={{uri: image}}
                             style={{borderBottomWidth: 0,
-                                    alignItems: 'flex-end'}}>
+                                    alignItems: 'flex-end',}}>
                             <TouchableOpacity onPress={() => {this.toggleExpand()}}>
                                 <View style={{marginRight: 10, marginTop: 10}}>
                                     <Icon
@@ -121,7 +121,7 @@ class EventPreview extends Component {
         return(
             <View style={{flex:1}}>
                 <TouchableOpacity onPress={() => {this.toggleExpand()}}>
-                    <Card style={cardNotStarted}>
+                    <Card style={[cardNotStarted, {borderRadius: 5, shadowRadius: 5, borderColor: '#ccc'}]}>
                         <View style={avatarStyle}>
                             <Avatar
                                 large
@@ -246,6 +246,7 @@ const styles = {
         fontSize: 16,
         fontStyle: 'italic',
         marginLeft: 10,
+        marginRight: 10,
     },
     modalStyle: {
         flex: 1,
@@ -262,7 +263,8 @@ const styles = {
         marginLeft: 15,
         flexDirection: 'row',
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        shadowOpacity: 0.2,
     },
 };
 

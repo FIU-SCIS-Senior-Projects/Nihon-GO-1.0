@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, ImageBackground, Dimensions } from 'react-native';
 import ItineraryList from './ItineraryList';
 import { Actions } from 'react-native-router-flux';
-import { Icon, Header } from 'react-native-elements';
+import { Icon, Header, SearchBar } from 'react-native-elements';
 import Map from './Map';
 import ActionBtn from './ActionBtn';
 import { Background } from './common';

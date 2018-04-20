@@ -193,7 +193,7 @@ const styles = {
 		paddingTop: 25,
 		paddingBottom: 5,
 		justifyContent:'flex-start',
-		height: 150,
+		height: 170,
 		elevation: 1,
 		backgroundColor: '#FF4081',
 	},

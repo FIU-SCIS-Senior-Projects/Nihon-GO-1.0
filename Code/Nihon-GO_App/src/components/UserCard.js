@@ -26,6 +26,14 @@ class UserCard extends Component {
 		const { profileImage } = this.props;
 		
 		if (this.props.loggedIn) {
+			if (!profileImage) {
+				return (
+					<View>
+						<Image source={profilePicture} style={styles.profileImage}/>
+					</View>
+				);
+			}
+
 			return (
 				<View>
 					<Image source={{ uri: profileImage }} style={styles.profileImage}/>

@@ -54,9 +54,14 @@ class UserCard extends Component {
 		if (this.props.loggedIn) {
 			return (
 				<View style={styles.textContainer}>
-					<Text style={styles.userName}>
-						{this.props.username}
-					</Text>
+					<View style={{flexDirection: 'column',}}>
+						<Text style={styles.userName}>
+							{this.props.username}
+						</Text>
+						<Text style={styles.email}>
+							{this.props.email}
+						</Text>
+					</View>
 					<TouchableNativeFeedback style={styles.logoutBtn} onPress={this.onLogoutPress.bind(this)}>
 						<Text style={styles.logoutText}>
 							Sign Out
@@ -119,6 +124,10 @@ const styles = {
 		color:'white',
 		fontSize: 20,
 	},
+	email: {
+		color:'white',
+		fontSize: 15,
+	},
 	logoutBtn: {
 		padding: 10,
 		marginRight: 7,
@@ -150,8 +159,8 @@ const styles = {
 // Redux things
 const mapStateToProps = (state) => {
 	const { loggedIn } = state.auth;
-	const { username, profileImage } = state.user;
-	return { username, profileImage, loggedIn };
+	const { username, profileImage, email } = state.user;
+	return { username, profileImage, loggedIn, email };
 };
 
 // Redux things

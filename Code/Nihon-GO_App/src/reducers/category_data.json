@@ -1,0 +1,16 @@
+[
+    {
+        "category": {
+            "id": 1,
+            "category": "Currency",
+            "image":"https://cdn0.iconfinder.com/data/icons/miscellaneous-40/100/yaun_symbol-512.png"
+        }
+    },
+    {
+        "category": {
+            "id": 2,
+            "category": "Travel",
+            "image":"https://cdn4.iconfinder.com/data/icons/world-travel-guide/512/travel-13-512.png"
+        }
+    }
+]

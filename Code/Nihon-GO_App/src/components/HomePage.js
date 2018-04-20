@@ -19,14 +19,7 @@ class HomePage extends Component {
 					<View style={styles.containerMap}>
 						<Map/>
 					</View>
-					<View style={{height: 30}}>
 					<ActionBtn/>
-					</View>
-					<SearchBar
-					lightTheme
-					showLoading
-					platform="android"
-					placeholder='Search' />
 				</Background>
 			</View>
 		);

@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import {Text,
+import {
+		Alert,
+		Text,
         View,
         TouchableWithoutFeedback,
         TouchableOpacity,
@@ -160,29 +162,37 @@ class ItineraryPreview extends Component {
 		var favorites = this.state.favorites;
 		var value = this.props.fav_itinerary;
 		var addSub = favorites + 1;
-		
-		// Check if user has any favorites
-		if (!value){
-			value = [];
-			value.push(id);
-		}
-		// Remove if in favorites
-		else if (value.includes(id)) {
-			addSub = favorites - 1;
-			var i = value.indexOf(id);
-			if(i != -1) {
-				value.splice(i, 1);
+		if(this.props.loggedIn){
+			// Check if user has any favorites
+			if (!value){
+				value = [];
+				value.push(id);
 			}
+			// Remove if in favorites
+			else if (value.includes(id)) {
+				addSub = favorites - 1;
+				var i = value.indexOf(id);
+				if(i != -1) {
+					value.splice(i, 1);
+				}
+			}
+			// Add to favorites
+			else {
+				value.push(id);			
+			}
+			
+			this.props.favUpdate(id, addSub);
+			this.setState({favorites: addSub});
+			this.props.userProfileUpdate({prop: 'fav_itinerary', value});
+			this.props.userProfileSave({fav_itinerary: value});
 		}
-		// Add to favorites
-		else {
-			value.push(id);			
+		else{
+			Alert.alert(
+				'Notice',
+				'Need to be logged in to do this!',
+				[{text: 'Sign In Now', onPress: () => Actions.login()},]
+			 );
 		}
-		
-		this.props.favUpdate(id, addSub);
-		this.setState({favorites: addSub});
-		this.props.userProfileUpdate({prop: 'fav_itinerary', value});
-		this.props.userProfileSave({fav_itinerary: value});
 	}
 	
     renderExpandedPreview(){
@@ -266,8 +276,8 @@ const styles = {
 
 const mapStateToProps = (state, ownProps) => {
     const { fav_itinerary } = state.user; 
-
-    return { fav_itinerary };
+	const { loggedIn } = state.auth; 
+    return { fav_itinerary, loggedIn };
 };
 
 export default connect(mapStateToProps, { userUpdateFavorites, favUpdate, userProfileSave, userProfileUpdate })(ItineraryPreview);

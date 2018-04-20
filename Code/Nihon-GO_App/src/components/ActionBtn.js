@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Alert } from 'react-native';
 import ActionButton from 'react-native-action-button';
 import { Icon } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
@@ -8,13 +8,24 @@ import { itineraryFetch, startedItnUpdate } from '../actions';
 import { connect } from 'react-redux';
 
 class ActionBtn extends Component {
-    goToTopItn(){
+    
+	createItn(){
+		if(this.props.loggedIn){
+			Actions.itineraryCreate()
+		}
+		else{
+			Alert.alert(
+					'Notice',
+					'Need to be logged in to do this!',
+					[{text: 'Sign In Now', onPress: () => Actions.login()},]
+			 );
+		}
+	}
+	
+	goToTopItn(){
         Actions.main();
         Actions.itineraryList({title: 'Top Itineraries', filters: {region:'ALL'} });
     }
-
-
-
 
     continueItn(id){
       this.props.itineraryFetch({id: id});
@@ -55,7 +66,7 @@ class ActionBtn extends Component {
                     <ActionButton.Item
                         buttonColor='#3498db'
                         title="Create Itinerary"
-                        onPress={() => Actions.itineraryCreate()}
+                        onPress={() => this.createItn()}
                     >
                         <Icon name='create' />
                     </ActionButton.Item>
@@ -82,7 +93,7 @@ class ActionBtn extends Component {
                     <ActionButton.Item
                         buttonColor='#3498db'
                         title="Create Itinerary"
-                        onPress={() => Actions.itineraryCreate()}
+                        onPress={() => this.createItn()}
                     >
                         <Icon name='create' />
                     </ActionButton.Item>
@@ -103,10 +114,11 @@ const styles = StyleSheet.create({
 
 // Redux things
 const mapStateToProps = (state) => {
+	const { loggedIn } = state.auth;
 	const itineraries = state.itineraries;
-  const start_itn = state.StartItn;
-  const { started, isStarted } = start_itn;
-	return { itineraries, started, isStarted };
+	const start_itn = state.StartItn;
+	const { started, isStarted } = start_itn;
+	return { itineraries, started, isStarted, loggedIn };
 };
 
 // Redux things

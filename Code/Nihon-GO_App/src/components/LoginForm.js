@@ -57,7 +57,7 @@ class LoginForm extends Component {
 		const { email, password } = this.props;
 		const { retypePassword } = this.state;
 		
-		if ((password == retypePassword) && (password > 5) && email) {
+		if ((password == retypePassword) && (password.length > 5) && email) {
 			this.props.registerUser({ email, password });
 			this.setState({retypePassword: ''});
 			this.setModalVisible(!this.state.modalVisible);
